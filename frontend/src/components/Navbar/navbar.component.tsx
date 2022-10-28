@@ -35,7 +35,7 @@ const Navbar = () => {
             href="/login"
             onClick={navigated}
           >
-            Login
+            Logout
           </a>
         </li>
       </>
