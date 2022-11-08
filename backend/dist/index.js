@@ -13,6 +13,7 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use((0, helmet_1.default)());
+console.log(process.env);
 const port = (_b = (_a = process.env) === null || _a === void 0 ? void 0 : _a.PORT) !== null && _b !== void 0 ? _b : 3001;
 app.get("/", (req, res) => {
     res.send("Express + TypeScript Server");

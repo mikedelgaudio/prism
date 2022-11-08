@@ -6,7 +6,7 @@ import helmet from "helmet";
 dotenv.config();
 
 const app: Express = express();
-app.use(cors());
+app.use(cors()); // Must allow-list only the FE / domain
 app.use(express.json());
 app.use(helmet());
 const port = process.env?.PORT ?? 3001;
