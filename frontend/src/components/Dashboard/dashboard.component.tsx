@@ -1,4 +1,23 @@
+import {
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  Title,
+  Tooltip,
+} from "chart.js";
 import { DayCard } from "./DayCard";
+import { EmptyCard } from "./EmptyCard";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 const Dashboard = () => {
   return (
@@ -26,7 +45,8 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <section className="py-6">
+          <section className="flex flex-col gap-6 py-6">
+            <EmptyCard />
             <DayCard />
           </section>
         </div>

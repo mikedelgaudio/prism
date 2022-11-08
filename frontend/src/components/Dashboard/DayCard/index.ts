@@ -1,1 +1,1 @@
-export { DayCard } from "./dayCard.component";
+export { DayCard } from "./day-card.component";
