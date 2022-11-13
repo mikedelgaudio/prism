@@ -1,7 +1,8 @@
+import { observer } from "mobx-react";
 import { useState } from "react";
 import "./navbar.component.css";
 
-const Navbar = () => {
+const Navbar = observer(() => {
   const [toggled, setToggle] = useState(false);
 
   const navigated = () => {
@@ -35,7 +36,7 @@ const Navbar = () => {
             href="/login"
             onClick={navigated}
           >
-            Logout
+            Login
           </a>
         </li>
       </>
@@ -102,6 +103,6 @@ const Navbar = () => {
       </div>
     </div>
   );
-};
+});
 
 export { Navbar };

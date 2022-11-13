@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Login } from "./components/Auth/Login";
 import { Register } from "./components/Auth/Register";
 import { Dashboard } from "./components/Dashboard";
-import { E404 } from "./components/E404";
+import { E404 } from "./components/Errors";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
 

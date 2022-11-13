@@ -1,4 +1,6 @@
-const Footer = () => {
+import { observer } from "mobx-react";
+
+const Footer = observer(() => {
   const links = () => {
     return (
       <>
@@ -48,6 +50,6 @@ const Footer = () => {
       </div>
     </section>
   );
-};
+});
 
 export { Footer };

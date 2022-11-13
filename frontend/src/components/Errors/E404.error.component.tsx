@@ -1,4 +1,6 @@
-const E404 = () => {
+import { observer } from "mobx-react";
+
+const E404 = observer(() => {
   return (
     <div className="flex min-h-screen flex-col gap-2 items-center pt-5">
       <h1 className="text-7xl font-bold">Error 404</h1>
@@ -11,6 +13,6 @@ const E404 = () => {
       </a>
     </div>
   );
-};
+});
 
 export { E404 };
