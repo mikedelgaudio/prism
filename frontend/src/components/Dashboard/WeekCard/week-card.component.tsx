@@ -54,7 +54,7 @@ const WeekCard = () => {
       <div className="py-4">
         <Line data={data} options={options} />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 py-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 py-4">
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
             Study for Chemical Engineering
@@ -72,6 +72,22 @@ const WeekCard = () => {
             Study for Chemical Engineering
           </h3>
           <p className="text-xl">1h 4m</p>
+        </div>
+        <div className="flex flex-col">
+          <h3 className="font-semibold text-xl">
+            Study for Chemical Engineering
+          </h3>
+          <p className="text-xl">1h 4m</p>
+        </div>
+        <div className="flex flex-col">
+          <h3 className="font-semibold text-xl">
+            Study for Chemical Engineering
+          </h3>
+          <p className="text-xl">1h 4m</p>
+        </div>
+        <div className="flex flex-col">
+          <h3 className="font-semibold text-xl">Total time</h3>
+          <p className="text-xl">6h 35m</p>
         </div>
       </div>
       <small className="text-gray-500">Updated today at 10:16 PM</small>

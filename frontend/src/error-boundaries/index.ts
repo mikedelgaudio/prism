@@ -1,1 +1,1 @@
-export { DashboardErrorBoundary } from "./dashboard.eb";
+export { GenericErrorBoundary } from "./generic.eb";

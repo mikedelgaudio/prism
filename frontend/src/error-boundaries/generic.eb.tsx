@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { DashboardErrorComponent } from "../components/Errors";
+import { GenericErrorComponent } from "../components/Errors";
 
 interface State {
   hasError: boolean;
@@ -7,7 +7,7 @@ interface State {
   info: { componentStack: "" };
 }
 
-class DashboardErrorBoundary extends Component<any, State> {
+class GenericErrorBoundary extends Component<any, State> {
   state: State = {
     hasError: false,
     error: { message: "", stack: "" },
@@ -25,8 +25,8 @@ class DashboardErrorBoundary extends Component<any, State> {
   render() {
     const { hasError } = this.state;
     const { children } = this.props;
-    return hasError ? <DashboardErrorComponent /> : children;
+    return hasError ? <GenericErrorComponent /> : children;
   }
 }
 
-export { DashboardErrorBoundary };
+export { GenericErrorBoundary };

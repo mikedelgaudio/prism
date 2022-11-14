@@ -6,6 +6,7 @@ import { DashboardWeek } from "./components/Dashboard/dashboard.week.component";
 import { E404 } from "./components/Errors";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
+import { Settings } from "./components/Settings";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             path="/dashboard"
             element={<Navigate replace to="/dashboard/day" />}
           />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<E404 />} />
         </Routes>
       </main>
