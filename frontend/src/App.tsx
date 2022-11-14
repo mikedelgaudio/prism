@@ -1,7 +1,8 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Login } from "./components/Auth/Login";
 import { Register } from "./components/Auth/Register";
-import { Dashboard } from "./components/Dashboard";
+import { DashboardDay } from "./components/Dashboard/dashboard.day.component";
+import { DashboardWeek } from "./components/Dashboard/dashboard.week.component";
 import { E404 } from "./components/Errors";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
@@ -17,7 +18,12 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/day" element={<DashboardDay />} />
+          <Route path="/dashboard/week" element={<DashboardWeek />} />
+          <Route
+            path="/dashboard"
+            element={<Navigate replace to="/dashboard/day" />}
+          />
           <Route path="*" element={<E404 />} />
         </Routes>
       </main>

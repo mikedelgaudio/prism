@@ -1,33 +1,47 @@
 import { observer } from "mobx-react";
-import { useContext } from "react";
-import { DashboardContext } from "../dashboard.context";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Header = observer(() => {
-  const { dashboardStore } = useContext(DashboardContext);
+  // const { dashboardStore } = useContext(DashboardContext);
+  const { pathname } = useLocation();
+  const weekView = pathname === "/dashboard/week";
+
+  const btnStyle =
+    "flex items-center justify-center rounded-xl border border-slate-900 px-5 py-3 text-base lg:text-xl font-semibold leading-7 transition-all duration-200 hover:bg-transparent hover:bg-slate-900 hover:text-white focus:bg-transparent focus:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2";
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex flex-col gap-6 md:gap-0 md:flex-row md:justify-between md:items-center">
       <div>
         <h1 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl sm:leading-tight lg:text-5xl lg:leading-tight">
-          Welcome Mike
+          {weekView ? "Week review" : "How you're doing Mike"}
         </h1>
-        <p className="pl-1">You got this today!</p>
+        {weekView ? (
+          <p className="pl-1">Track your improvement</p>
+        ) : (
+          <p className="pl-1">Here's how you're doing daily</p>
+        )}
       </div>
       <div className="flex gap-4">
-        {/* Disabled when in day view, otherwise allow them to swap views? */}
-        <button
-          disabled={true}
-          className="flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-5 py-3 text-base lg:text-xl font-semibold leading-7 text-white disabled:cursor-not-allowed disabled:hover:bg-slate-900 disabled:hover:text-white transition-all  duration-200 hover:bg-transparent hover:text-slate-900 focus:bg-transparent focus:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2"
-          onClick={dashboardStore.changeView}
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? `${btnStyle} bg-slate-900 text-white`
+              : `${btnStyle} bg-transparent text-slate-900`
+          }
+          to={"/dashboard/day"}
         >
           Day
-        </button>
-        <button
-          className="flex items-center justify-center rounded-xl border border-slate-900 bg-transparent px-5 py-2 text-base lg:text-xl font-semibold leading-7 text-slate-900 transition-all duration-200 hover:bg-slate-900 hover:text-white focus:bg-slate-900 focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2 w-full sm:w-auto"
-          onClick={() => dashboardStore.changeView()}
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? `${btnStyle} bg-slate-900 text-white`
+              : `${btnStyle} bg-transparent text-slate-900`
+          }
+          to={"/dashboard/week"}
         >
           Week
-        </button>
+        </NavLink>
       </div>
     </div>
   );

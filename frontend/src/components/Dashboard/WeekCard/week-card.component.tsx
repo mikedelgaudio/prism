@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
+import { Card } from "../Card";
 
 const WeekCard = () => {
   const options = {
@@ -10,46 +11,48 @@ const WeekCard = () => {
       },
       title: {
         display: true,
-        text: "Chart.js Bar Chart",
+        text: "Week 44 Review",
       },
     },
   };
+
   const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
   ];
 
   const data = {
     labels,
     datasets: [
       {
-        label: "Dataset 1",
+        label: "This week",
         data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        backgroundColor: "#6A5BFF ",
+        borderColor: "#6A5BFF",
       },
       {
-        label: "Dataset 2",
+        label: "Previous week",
         data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        backgroundColor: "#088F8F",
       },
     ],
   };
 
   return (
-    <div className="flex flex-col bg-white text-base p-9 rounded-xl shadow-lg">
+    <Card>
       <div>
-        <small>Week in Review</small>
-        <h2 className="font-bold text-2xl">Wednesday, November 2, 2022 - </h2>
+        <small className="text-base">Week 44 Review</small>
+        <h2 className="font-bold text-2xl">October 30 - November 5</h2>
         <p className="text-gray-700 font-semibold text-xl">6h 35m tracked</p>
       </div>
 
       <div className="py-4">
-        <Bar options={options} data={data} />
+        <Line data={data} options={options} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 py-4">
         <div className="flex flex-col">
@@ -72,7 +75,7 @@ const WeekCard = () => {
         </div>
       </div>
       <small className="text-gray-500">Updated today at 10:16 PM</small>
-    </div>
+    </Card>
   );
 };
 

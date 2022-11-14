@@ -1,6 +1,8 @@
+import { Card } from "../Card";
+
 const EmptyCard = () => {
   return (
-    <div className="flex flex-col bg-white text-base p-9 rounded-xl shadow-lg">
+    <Card>
       <div>
         <small>Day in Review</small>
         <h2 className="font-bold text-2xl">Saturday, November 5, 2022</h2>
@@ -12,7 +14,7 @@ const EmptyCard = () => {
           Upload your daily productivity
         </button>
       </div>
-    </div>
+    </Card>
   );
 };
 
