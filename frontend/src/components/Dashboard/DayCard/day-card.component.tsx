@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { Bar } from "react-chartjs-2";
-import { Card } from "../Card";
+import { Card } from "../../Shared";
 
 const DayCard = () => {
   const options = {

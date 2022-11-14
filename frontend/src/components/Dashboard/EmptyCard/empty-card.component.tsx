@@ -1,4 +1,4 @@
-import { Card } from "../Card";
+import { Card } from "../../Shared";
 
 const EmptyCard = () => {
   return (
@@ -11,7 +11,7 @@ const EmptyCard = () => {
 
       <div className="py-4 flex items-center justify-center">
         <button className="rounded-xl border border-slate-900 bg-slate-900 px-5 py-3 text-base lg:text-xl font-semibold leading-7 text-white disabled:cursor-not-allowed disabled:hover:bg-slate-900 disabled:hover:text-white transition-all  duration-200 hover:bg-transparent hover:text-slate-900 focus:bg-transparent focus:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2">
-          Upload your daily productivity
+          Upload November 5 Data
         </button>
       </div>
     </Card>
