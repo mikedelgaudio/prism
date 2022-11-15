@@ -1,19 +1,16 @@
 import { observer } from "mobx-react";
-import { Helmet } from "react-helmet";
+import { useTitle } from "../../hooks/useTitle.hook";
 import { Dashboard } from "./dashboard.component";
 import { WeekCard } from "./WeekCard/week-card.component";
 
 const DashboardWeek = observer(() => {
+  useTitle("Week Dashboard - Prism");
+
   return (
-    <>
-      <Helmet>
-        <title>Week Dashboard - Prism</title>
-      </Helmet>
-      <Dashboard>
-        <WeekCard />
-        <WeekCard />
-      </Dashboard>
-    </>
+    <Dashboard>
+      <WeekCard />
+      <WeekCard />
+    </Dashboard>
   );
 });
 
