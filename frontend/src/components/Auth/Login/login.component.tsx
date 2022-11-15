@@ -11,23 +11,28 @@ const Login = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex gap-5 flex-col lg:flex-row lg:gap-20 items-center justify-center">
           <div className="max-w-md sm:max-w-xl w-full">
-            <form className="flex flex-col gap-6">
-              <div className="flex flex-col gap-2">
-                <h1 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl sm:leading-tight lg:text-5xl lg:leading-tight">
-                  Let's get started
-                </h1>
-                <label htmlFor="email">Email</label>
+            <h1 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl sm:leading-tight lg:text-5xl lg:leading-tight">
+              Let's get started
+            </h1>
+            <form className="flex flex-col gap-8 pt-3">
+              <div className="flex flex-col gap-2 leading-3">
+                <label className="required" htmlFor="email">
+                  Email
+                </label>
                 <input
                   className="border border-slate-400 p-2 rounded-md"
                   id="email"
                   type={"email"}
                   required={true}
+                  placeholder="your-email@email.com"
                 />
               </div>
 
-              <div className="flex flex-col gap-2">
-                <label htmlFor="password">Password</label>
-                <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-2 leading-3">
+                <label className="required" htmlFor="password">
+                  Password
+                </label>
+                <div className="flex flex-col gap-2">
                   <input
                     className="border border-slate-400 p-2 rounded-md"
                     id="password"

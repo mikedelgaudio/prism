@@ -70,8 +70,16 @@ const Account = observer(() => {
             </li>
             <li className="flex justify-between items-center">
               <div className="flex flex-col leading-5">
+                <span>Change email</span>
+                <small>Need to update your email?</small>
+              </div>
+
+              <button className="underline hover:no-underline">Change</button>
+            </li>
+            <li className="flex justify-between items-center">
+              <div className="flex flex-col leading-5">
                 <span>Reset password</span>
-                <small>Forgot your password? Don't worry we all do</small>
+                <small>Forgot your password?</small>
               </div>
 
               <button className="underline hover:no-underline">Reset</button>

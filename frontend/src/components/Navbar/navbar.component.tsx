@@ -71,7 +71,7 @@ const Navbar = observer(() => {
                 data-name="Layer 1"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 460.01 460.02"
-                className="w-[50px] md:w-[60px]"
+                className="w-[30px] md:w-[45px]"
                 aria-hidden={true}
               >
                 <path
