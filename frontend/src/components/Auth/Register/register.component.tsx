@@ -17,7 +17,7 @@ const Register = () => {
             </h1>
             <form className="flex flex-col gap-8 pt-3">
               <div className="flex flex-col gap-2 leading-3">
-                <h2 className="font-semibold text-xl">How we'll greet you</h2>
+                <h2 className="font-semibold text-2xl">How we'll greet you</h2>
                 <label className="required" htmlFor="firstName">
                   First Name
                 </label>
@@ -41,7 +41,7 @@ const Register = () => {
               </div>
 
               <div className="flex flex-col gap-3 leading-3">
-                <h2 className="font-semibold text-xl">How you'll login</h2>
+                <h2 className="font-semibold text-2xl">How you'll login</h2>
                 <div className="flex flex-col gap-2">
                   <label className="required" htmlFor="email">
                     Email
@@ -80,7 +80,7 @@ const Register = () => {
               </div>
 
               <div className="flex flex-col gap-3">
-                <h2 className="font-semibold text-xl">Register your Prism</h2>
+                <h2 className="font-semibold text-2xl">Register your Prism</h2>
                 <div className="flex flex-col gap-2 leading-3">
                   <label className="required" htmlFor="serial">
                     Serial number

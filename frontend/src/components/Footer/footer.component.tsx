@@ -1,24 +1,26 @@
 import { observer } from "mobx-react";
+import { NavLink } from "react-router-dom";
 
 const Footer = observer(() => {
+  // ! Need to change links based upon auth
   const links = () => {
     return (
       <>
         <li>
-          <a
+          <NavLink
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
-            href="#features"
+            to={"/dashboard/day"}
           >
-            Features
-          </a>
+            Dashboard
+          </NavLink>
         </li>
         <li>
-          <a
+          <NavLink
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
-            href="#team"
+            to={"/settings"}
           >
-            Team
-          </a>
+            Settings
+          </NavLink>
         </li>
         <li>
           <a
