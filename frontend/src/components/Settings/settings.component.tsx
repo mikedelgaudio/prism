@@ -19,8 +19,8 @@ const Settings = observer(() => {
         </div>
 
         <div className="flex flex-col pt-6 gap-6">
-          <Account />
           <Cube />
+          <Account />
         </div>
       </div>
     </div>

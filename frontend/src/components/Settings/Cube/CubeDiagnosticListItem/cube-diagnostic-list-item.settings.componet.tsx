@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 const CubeDiagnosticListItem = observer(() => {
   return (
     <li
-      className="flex flex-col gap-4 p-6 bg-slate-100 rounded-xl"
+      className="flex gap-4 p-6 bg-slate-100 rounded-xl"
       aria-expanded={false}
     >
       <p>Power</p>
