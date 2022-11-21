@@ -4,7 +4,9 @@ import { Card } from "../../Shared";
 const Account = observer(() => {
   return (
     <Card className="gap-6">
-      <h2 className="font-bold text-3xl">Account</h2>
+      <div className="border-b-2 pb-3 border-slate-500">
+        <h2 className="font-bold text-3xl">Account</h2>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <dl className="max-w-md text-slate-900 divide-y divide-slate-200">
