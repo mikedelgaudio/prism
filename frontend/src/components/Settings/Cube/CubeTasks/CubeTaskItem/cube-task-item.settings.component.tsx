@@ -15,7 +15,7 @@ const CubeTaskItem = observer(() => {
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="w-[10px] md:w-[20px]"
+        className="w-[20px]"
         aria-hidden={true}
         viewBox="0 0 512 512"
       >
@@ -32,7 +32,7 @@ const CubeTaskItem = observer(() => {
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="w-[10px] md:w-[20px]"
+        className="w-[20px]"
         aria-hidden={true}
         viewBox="0 0 512 512"
       >
@@ -74,7 +74,7 @@ const CubeTaskItem = observer(() => {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="w-[10px] md:w-[20px]"
+            className="w-[20px]"
             aria-hidden={true}
             viewBox="0 0 448 512"
           >

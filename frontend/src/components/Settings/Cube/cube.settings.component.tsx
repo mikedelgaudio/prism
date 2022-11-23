@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { Card } from "../../Shared";
-import { CubeAssigned } from "./CubeAssigned/cube-assigned.settings.component";
+import { CubeAssigned } from "./CubeAssigned";
 import { CubeTasks } from "./CubeTasks";
 
 const Cube = observer(() => {
@@ -10,8 +10,10 @@ const Cube = observer(() => {
         <h2 className="font-bold text-3xl">Your Prism</h2>
       </div>
 
-      <CubeTasks />
-      <CubeAssigned />
+      <div className="flex flex-col gap-14">
+        <CubeTasks />
+        <CubeAssigned />
+      </div>
     </Card>
   );
 });
