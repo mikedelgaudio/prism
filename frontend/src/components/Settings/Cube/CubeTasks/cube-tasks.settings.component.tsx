@@ -1,7 +1,15 @@
 import { observer } from "mobx-react";
+import { useContext } from "react";
+import { SettingsContext } from "../../settings.context";
 import { CubeTaskItem } from "./CubeTaskItem";
 
 const CubeTasks = observer(() => {
+  const { settingsStore } = useContext(SettingsContext);
+  // const didMountOnce = didMount();
+
+  // const [editing, setEditing] = useState(false);
+  // const [eventTitleInput, setEventTitleInput] = useState(settingsStore.tasks);
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex justify-between items-center">
@@ -10,18 +18,22 @@ const CubeTasks = observer(() => {
           <p>Update, add, or delete items in your task pool</p>{" "}
         </div>
 
-        <button className="underline hover:no-underline">Add task</button>
+        <button
+          className="underline hover:no-underline"
+          onClick={() => settingsStore.addTask()}
+        >
+          Add task
+        </button>
       </div>
 
       <ul className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <CubeTaskItem />
-        <CubeTaskItem />
-        <CubeTaskItem />
-        <CubeTaskItem />
-        <CubeTaskItem />
-        <CubeTaskItem />
-        <CubeTaskItem />
-        <CubeTaskItem />
+        {settingsStore.tasks.length !== 0 ? (
+          settingsStore.tasks?.map(task => {
+            return <CubeTaskItem key={`${task.id}-item`} id={task.id} />;
+          })
+        ) : (
+          <p className="font-semibold">No tasks found</p>
+        )}
       </ul>
     </div>
   );

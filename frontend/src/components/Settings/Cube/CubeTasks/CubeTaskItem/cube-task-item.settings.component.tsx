@@ -1,8 +1,10 @@
 import { observer } from "mobx-react-lite";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { SettingsContext } from "../../../settings.context";
 
-const CubeTaskItem = observer(() => {
+const CubeTaskItem = observer((id: string) => {
   const [editing, setEditing] = useState(false);
+  const { settingsStore } = useContext(SettingsContext);
 
   // ! Disable Delete when Assigned to Side of Cube
   // ! Add task should create a new entry but not push to DB until saving
