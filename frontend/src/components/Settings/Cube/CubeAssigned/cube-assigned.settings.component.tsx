@@ -1,7 +1,12 @@
 import { observer } from "mobx-react";
+import { useContext } from "react";
+import { SettingsContext } from "../../settings.context";
 import { CubeAssignedItem } from "./CubeAssignedItem";
 
 const CubeAssigned = observer(() => {
+  const { settingsStore } = useContext(SettingsContext);
+  const tasks = settingsStore.assignedTasks;
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col leading-3">
@@ -10,11 +15,11 @@ const CubeAssigned = observer(() => {
       </div>
 
       <ol className="flex flex-col gap-6">
-        <CubeAssignedItem />
-        <CubeAssignedItem />
-        <CubeAssignedItem />
-        <CubeAssignedItem />
-        <CubeAssignedItem />
+        {tasks.map(task => {
+          return (
+            <CubeAssignedItem key={`${task.id}-assigned-key`} id={task.id} />
+          );
+        })}
       </ol>
     </div>
   );

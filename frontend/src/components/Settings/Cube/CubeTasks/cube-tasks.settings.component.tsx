@@ -5,10 +5,6 @@ import { CubeTaskItem } from "./CubeTaskItem";
 
 const CubeTasks = observer(() => {
   const { settingsStore } = useContext(SettingsContext);
-  // const didMountOnce = didMount();
-
-  // const [editing, setEditing] = useState(false);
-  // const [eventTitleInput, setEventTitleInput] = useState(settingsStore.tasks);
 
   return (
     <div className="flex flex-col gap-6">
