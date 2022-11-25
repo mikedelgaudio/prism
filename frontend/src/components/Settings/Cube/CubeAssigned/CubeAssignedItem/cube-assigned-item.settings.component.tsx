@@ -7,12 +7,25 @@ const CubeAssignedItem = observer(({ id }: { id: string }) => {
   const { settingsStore } = useContext(SettingsContext);
   const tasks = settingsStore.tasks;
   const task = tasks.find(task => task.id === id);
+  const [selected, setSelected] = useState(task?.id ?? "");
+
+  const handleSelection = (e: any) => {
+    setSelected(prev => (prev = e.target.value));
+    // ! Watch out mixing props vs store will this be an issue?
+    // ! Error handling?
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    settingsStore.assignTask(id, selected);
+  };
 
   const editBtn = (
     <button
       className="p-3 rounded-xl hover:bg-slate-200 transition-colors"
       onClick={() => setEditing(prev => (prev = !prev))}
       aria-label="Edit"
+      type="button"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -30,6 +43,7 @@ const CubeAssignedItem = observer(({ id }: { id: string }) => {
       className="p-3 rounded-xl hover:bg-slate-200 transition-colors"
       onClick={() => setEditing(prev => (prev = !prev))}
       aria-label="Save"
+      type="submit"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -50,15 +64,12 @@ const CubeAssignedItem = observer(({ id }: { id: string }) => {
       <select
         className="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
         id={`${id}-assigned`}
-        defaultValue={task?.name}
+        value={selected}
+        onChange={handleSelection}
       >
         {tasks.map(task => {
           return (
-            <option
-              key={`${task.side}-${task.id}-option-key`}
-              disabled={task.id === id}
-              value={task.name}
-            >
+            <option key={`${task.side}-${task.id}-option-key`} value={task.id}>
               {task.name}
             </option>
           );
@@ -68,23 +79,28 @@ const CubeAssignedItem = observer(({ id }: { id: string }) => {
   );
 
   return (
-    <li className="flex gap-4 p-6 justify-between items-center bg-slate-100 rounded-xl">
-      <div className="flex gap-6 items-center w-full">
-        <div className="flex flex-col items-center justify-center">
-          <small className="text-sm">Side</small>
-          <span className="text-2xl font-bold">{task?.side}</span>
+    <li className="gap-4 p-6 bg-slate-100 rounded-xl">
+      <form
+        className="flex justify-between items-center"
+        onSubmit={handleSubmit}
+      >
+        <div className="flex gap-6 items-center w-full">
+          <div className="flex flex-col items-center justify-center">
+            <small className="text-sm">Side</small>
+            <span className="text-2xl font-bold">{task?.side}</span>
+          </div>
+
+          {editing ? (
+            selectField
+          ) : (
+            <h4 className="font-bold text-xl">{task?.name}</h4>
+          )}
         </div>
 
-        {editing ? (
-          selectField
-        ) : (
-          <h4 className="font-bold text-xl">{task?.name}</h4>
-        )}
-      </div>
-
-      <div className="flex items-center justify-center gap-6">
-        {editing ? editBtn : saveBtn}
-      </div>
+        <div className="flex items-center justify-center gap-6">
+          {editing ? editBtn : saveBtn}
+        </div>
+      </form>
     </li>
   );
 });

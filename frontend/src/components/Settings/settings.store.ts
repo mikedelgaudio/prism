@@ -81,4 +81,23 @@ export class SettingsStore {
     }
     console.log(toJS(this.tasks), toJS(this.tasksPool));
   }
+
+  assignTask(fromId: string | undefined, toId: string | undefined) {
+    if (!fromId || !toId) return;
+
+    const toTask = this.getTaskById(toId);
+    const fromTask = this.getTaskById(fromId);
+
+    if (!toTask || !fromTask) return;
+
+    const prev = { ...fromTask };
+    const next = { ...toTask };
+
+    fromTask.id = next.id;
+    fromTask.name = next.name;
+    toTask.id = prev.id;
+    toTask.name = prev.name;
+
+    console.log(toJS(this.tasks), "assigned");
+  }
 }
