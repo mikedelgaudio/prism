@@ -6,6 +6,10 @@ import { Card } from "../../Shared";
 const Account = observer(() => {
   const { authStore } = useContext(AuthContext);
 
+  // TODO
+  // Update a11y on toggle switches
+  // Change password and reset password link to different page
+
   return (
     <Card className="gap-6">
       <div className="border-b-2 pb-3 border-slate-500">
@@ -29,7 +33,7 @@ const Account = observer(() => {
           <div className="flex flex-col pt-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Prism serial</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              {authStore.user.prismId}
+              {authStore.user.prismId ?? "No serial found"}
             </dd>
           </div>
         </dl>
@@ -48,10 +52,10 @@ const Account = observer(() => {
               >
                 <input
                   type="checkbox"
-                  value=""
                   id="default-toggle"
                   className="sr-only peer"
                   checked={authStore.user.progressEmail}
+                  onChange={() => authStore.toggleProgressEmail()}
                 />
                 <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
               </label>
@@ -68,10 +72,10 @@ const Account = observer(() => {
               >
                 <input
                   type="checkbox"
-                  value=""
                   id="default-toggle2"
                   className="sr-only peer"
                   checked={authStore.user.timeToStand}
+                  onChange={() => authStore.toggleTimeToStand()}
                 />
                 <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
               </label>
@@ -105,7 +109,11 @@ const Account = observer(() => {
                   </small>
                 </div>
 
-                <button className="underline hover:no-underline">
+                <button
+                  className="underline hover:no-underline disabled:opacity-50 disabled:no-underline"
+                  onClick={() => authStore.disconnectPrism()}
+                  disabled={authStore.user.prismId === null}
+                >
                   Disconnect
                 </button>
               </li>
@@ -117,7 +125,12 @@ const Account = observer(() => {
                   </small>
                 </div>
 
-                <button className="underline hover:no-underline">Delete</button>
+                <button
+                  className="underline hover:no-underline"
+                  onClick={() => authStore.deleteAccount()}
+                >
+                  Delete
+                </button>
               </li>
             </ul>
           </div>

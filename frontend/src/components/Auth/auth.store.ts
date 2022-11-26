@@ -79,8 +79,19 @@ export class AuthStore {
   disconnectPrism() {
     const TOAST_ID = "DISCONNECT_PRISM";
 
+    if (this.user.prismId === null) {
+      this.toastService.error(
+        TOAST_ID,
+        "Error: No prism found with account.",
+        true,
+      );
+      return;
+    }
+
     // Send to request to DB
     // Reset UI to onboarding UI
+
+    this.userProfile.prismId = null;
 
     this.toastService.success(
       TOAST_ID,

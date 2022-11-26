@@ -1,10 +1,15 @@
 import { observer } from "mobx-react";
+import { useContext } from "react";
 import { useTitle } from "../../hooks/useTitle.hook";
+import { AuthContext } from "../Auth/auth.context";
 import { Account } from "./Account/account.settings.component";
 import { Cube } from "./Cube/cube.settings.component";
+import { OnboardingCube } from "./OnboardingCube";
 
 const Settings = observer(() => {
   useTitle("Settings - Prism");
+
+  const { authStore } = useContext(AuthContext);
 
   return (
     <div id="home" className="relative py-6 bg-slate-100">
@@ -19,7 +24,7 @@ const Settings = observer(() => {
         </div>
 
         <div className="flex flex-col pt-6 gap-6">
-          <Cube />
+          {authStore.user.prismId ? <Cube /> : <OnboardingCube />}
           <Account />
         </div>
       </div>
