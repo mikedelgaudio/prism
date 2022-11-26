@@ -1,17 +1,33 @@
 import { observer } from "mobx-react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useTitle } from "../../../hooks/useTitle.hook";
 import { AuthLayout } from "../../Shared";
 
-const Login = observer(() => {
-  useTitle("Login - Prism");
+const Logout = observer(() => {
+  useTitle("Logged out - Prism");
 
   return (
     <AuthLayout>
       <h1 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl sm:leading-tight lg:text-5xl lg:leading-tight">
-        Let's get started
+        You've logged out
       </h1>
-      <form className="flex flex-col gap-8 pt-3">
+      <div className="flex flex-col pt-6 gap-1">
+        <p>Miss us already?</p>
+
+        <NavLink
+          className="flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-5 py-3 text-md lg:text-xl font-semibold leading-7 text-white transition-all duration-200 hover:bg-transparent hover:text-slate-900 focus:bg-transparent focus:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2"
+          to={"/login"}
+        >
+          Login
+        </NavLink>
+        {/* <div className="flex gap-1">
+          <p>Need an account?</p>
+          <Link className="underline hover:opacity-70" to={"/register"}>
+            Register
+          </Link>
+        </div> */}
+      </div>
+      {/* <form className="flex flex-col gap-8 pt-3">
         <div className="flex flex-col gap-2 leading-3">
           <label className="required" htmlFor="email">
             Email
@@ -24,6 +40,7 @@ const Login = observer(() => {
             placeholder="your-email@email.com"
           />
         </div>
+
         <div className="flex flex-col gap-2 leading-3">
           <label className="required" htmlFor="password">
             Password
@@ -52,8 +69,9 @@ const Login = observer(() => {
             </Link>
           </div>
         </div>
-      </form>
+      </form> */}
     </AuthLayout>
   );
 });
-export { Login };
+
+export { Logout };
