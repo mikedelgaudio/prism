@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Login } from "./components/Auth/Login";
+import { PasswordReset } from "./components/Auth/PasswordReset";
 import { Register } from "./components/Auth/Register";
 import { DashboardDay } from "./components/Dashboard/dashboard.day.component";
 import { DashboardWeek } from "./components/Dashboard/dashboard.week.component";
@@ -29,6 +30,8 @@ function App() {
             element={<Navigate replace to="/dashboard/day" />}
           />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/reset-password" element={<PasswordReset />} />
+
           <Route path="*" element={<E404 />} />
         </Routes>
       </main>

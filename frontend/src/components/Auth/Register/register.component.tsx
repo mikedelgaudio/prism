@@ -5,10 +5,7 @@ const Register = () => {
   useTitle("Register - Prism");
 
   return (
-    <section
-      id="home"
-      className="relative py-12 sm:py-16 lg:pt-10 lg:pb-30 xl:pt-20 xl:pb-36 bg-slate-50"
-    >
+    <div className="relative py-12 sm:py-16 lg:pt-10 lg:pb-30 xl:pt-20 xl:pb-36 bg-slate-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex gap-5 flex-col lg:flex-row lg:gap-20 items-center justify-center">
           <div className="max-w-md sm:max-w-xl w-full">
@@ -109,7 +106,7 @@ const Register = () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 export { Register };
