@@ -1,7 +1,11 @@
 import { observer } from "mobx-react";
+import { useContext } from "react";
+import { AuthContext } from "../../Auth/auth.context";
 import { Card } from "../../Shared";
 
 const Account = observer(() => {
+  const { authStore } = useContext(AuthContext);
+
   return (
     <Card className="gap-6">
       <div className="border-b-2 pb-3 border-slate-500">
@@ -13,19 +17,19 @@ const Account = observer(() => {
           <div className="flex flex-col pb-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Name</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              Mike DelGaudio
+              {authStore.user.firstName} {authStore.user.lastName}
             </dd>
           </div>
           <div className="flex flex-col py-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Email address</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              mdelgaud@stevens.edu
+              {authStore.user.email}
             </dd>
           </div>
           <div className="flex flex-col pt-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Prism serial</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              7e16bfa3-d7a1-4450-8f67-caa22b9261c5
+              {authStore.user.prismId}
             </dd>
           </div>
         </dl>
@@ -47,6 +51,7 @@ const Account = observer(() => {
                   value=""
                   id="default-toggle"
                   className="sr-only peer"
+                  checked={authStore.user.progressEmail}
                 />
                 <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
               </label>
@@ -66,6 +71,7 @@ const Account = observer(() => {
                   value=""
                   id="default-toggle2"
                   className="sr-only peer"
+                  checked={authStore.user.timeToStand}
                 />
                 <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
               </label>

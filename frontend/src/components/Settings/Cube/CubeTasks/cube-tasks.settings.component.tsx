@@ -22,7 +22,7 @@ const CubeTasks = observer(() => {
         </button>
       </div>
 
-      <ul className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {settingsStore.tasks.length !== 0 ? (
           settingsStore.tasks?.map(task => {
             return <CubeTaskItem key={`${task.id}-item`} id={task.id} />;
