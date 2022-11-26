@@ -1,4 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Login } from "./components/Auth/Login";
 import { Register } from "./components/Auth/Register";
 import { DashboardDay } from "./components/Dashboard/dashboard.day.component";
@@ -15,6 +17,7 @@ function App() {
         <Navbar />
       </header>
       <main>
+        <ToastContainer role="alert" />
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />

@@ -1,5 +1,6 @@
 import { makeAutoObservable, toJS } from "mobx";
 import { v4 as uuidv4 } from "uuid";
+import { ToastService } from "../../services/toast.service";
 
 export interface Task {
   side: string | null;
@@ -37,7 +38,7 @@ export class SettingsStore {
     },
   ];
 
-  constructor() {
+  constructor(private readonly toastService: ToastService) {
     makeAutoObservable(this);
   }
 
