@@ -1,5 +1,6 @@
 import { observer } from "mobx-react";
 import { useContext } from "react";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../../Auth/auth.context";
 import { Card } from "../../Shared";
 
@@ -94,7 +95,12 @@ const Account = observer(() => {
                 <small>Forgot your password?</small>
               </div>
 
-              <button className="underline hover:no-underline">Reset</button>
+              <Link
+                className="underline hover:no-underline"
+                to={"/reset-password"}
+              >
+                Reset
+              </Link>
             </li>
           </ul>
 

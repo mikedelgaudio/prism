@@ -39,7 +39,7 @@ const Login = () => {
                   />
                   <a
                     className="underline hover:opacity-70"
-                    href="/password-reset"
+                    href="/reset-password"
                   >
                     Forgot your password?
                   </a>
