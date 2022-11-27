@@ -2,4 +2,4 @@
 - Create banner if offline internet
 - Change nav links based upon login
 - Change footer links based upon auth
-- Change
+- Ensure all user input goes thru validString()

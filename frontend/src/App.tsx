@@ -36,17 +36,66 @@ function App() {
               }
             />
             <Route path="/login" element={<Login />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard/day" element={<DashboardDay />} />
-            <Route path="/dashboard/week" element={<DashboardWeek />} />
+            <Route
+              path="/logout"
+              element={
+                <FirebaseGuards.RequireAuth>
+                  <Logout />
+                </FirebaseGuards.RequireAuth>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <FirebaseGuards.RequireUnAuth>
+                  <Register />
+                </FirebaseGuards.RequireUnAuth>
+              }
+            />
+            <Route
+              path="/dashboard/day"
+              element={
+                <FirebaseGuards.RequireAuth>
+                  <DashboardDay />
+                </FirebaseGuards.RequireAuth>
+              }
+            />
+            <Route
+              path="/dashboard/week"
+              element={
+                <FirebaseGuards.RequireAuth>
+                  <DashboardWeek />
+                </FirebaseGuards.RequireAuth>
+              }
+            />
             <Route
               path="/dashboard"
               element={<Navigate replace to="/dashboard/day" />}
             />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/reset-password" element={<PasswordReset />} />
-            <Route path="/change-email" element={<ChangeEmail />} />
+            <Route
+              path="/settings"
+              element={
+                <FirebaseGuards.RequireAuth>
+                  <Settings />
+                </FirebaseGuards.RequireAuth>
+              }
+            />
+            <Route
+              path="/reset-password"
+              element={
+                <FirebaseGuards.RequireAuth>
+                  <PasswordReset />
+                </FirebaseGuards.RequireAuth>
+              }
+            />
+            <Route
+              path="/change-email"
+              element={
+                <FirebaseGuards.RequireAuth>
+                  <ChangeEmail />
+                </FirebaseGuards.RequireAuth>
+              }
+            />
             <Route path="*" element={<E404 />} />
           </Routes>
         </main>

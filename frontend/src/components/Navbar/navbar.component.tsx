@@ -1,14 +1,12 @@
 import { observer } from "mobx-react";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { AuthContext } from "../Auth/auth.context";
-import { useAuth } from "../Auth/firebase.context";
+import { useFirebaseAuth } from "../Auth/firebase.context";
 import "./navbar.component.css";
 
 const Navbar = observer(() => {
   const [toggled, setToggle] = useState(false);
-  const { authStore } = useContext(AuthContext);
-  const { currentUser } = useAuth();
+  const { currentUser } = useFirebaseAuth();
 
   const navigated = () => {
     if (toggled) setToggle(toggled => (toggled = !toggled));
@@ -17,24 +15,31 @@ const Navbar = observer(() => {
   const links = () => {
     return (
       <>
-        <li>
-          <NavLink
-            className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
-            to="/dashboard/day"
-            onClick={navigated}
-          >
-            Dashboard
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
-            to="/settings"
-            onClick={navigated}
-          >
-            Settings
-          </NavLink>
-        </li>
+        {currentUser ? (
+          <>
+            <li>
+              <NavLink
+                className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
+                to="/dashboard/day"
+                onClick={navigated}
+              >
+                Dashboard
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+                to="/settings"
+                onClick={navigated}
+              >
+                Settings
+              </NavLink>
+            </li>
+          </>
+        ) : (
+          <></>
+        )}
+
         {currentUser ? (
           <li>
             <NavLink

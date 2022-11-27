@@ -4,13 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTitle } from "../../../hooks/useTitle.hook";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
-import { useAuth } from "../firebase.context";
+import { useFirebaseAuth } from "../firebase.context";
 
 const Register = observer(() => {
   useTitle("Register - Prism");
 
   const navigate = useNavigate();
-  const { currentUser, register } = useAuth();
+  const { currentUser, register } = useFirebaseAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

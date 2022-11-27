@@ -4,13 +4,13 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useTitle } from "../../../hooks/useTitle.hook";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
-import { useAuth } from "../firebase.context";
+import { useFirebaseAuth } from "../firebase.context";
 
 const Logout = observer(() => {
   useTitle("Logged out - Prism");
 
   const navigate = useNavigate();
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout } = useFirebaseAuth();
 
   useEffect(() => {
     async function handleLogout() {

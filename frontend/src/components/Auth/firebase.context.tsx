@@ -29,7 +29,7 @@ const defaultValue: FirebaseContext = {
 
 const FirebaseContext = createContext(defaultValue);
 
-export function useAuth() {
+export function useFirebaseAuth() {
   return useContext(FirebaseContext);
 }
 
@@ -76,8 +76,10 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// TODO
+// What type is children?
 function RequireAuth({ children }: { children: any }) {
-  const { currentUser } = useAuth();
+  const { currentUser } = useFirebaseAuth();
   const location = useLocation();
 
   console.log(currentUser);
@@ -93,8 +95,10 @@ function RequireAuth({ children }: { children: any }) {
   return children;
 }
 
-function RequireUnAuth({ children }: { children: ReactNode }) {
-  const { currentUser } = useAuth();
+// TODO
+// What type is children?
+function RequireUnAuth({ children }: { children: any }) {
+  const { currentUser } = useFirebaseAuth();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
