@@ -2,11 +2,13 @@ import { observer } from "mobx-react";
 import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../Auth/auth.context";
+import { useAuth } from "../Auth/firebase.context";
 import "./navbar.component.css";
 
 const Navbar = observer(() => {
   const [toggled, setToggle] = useState(false);
   const { authStore } = useContext(AuthContext);
+  const { currentUser } = useAuth();
 
   const navigated = () => {
     if (toggled) setToggle(toggled => (toggled = !toggled));
@@ -33,7 +35,7 @@ const Navbar = observer(() => {
             Settings
           </NavLink>
         </li>
-        {authStore.user.id ? (
+        {currentUser ? (
           <li>
             <NavLink
               className="flex items-center justify-center rounded-xl border border-slate-900 bg-transparent px-5 py-2 text-base font-semibold leading-7 text-slate-900 transition-all duration-200 hover:bg-slate-900 hover:text-white focus:bg-slate-900 focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2 w-full sm:w-auto"

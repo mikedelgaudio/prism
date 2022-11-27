@@ -1,4 +1,3 @@
-import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
@@ -10,11 +9,11 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env
     .VITE_REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_REACT_APP_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_REACT_APP_FIREBASE_MEASUREMENT_ID,
+  // measurementId: import.meta.env.VITE_REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);
 
 // gives us an auth instance
 export const auth = getAuth(app);
