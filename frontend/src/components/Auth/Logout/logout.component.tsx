@@ -1,10 +1,39 @@
 import { observer } from "mobx-react";
-import { NavLink } from "react-router-dom";
+import { useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useTitle } from "../../../hooks/useTitle.hook";
+import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
+import { useAuth } from "../firebase.context";
 
 const Logout = observer(() => {
   useTitle("Logged out - Prism");
+
+  const navigate = useNavigate();
+  const { currentUser, logout } = useAuth();
+
+  useEffect(() => {
+    async function handleLogout() {
+      try {
+        if (logout) await logout();
+      } catch {
+        const TOAST_ID = "FAILED_TO_LOGOUT";
+        TOAST_SERVICE.error(
+          TOAST_ID,
+          "Failed to logout. Please try again by refreshing the page.",
+          false,
+        );
+      }
+    }
+
+    if (!currentUser) {
+      const TOAST_ID = "LOGOUT";
+      TOAST_SERVICE.success(TOAST_ID, "Successfully logged out.", true);
+      navigate("/login");
+    } else {
+      handleLogout();
+    }
+  }, [logout, navigate, currentUser]);
 
   return (
     <AuthLayout>
@@ -13,63 +42,13 @@ const Logout = observer(() => {
       </h1>
       <div className="flex flex-col pt-6 gap-1">
         <p>Miss us already?</p>
-
         <NavLink
           className="flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-5 py-3 text-md lg:text-xl font-semibold leading-7 text-white transition-all duration-200 hover:bg-transparent hover:text-slate-900 focus:bg-transparent focus:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2"
           to={"/login"}
         >
           Login
         </NavLink>
-        {/* <div className="flex gap-1">
-          <p>Need an account?</p>
-          <Link className="underline hover:opacity-70" to={"/register"}>
-            Register
-          </Link>
-        </div> */}
       </div>
-      {/* <form className="flex flex-col gap-8 pt-3">
-        <div className="flex flex-col gap-2 leading-3">
-          <label className="required" htmlFor="email">
-            Email
-          </label>
-          <input
-            className="border border-slate-400 p-2 rounded-md"
-            id="email"
-            type={"email"}
-            required={true}
-            placeholder="your-email@email.com"
-          />
-        </div>
-
-        <div className="flex flex-col gap-2 leading-3">
-          <label className="required" htmlFor="password">
-            Password
-          </label>
-          <div className="flex flex-col gap-2">
-            <input
-              className="border border-slate-400 p-2 rounded-md"
-              id="password"
-              type={"password"}
-              required={true}
-            />
-            <a className="underline hover:opacity-70" href="/reset-password">
-              Forgot your password?
-            </a>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <button className="flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-5 py-3 text-md lg:text-xl font-semibold leading-7 text-white transition-all duration-200 hover:bg-transparent hover:text-slate-900 focus:bg-transparent focus:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2">
-            Login
-          </button>
-          <div className="flex gap-1">
-            <p>Need an account?</p>
-            <Link className="underline hover:opacity-70" to={"/register"}>
-              Register
-            </Link>
-          </div>
-        </div>
-      </form> */}
     </AuthLayout>
   );
 });

@@ -2,7 +2,10 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ChangeEmail } from "./components/Auth/ChangeEmail";
-import { FirebaseProvider } from "./components/Auth/firebase.context";
+import {
+  FirebaseGuards,
+  FirebaseProvider,
+} from "./components/Auth/firebase.context";
 import { Login } from "./components/Auth/Login";
 import { Logout } from "./components/Auth/Logout";
 import { PasswordReset } from "./components/Auth/PasswordReset";
@@ -24,7 +27,14 @@ function App() {
         <main>
           <ToastContainer role="alert" />
           <Routes>
-            <Route path="/" element={<DashboardDay />} />
+            <Route
+              path="/"
+              element={
+                <FirebaseGuards.RequireAuth>
+                  <DashboardDay />
+                </FirebaseGuards.RequireAuth>
+              }
+            />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/register" element={<Register />} />
