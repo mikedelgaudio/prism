@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { useTitle } from "../../hooks/useTitle.hook";
+import { useTitle } from "../../hooks/use-title";
 import { Dashboard } from "./dashboard.component";
 import { WeekCard } from "./WeekCard/week-card.component";
 

@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useTitle } from "../../../hooks/useTitle.hook";
+import { useTitle } from "../../../hooks/use-title";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
 import { useFirebaseAuth } from "../firebase.context";
@@ -25,10 +25,26 @@ const Login = observer(() => {
       navigate("/dashboard/day");
     } catch (e: any) {
       console.error(e);
+
+      let errorMsg =
+        "Unexpected error logging in. Please refresh the page and try again.";
+
+      console.log(e?.message);
+
+      if (
+        e?.message === "Firebase: Error (auth/wrong-password)." ||
+        e?.message === "Firebase: Error (auth/user-not-found)."
+      ) {
+        errorMsg = "Invalid email or password";
+      }
+
       const TOAST_ID = "FAILED_TO_LOGIN";
-      TOAST_SERVICE.error(TOAST_ID, e?.message, true);
+      TOAST_SERVICE.error(TOAST_ID, errorMsg, true);
     }
 
+    (e.target as HTMLFormElement).reset();
+    setEmail("");
+    setPassword("");
     setLoading(false);
   };
 

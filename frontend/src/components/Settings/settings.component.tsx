@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { useContext } from "react";
-import { useTitle } from "../../hooks/useTitle.hook";
+import { useTitle } from "../../hooks/use-title";
 import { AuthContext } from "../Auth/auth.context";
 import { Account } from "./Account/account.settings.component";
 import { Cube } from "./Cube/cube.settings.component";

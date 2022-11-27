@@ -80,14 +80,7 @@ function App() {
                 </FirebaseGuards.RequireAuth>
               }
             />
-            <Route
-              path="/reset-password"
-              element={
-                <FirebaseGuards.RequireAuth>
-                  <PasswordReset />
-                </FirebaseGuards.RequireAuth>
-              }
-            />
+            <Route path="/reset-password" element={<PasswordReset />} />
             <Route
               path="/change-email"
               element={

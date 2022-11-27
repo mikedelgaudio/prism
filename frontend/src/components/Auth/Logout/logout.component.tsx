@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useTitle } from "../../../hooks/useTitle.hook";
+import { useTitle } from "../../../hooks/use-title";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
 import { useFirebaseAuth } from "../firebase.context";
@@ -16,6 +16,8 @@ const Logout = observer(() => {
     async function handleLogout() {
       try {
         if (logout) await logout();
+        const TOAST_ID = "SUCCESS_LOGOUT";
+        TOAST_SERVICE.success(TOAST_ID, "Successfully logged out.", true);
       } catch {
         const TOAST_ID = "FAILED_TO_LOGOUT";
         TOAST_SERVICE.error(
@@ -27,8 +29,6 @@ const Logout = observer(() => {
     }
 
     if (!currentUser) {
-      const TOAST_ID = "LOGOUT";
-      TOAST_SERVICE.success(TOAST_ID, "Successfully logged out.", true);
       navigate("/login");
     } else {
       handleLogout();

@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useTitle } from "../../../hooks/useTitle.hook";
+import { useTitle } from "../../../hooks/use-title";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
 import { useFirebaseAuth } from "../firebase.context";
@@ -45,6 +45,9 @@ const Register = observer(() => {
       );
     }
 
+    (e.target as HTMLFormElement).reset();
+    setEmail("");
+    setPassword("");
     setLoading(false);
   };
 

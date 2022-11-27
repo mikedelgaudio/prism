@@ -12,33 +12,46 @@ const Navbar = observer(() => {
     if (toggled) setToggle(toggled => (toggled = !toggled));
   };
 
+  const authLinks = (
+    <>
+      <li>
+        <NavLink
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
+          to="/dashboard/day"
+          onClick={navigated}
+        >
+          Dashboard
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          to="/settings"
+          onClick={navigated}
+        >
+          Settings
+        </NavLink>
+      </li>
+    </>
+  );
+
+  const unAuthLinks = (
+    <>
+      <li>
+        <a
+          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          href="https://sd.delgaudio.dev"
+        >
+          What's Prism?
+        </a>
+      </li>
+    </>
+  );
+
   const links = () => {
     return (
       <>
-        {currentUser ? (
-          <>
-            <li>
-              <NavLink
-                className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
-                to="/dashboard/day"
-                onClick={navigated}
-              >
-                Dashboard
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
-                to="/settings"
-                onClick={navigated}
-              >
-                Settings
-              </NavLink>
-            </li>
-          </>
-        ) : (
-          <></>
-        )}
+        {currentUser ? authLinks : unAuthLinks}
 
         {currentUser ? (
           <li>

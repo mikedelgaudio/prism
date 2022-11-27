@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { useTitle } from "../../../hooks/useTitle.hook";
+import { useTitle } from "../../../hooks/use-title";
 import { AuthLayout } from "../../Shared";
 
 const ChangeEmail = observer(() => {

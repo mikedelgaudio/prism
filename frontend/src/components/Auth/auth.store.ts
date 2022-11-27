@@ -4,10 +4,6 @@ import { ToastService } from "../../services/toast.service";
 import { validString } from "../../services/util.service";
 
 export interface User {
-  id: string | null;
-  firstName: string;
-  lastName: string;
-  email: string;
   prismId: string | null;
   progressEmail: boolean;
   timeToStand: boolean;
@@ -15,10 +11,6 @@ export interface User {
 
 export class AuthStore {
   public userProfile: User = {
-    id: uuidv4(),
-    firstName: "Mike",
-    lastName: "DelGaudio",
-    email: "mdelgaud@stevens.edu",
     prismId: uuidv4(),
     progressEmail: false,
     timeToStand: true,
@@ -45,7 +37,7 @@ export class AuthStore {
   changeEmail(newEmail: string | undefined) {
     // ! Add error handling and db call
     if (!validString(newEmail)) return;
-    this.userProfile.email = newEmail ?? "";
+    // this.userProfile.email = newEmail ?? "";
 
     const TOAST_ID = "EMAIL_CHANGE";
     this.toastService.success(

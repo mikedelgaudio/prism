@@ -1,5 +1,3 @@
 - Create banner if API offline
-- Create banner if offline internet
-- Change nav links based upon login
-- Change footer links based upon auth
 - Ensure all user input goes thru validString()
+- Add Error Boundary to components like Login/Registration
