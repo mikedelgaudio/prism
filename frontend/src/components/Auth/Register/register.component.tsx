@@ -10,8 +10,11 @@ const Register = observer(() => {
   useTitle("Register - Prism");
 
   const navigate = useNavigate();
-  const { currentUser, register } = useFirebaseAuth();
+  const { currentUser, register, updateDisplayName, sendVerificationEmail } =
+    useFirebaseAuth();
 
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,6 +38,9 @@ const Register = observer(() => {
     try {
       setLoading(true);
       if (register) await register(email, password);
+      // ! Not sure what or which failed
+      // if (updateDisplayName) await updateDisplayName(firstName, lastName);
+      // if (sendVerificationEmail) await sendVerificationEmail();
       navigate("/dashboard/day");
     } catch (e) {
       const TOAST_ID = "FAILED_TO_REGISTER";
@@ -46,6 +52,8 @@ const Register = observer(() => {
     }
 
     (e.target as HTMLFormElement).reset();
+    setFirstName("");
+    setLastName("");
     setEmail("");
     setPassword("");
     setLoading(false);
@@ -68,6 +76,7 @@ const Register = observer(() => {
             type={"text"}
             required={true}
             placeholder="Joe"
+            onChange={e => setFirstName(e.target.value)}
           />
           <label className="required" htmlFor="lastName">
             Last Name
@@ -78,6 +87,7 @@ const Register = observer(() => {
             type={"text"}
             required={true}
             placeholder="Blow"
+            onChange={e => setLastName(e.target.value)}
           />
         </div>
 

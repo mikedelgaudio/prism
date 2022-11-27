@@ -1,7 +1,9 @@
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
   User,
   UserCredential,
 } from "firebase/auth";
@@ -21,6 +23,8 @@ interface FirebaseContext {
   login?: (email: string, password: string) => Promise<UserCredential>;
   register?: (email: string, password: string) => Promise<UserCredential>;
   logout?: () => Promise<void>;
+  updateDisplayName?: (firstName: string, lastName: string) => Promise<void>;
+  sendVerificationEmail?: () => Promise<void>;
 }
 
 const defaultValue: FirebaseContext = {
@@ -45,6 +49,18 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
+  const updateDisplayName = (firstName: string, lastName: string) => {
+    if (!currentUser) return Promise.reject("Current user is null");
+    return updateProfile(currentUser, {
+      displayName: `${firstName} ${lastName}`,
+    });
+  };
+
+  const sendVerificationEmail = () => {
+    if (!currentUser) return Promise.reject("Current user is null");
+    return sendEmailVerification(currentUser);
+  };
+
   const logout = () => {
     return signOut(auth);
   };
@@ -67,6 +83,8 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     login,
     register,
     logout,
+    updateDisplayName,
+    sendVerificationEmail,
   };
 
   return (
