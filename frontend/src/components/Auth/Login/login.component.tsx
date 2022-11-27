@@ -20,6 +20,7 @@ const Login = observer(() => {
             className="border border-slate-400 p-2 rounded-md"
             id="email"
             type={"email"}
+            autoComplete="email"
             required={true}
             placeholder="your-email@email.com"
           />
@@ -33,6 +34,7 @@ const Login = observer(() => {
               className="border border-slate-400 p-2 rounded-md"
               id="password"
               type={"password"}
+              autoComplete="current-password"
               required={true}
             />
             <a className="underline hover:opacity-70" href="/reset-password">
