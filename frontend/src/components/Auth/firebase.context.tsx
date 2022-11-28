@@ -1,5 +1,7 @@
 import {
   createUserWithEmailAndPassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
   sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
@@ -24,6 +26,7 @@ interface FirebaseContext {
   logout?: () => Promise<void>;
   updateDisplayName?: (firstName: string, lastName: string) => Promise<void>;
   sendVerificationEmail?: () => Promise<void>;
+  reauthUser?: (password: string) => Promise<UserCredential>;
 }
 
 const defaultValue: FirebaseContext = {
@@ -58,6 +61,16 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const reauthUser = (password: string) => {
+    if (!auth.currentUser || !auth.currentUser.email)
+      return Promise.reject("Invalid current user object");
+    const credential = EmailAuthProvider.credential(
+      auth.currentUser.email,
+      password,
+    );
+    return reauthenticateWithCredential(auth.currentUser, credential);
+  };
+
   const sendVerificationEmail = () => {
     if (!auth.currentUser) return Promise.reject("Current user is null");
     return sendEmailVerification(auth.currentUser);
@@ -86,6 +99,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     logout,
     updateDisplayName,
     sendVerificationEmail,
+    reauthUser,
   };
 
   return (

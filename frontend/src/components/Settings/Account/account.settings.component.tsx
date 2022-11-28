@@ -12,7 +12,6 @@ const Account = observer(() => {
 
   // TODO
   // ! Update a11y on toggle switches
-  // ! Change password and reset password link to different page
 
   const verifyEmail = async () => {
     try {

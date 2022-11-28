@@ -2,11 +2,15 @@ import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { useTitle } from "../../../hooks/use-title";
 import { AuthLayout } from "../../Shared";
+import { useFirebaseAuth } from "../firebase.context";
+import { ReAuth } from "../Login";
 
 const ChangeEmail = observer(() => {
   useTitle("Change Email - Prism");
 
-  return (
+  const { currentUser } = useFirebaseAuth();
+
+  const changeEmailLayout = (
     <AuthLayout>
       <h1 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl sm:leading-tight lg:text-5xl lg:leading-tight">
         Change Email
@@ -50,6 +54,25 @@ const ChangeEmail = observer(() => {
         </div>
       </form>
     </AuthLayout>
+  );
+
+  const TIME_TO_REAUTH = 50000;
+
+  console.log(currentUser?.metadata.lastLoginAt);
+
+  return (
+    <>
+      {new Date().getTime() -
+        parseInt(
+          currentUser?.metadata.lastSignInTime ??
+            Number.MAX_SAFE_INTEGER.toString(),
+        ) <
+      TIME_TO_REAUTH ? (
+        <ReAuth toRoute="/change-email" />
+      ) : (
+        changeEmailLayout
+      )}
+    </>
   );
 });
 
