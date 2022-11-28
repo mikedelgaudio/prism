@@ -9,6 +9,9 @@ import { useFirebaseAuth } from "../firebase.context";
 const Register = observer(() => {
   useTitle("Register - Prism");
 
+  // TODO
+  // Need firestore for Prism ID
+
   const navigate = useNavigate();
   const { currentUser, register, updateDisplayName, sendVerificationEmail } =
     useFirebaseAuth();
@@ -38,11 +41,15 @@ const Register = observer(() => {
     try {
       setLoading(true);
       if (register) await register(email, password);
-      // ! Not sure what or which failed
-      // if (updateDisplayName) await updateDisplayName(firstName, lastName);
-      // if (sendVerificationEmail) await sendVerificationEmail();
+      if (updateDisplayName) await updateDisplayName(firstName, lastName);
+      if (sendVerificationEmail)
+        await sendVerificationEmail().then(() => {
+          const TOAST_ID = "VERIFY_YOUR_EMAIL";
+          TOAST_SERVICE.success(TOAST_ID, `Verify your email ${email}`, false);
+        });
       navigate("/dashboard/day");
     } catch (e) {
+      console.error(e);
       const TOAST_ID = "FAILED_TO_REGISTER";
       TOAST_SERVICE.error(
         TOAST_ID,

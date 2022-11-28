@@ -1,15 +1,35 @@
 import { observer } from "mobx-react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../Auth/auth.context";
+import { TOAST_SERVICE } from "../../../services/toast.service";
+import { useFirebaseAuth } from "../../Auth/firebase.context";
+import { ProfileContext } from "../../Auth/profile.context";
 import { Card } from "../../Shared";
 
 const Account = observer(() => {
-  const { authStore } = useContext(AuthContext);
+  const { profileStore } = useContext(ProfileContext);
+  const { currentUser, sendVerificationEmail } = useFirebaseAuth();
 
   // TODO
-  // Update a11y on toggle switches
-  // Change password and reset password link to different page
+  // ! Update a11y on toggle switches
+  // ! Change password and reset password link to different page
+
+  const verifyEmail = async () => {
+    try {
+      if (sendVerificationEmail)
+        await sendVerificationEmail().then(() => {
+          const TOAST_ID = "VERIFY_YOUR_EMAIL";
+          TOAST_SERVICE.success(
+            TOAST_ID,
+            `Verify your email ${currentUser?.email}`,
+            false,
+          );
+        });
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_SEND_EMAIL";
+      TOAST_SERVICE.error(TOAST_ID, "Failed to send email", true);
+    }
+  };
 
   return (
     <Card className="gap-6">
@@ -22,19 +42,36 @@ const Account = observer(() => {
           <div className="flex flex-col pb-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Name</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              {authStore.user.firstName} {authStore.user.lastName}
+              {currentUser?.displayName ?? "N/A"}
             </dd>
           </div>
           <div className="flex flex-col py-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Email address</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              {authStore.user.email}
+              {currentUser?.email ?? "N/A"}{" "}
+              {currentUser?.emailVerified ? (
+                <span className="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">
+                  Verified
+                </span>
+              ) : (
+                <>
+                  <span className="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-red-200 dark:text-red-900">
+                    Not verified
+                  </span>
+                  <button
+                    className="text-sm underline hover:no-underline"
+                    onClick={() => verifyEmail()}
+                  >
+                    Resend
+                  </button>
+                </>
+              )}
             </dd>
           </div>
           <div className="flex flex-col pt-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Prism serial</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              {authStore.user.prismId ?? "No serial found"}
+              {profileStore.user.prismId ?? "No serial found"}
             </dd>
           </div>
         </dl>
@@ -55,8 +92,8 @@ const Account = observer(() => {
                   type="checkbox"
                   id="default-toggle"
                   className="sr-only peer"
-                  checked={authStore.user.progressEmail}
-                  onChange={() => authStore.toggleProgressEmail()}
+                  checked={profileStore.user.progressEmail}
+                  onChange={() => profileStore.toggleProgressEmail()}
                 />
                 <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
               </label>
@@ -75,8 +112,8 @@ const Account = observer(() => {
                   type="checkbox"
                   id="default-toggle2"
                   className="sr-only peer"
-                  checked={authStore.user.timeToStand}
-                  onChange={() => authStore.toggleTimeToStand()}
+                  checked={profileStore.user.timeToStand}
+                  onChange={() => profileStore.toggleTimeToStand()}
                 />
                 <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
               </label>
@@ -120,8 +157,8 @@ const Account = observer(() => {
 
                 <button
                   className="underline hover:no-underline disabled:opacity-50 disabled:no-underline"
-                  onClick={() => authStore.disconnectPrism()}
-                  disabled={authStore.user.prismId === null}
+                  onClick={() => profileStore.disconnectPrism()}
+                  disabled={profileStore.user.prismId === null}
                 >
                   Disconnect
                 </button>
@@ -136,7 +173,7 @@ const Account = observer(() => {
 
                 <button
                   className="underline hover:no-underline"
-                  onClick={() => authStore.deleteAccount()}
+                  onClick={() => profileStore.deleteAccount()}
                 >
                   Delete
                 </button>

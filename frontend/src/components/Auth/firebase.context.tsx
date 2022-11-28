@@ -15,7 +15,6 @@ import {
   useState,
 } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-
 import { auth } from "../../services/firebase.service";
 
 interface FirebaseContext {
@@ -41,6 +40,9 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // TODO
+  // ! Must ensure input is sanitized
+
   const register = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
@@ -50,15 +52,15 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   };
 
   const updateDisplayName = (firstName: string, lastName: string) => {
-    if (!currentUser) return Promise.reject("Current user is null");
-    return updateProfile(currentUser, {
+    if (!auth.currentUser) return Promise.reject("Current user is null");
+    return updateProfile(auth.currentUser, {
       displayName: `${firstName} ${lastName}`,
     });
   };
 
   const sendVerificationEmail = () => {
-    if (!currentUser) return Promise.reject("Current user is null");
-    return sendEmailVerification(currentUser);
+    if (!auth.currentUser) return Promise.reject("Current user is null");
+    return sendEmailVerification(auth.currentUser);
   };
 
   const logout = () => {
@@ -67,9 +69,8 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // TODO
-    // What type is user?
-    // How can we merge this into MobX?
-    console.log("unsubscribe");
+    // ! What type is user?
+    // ! How can we merge this into MobX?
     const unsubscribe = auth.onAuthStateChanged((user: any) => {
       setCurrentUser(user);
       setLoading(false);
@@ -95,7 +96,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
 }
 
 // TODO
-// What type is children?
+// ! What type is children?
 function RequireAuth({ children }: { children: any }) {
   const { currentUser } = useFirebaseAuth();
   const location = useLocation();
@@ -114,7 +115,7 @@ function RequireAuth({ children }: { children: any }) {
 }
 
 // TODO
-// What type is children?
+// ! What type is children?
 function RequireUnAuth({ children }: { children: any }) {
   const { currentUser } = useFirebaseAuth();
   const location = useLocation();

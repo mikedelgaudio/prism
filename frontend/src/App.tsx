@@ -35,7 +35,14 @@ function App() {
                 </FirebaseGuards.RequireAuth>
               }
             />
-            <Route path="/login" element={<Login />} />
+            <Route
+              path="/login"
+              element={
+                <FirebaseGuards.RequireUnAuth>
+                  <Login />
+                </FirebaseGuards.RequireUnAuth>
+              }
+            />
             <Route
               path="/logout"
               element={

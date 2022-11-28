@@ -1,7 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from "uuid";
 import { ToastService } from "../../services/toast.service";
-import { validString } from "../../services/util.service";
 
 export interface User {
   prismId: string | null;
@@ -9,7 +8,7 @@ export interface User {
   timeToStand: boolean;
 }
 
-export class AuthStore {
+export class ProfileStore {
   public userProfile: User = {
     prismId: uuidv4(),
     progressEmail: false,
@@ -34,39 +33,39 @@ export class AuthStore {
     this.userProfile.timeToStand = !this.user.timeToStand;
   }
 
-  changeEmail(newEmail: string | undefined) {
-    // ! Add error handling and db call
-    if (!validString(newEmail)) return;
-    // this.userProfile.email = newEmail ?? "";
+  // changeEmail(newEmail: string | undefined) {
+  //   // ! Add error handling and db call
+  //   if (!validString(newEmail)) return;
+  //   // this.userProfile.email = newEmail ?? "";
 
-    const TOAST_ID = "EMAIL_CHANGE";
-    this.toastService.success(
-      TOAST_ID,
-      "Successfully changed account email",
-      true,
-    );
-  }
+  //   const TOAST_ID = "EMAIL_CHANGE";
+  //   this.toastService.success(
+  //     TOAST_ID,
+  //     "Successfully changed account email",
+  //     true,
+  //   );
+  // }
 
-  resetPasswordAuth(
-    currentPassword: string | undefined,
-    newPassword: string | undefined,
-  ) {
-    if (!validString(currentPassword) || !validString(newPassword)) return;
+  // resetPasswordAuth(
+  //   currentPassword: string | undefined,
+  //   newPassword: string | undefined,
+  // ) {
+  //   if (!validString(currentPassword) || !validString(newPassword)) return;
 
-    const TOAST_ID = "RESET_PASSWORD_AUTH";
+  //   const TOAST_ID = "RESET_PASSWORD_AUTH";
 
-    // Verify current password
+  //   // Verify current password
 
-    // Update to new password
+  //   // Update to new password
 
-    // Confirm change
+  //   // Confirm change
 
-    this.toastService.success(
-      TOAST_ID,
-      "Successfully updated account password.",
-      true,
-    );
-  }
+  //   this.toastService.success(
+  //     TOAST_ID,
+  //     "Successfully updated account password.",
+  //     true,
+  //   );
+  // }
 
   disconnectPrism() {
     const TOAST_ID = "DISCONNECT_PRISM";
