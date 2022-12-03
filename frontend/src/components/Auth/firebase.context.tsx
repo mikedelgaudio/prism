@@ -5,6 +5,7 @@ import {
   sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
+  updateEmail,
   updateProfile,
   User,
   UserCredential,
@@ -18,6 +19,7 @@ import {
 } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { auth } from "../../services/firebase.service";
+import { validString } from "../../services/util.service";
 
 interface FirebaseContext {
   currentUser: User | null;
@@ -26,7 +28,8 @@ interface FirebaseContext {
   logout?: () => Promise<void>;
   updateDisplayName?: (firstName: string, lastName: string) => Promise<void>;
   sendVerificationEmail?: () => Promise<void>;
-  reauthUser?: (password: string) => Promise<UserCredential>;
+  reauthUser?: (email: string, password: string) => Promise<UserCredential>;
+  updateUserEmail?: (currentEmail: string, newEmail: string) => Promise<void>;
 }
 
 const defaultValue: FirebaseContext = {
@@ -44,39 +47,57 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   // TODO
-  // ! Must ensure input is sanitized
+  // ! Must ensure input is sanitized with XSS or validString()?
 
-  const register = (email: string, password: string) => {
+  const register = async (email: string, password: string) => {
+    if (!validString(email) || !validString(password))
+      return Promise.reject("Invalid fields provided.");
+
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  const login = (email: string, password: string) => {
+  const login = async (email: string, password: string) => {
+    if (!validString(email) || !validString(password))
+      return Promise.reject("Invalid fields provided.");
+
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const updateDisplayName = (firstName: string, lastName: string) => {
+  const updateDisplayName = async (firstName: string, lastName: string) => {
     if (!auth.currentUser) return Promise.reject("Current user is null");
     return updateProfile(auth.currentUser, {
       displayName: `${firstName} ${lastName}`,
     });
   };
 
-  const reauthUser = (password: string) => {
-    if (!auth.currentUser || !auth.currentUser.email)
-      return Promise.reject("Invalid current user object");
-    const credential = EmailAuthProvider.credential(
-      auth.currentUser.email,
-      password,
-    );
+  const updateUserEmail = async (currentEmail: string, newEmail: string) => {
+    if (!auth.currentUser) return Promise.reject("Current user is null");
+
+    if (!validString(currentEmail) || !validString(newEmail))
+      return Promise.reject("Invalid input to update email");
+
+    // Check if current email input matches current
+    if (currentEmail !== auth.currentUser.email)
+      return Promise.reject("Invalid current email");
+
+    await sendVerificationEmail();
+
+    return updateEmail(auth.currentUser, newEmail);
+  };
+
+  const reauthUser = async (email: string, password: string) => {
+    if (!auth.currentUser)
+      return Promise.reject("Can't reauth when user isn't logged in");
+    const credential = EmailAuthProvider.credential(email, password);
     return reauthenticateWithCredential(auth.currentUser, credential);
   };
 
-  const sendVerificationEmail = () => {
+  const sendVerificationEmail = async () => {
     if (!auth.currentUser) return Promise.reject("Current user is null");
     return sendEmailVerification(auth.currentUser);
   };
 
-  const logout = () => {
+  const logout = async () => {
     return signOut(auth);
   };
 
@@ -100,6 +121,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     updateDisplayName,
     sendVerificationEmail,
     reauthUser,
+    updateUserEmail,
   };
 
   return (

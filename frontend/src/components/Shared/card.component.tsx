@@ -1,8 +1,8 @@
-import React from "react";
+import { ReactNode } from "react";
 
 interface Props {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const Card = ({ className, children }: Props) => {

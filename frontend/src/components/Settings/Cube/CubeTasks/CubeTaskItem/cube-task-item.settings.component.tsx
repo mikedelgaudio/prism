@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { SettingsContext } from "../../../settings.context";
 
 const CubeTaskItem = observer(({ id }: { id: string }) => {
@@ -8,11 +8,11 @@ const CubeTaskItem = observer(({ id }: { id: string }) => {
   const task = settingsStore.getTaskById(id);
   const [label, setLabel] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setLabel(prev => (prev = e.target.value));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     settingsStore.editTaskName(task?.id, label);
     setLabel(prev => (prev = ""));
