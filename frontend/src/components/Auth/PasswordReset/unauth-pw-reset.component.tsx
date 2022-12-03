@@ -2,6 +2,10 @@ import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 
 const UnauthPwReset = observer(() => {
+  // TODO
+  // ! This functionality won't work without custom backend
+  // ! https://stackoverflow.com/questions/51325629/firebase-how-to-send-a-password-reset-email-backend-with-nodejs
+  // ! https://stackoverflow.com/questions/68114469/firebase-auth-update-not-signed-in-user-password-without-use-sendpasswordres
   return (
     <form className="flex flex-col gap-8 pt-3">
       <div className="flex flex-col gap-2">
@@ -17,28 +21,6 @@ const UnauthPwReset = observer(() => {
             required={true}
           />
         </div>
-        {/* <div className="flex flex-col gap-2">
-          <label className="required" htmlFor="password">
-            Password
-          </label>
-          <input
-            className="border border-slate-400 p-2 rounded-md"
-            id="password"
-            type={"password"}
-            required={true}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label className="required" htmlFor="password-confirm">
-            Confirm Password
-          </label>
-          <input
-            className="border border-slate-400 p-2 rounded-md"
-            id="password-confirm"
-            type={"password"}
-            required={true}
-          />
-        </div> */}
       </div>
 
       <div className="flex flex-col gap-1">

@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateEmail,
+  updatePassword,
   updateProfile,
   User,
   UserCredential,
@@ -30,6 +31,7 @@ interface FirebaseContext {
   sendVerificationEmail?: () => Promise<void>;
   reauthUser?: (email: string, password: string) => Promise<UserCredential>;
   updateUserEmail?: (currentEmail: string, newEmail: string) => Promise<void>;
+  updateUserPassword?: (newPassword: string) => Promise<void>;
 }
 
 const defaultValue: FirebaseContext = {
@@ -85,6 +87,15 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     return updateEmail(auth.currentUser, newEmail);
   };
 
+  const updateUserPassword = async (newPassword: string) => {
+    if (!auth.currentUser) return Promise.reject("Current user is null");
+
+    if (!validString(newPassword))
+      return Promise.reject("Invalid fields to update password");
+
+    return updatePassword(auth.currentUser, newPassword);
+  };
+
   const reauthUser = async (email: string, password: string) => {
     if (!auth.currentUser)
       return Promise.reject("Can't reauth when user isn't logged in");
@@ -122,6 +133,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     sendVerificationEmail,
     reauthUser,
     updateUserEmail,
+    updateUserPassword,
   };
 
   return (

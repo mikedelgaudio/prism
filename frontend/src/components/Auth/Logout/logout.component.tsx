@@ -28,8 +28,6 @@ const Logout = observer(() => {
       }
     }
 
-    // TODO
-    // ! This component will never be seen given the navigate
     if (!currentUser) {
       navigate("/login");
     } else {
