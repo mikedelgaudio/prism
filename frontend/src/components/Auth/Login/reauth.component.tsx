@@ -1,6 +1,7 @@
 import { observer } from "mobx-react";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
 import { useFirebaseAuth } from "../firebase.context";
@@ -29,17 +30,8 @@ const ReAuth = observer(
         setReauth(prev => (prev = false));
         navigate(toRoute);
       } catch (e: any) {
-        let errorMsg =
-          "Unexpected error logging you in again. Please refresh the page and try again.";
-        if (
-          e?.message === "Firebase: Error (auth/wrong-password)." ||
-          e?.message === "Firebase: Error (auth/user-not-found)." ||
-          e?.message === "Firebase: Error (auth/user-mismatch)."
-        ) {
-          errorMsg = "Invalid email or password";
-        }
         const TOAST_ID = "FAILED_TO_REAUTH";
-        TOAST_SERVICE.error(TOAST_ID, errorMsg, true);
+        TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
       }
 
       (e.target as HTMLFormElement).reset();

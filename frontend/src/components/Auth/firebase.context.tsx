@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
   EmailAuthProvider,
   reauthenticateWithCredential,
   sendEmailVerification,
@@ -19,6 +20,11 @@ import {
   useState,
 } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import {
+  ERROR_INVALID_CURRENT_EMAIL,
+  ERROR_INVALID_INPUT,
+  ERROR_USER_IS_NULL,
+} from "../../services/errors.service";
 import { auth } from "../../services/firebase.service";
 import { validString } from "../../services/util.service";
 
@@ -32,6 +38,7 @@ interface FirebaseContext {
   reauthUser?: (email: string, password: string) => Promise<UserCredential>;
   updateUserEmail?: (currentEmail: string, newEmail: string) => Promise<void>;
   updateUserPassword?: (newPassword: string) => Promise<void>;
+  deleteAccount?: () => Promise<void>;
 }
 
 const defaultValue: FirebaseContext = {
@@ -53,34 +60,36 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
 
   const register = async (email: string, password: string) => {
     if (!validString(email) || !validString(password))
-      return Promise.reject("Invalid fields provided.");
+      return Promise.reject({ message: ERROR_INVALID_INPUT });
 
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
   const login = async (email: string, password: string) => {
     if (!validString(email) || !validString(password))
-      return Promise.reject("Invalid fields provided.");
+      return Promise.reject({ message: ERROR_INVALID_INPUT });
 
     return signInWithEmailAndPassword(auth, email, password);
   };
 
   const updateDisplayName = async (firstName: string, lastName: string) => {
-    if (!auth.currentUser) return Promise.reject("Current user is null");
+    if (!auth.currentUser)
+      return Promise.reject({ message: ERROR_USER_IS_NULL });
     return updateProfile(auth.currentUser, {
       displayName: `${firstName} ${lastName}`,
     });
   };
 
   const updateUserEmail = async (currentEmail: string, newEmail: string) => {
-    if (!auth.currentUser) return Promise.reject("Current user is null");
+    if (!auth.currentUser)
+      return Promise.reject({ message: ERROR_USER_IS_NULL });
 
     if (!validString(currentEmail) || !validString(newEmail))
-      return Promise.reject("Invalid input to update email");
+      return Promise.reject({ message: ERROR_INVALID_INPUT });
 
     // Check if current email input matches current
     if (currentEmail !== auth.currentUser.email)
-      return Promise.reject("Invalid current email");
+      return Promise.reject({ message: ERROR_INVALID_CURRENT_EMAIL });
 
     await sendVerificationEmail();
 
@@ -88,24 +97,38 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   };
 
   const updateUserPassword = async (newPassword: string) => {
-    if (!auth.currentUser) return Promise.reject("Current user is null");
+    if (!auth.currentUser)
+      return Promise.reject({ message: ERROR_USER_IS_NULL });
 
     if (!validString(newPassword))
-      return Promise.reject("Invalid fields to update password");
+      return Promise.reject({ message: ERROR_INVALID_INPUT });
 
     return updatePassword(auth.currentUser, newPassword);
   };
 
+  // TODO
+  // ! If user stays on a page for too long you may need
+  // ! prompt them for re-auth again...
   const reauthUser = async (email: string, password: string) => {
     if (!auth.currentUser)
-      return Promise.reject("Can't reauth when user isn't logged in");
+      return Promise.reject({ message: ERROR_USER_IS_NULL });
+
     const credential = EmailAuthProvider.credential(email, password);
     return reauthenticateWithCredential(auth.currentUser, credential);
   };
 
   const sendVerificationEmail = async () => {
-    if (!auth.currentUser) return Promise.reject("Current user is null");
+    if (!auth.currentUser)
+      return Promise.reject({ message: ERROR_USER_IS_NULL });
+
     return sendEmailVerification(auth.currentUser);
+  };
+
+  const deleteAccount = async () => {
+    if (!auth.currentUser)
+      return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+    return deleteUser(auth.currentUser);
   };
 
   const logout = async () => {
@@ -134,6 +157,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     reauthUser,
     updateUserEmail,
     updateUserPassword,
+    deleteAccount,
   };
 
   return (

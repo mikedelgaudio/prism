@@ -6,15 +6,15 @@ import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
 import { useFirebaseAuth } from "../firebase.context";
+import { ReAuth } from "../Login";
 
-const Login = observer(() => {
-  useTitle("Login - Prism");
+const DeleteAccount = observer(() => {
+  useTitle("Delete Account - Prism");
 
   const navigate = useNavigate();
-  const { login } = useFirebaseAuth();
+  const { deleteAccount } = useFirebaseAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [reauth, setReauth] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -22,74 +22,68 @@ const Login = observer(() => {
 
     try {
       setLoading(true);
-      if (login) await login(email, password);
-      navigate("/dashboard/day");
+      if (deleteAccount) await deleteAccount();
+      else throw new Error();
+
+      // TODO
+      // ! Must disconnect Prism too
+
+      const TOAST_ID = "SUCCESS_DELETE_ACCOUNT";
+      TOAST_SERVICE.success(TOAST_ID, "Successfully deleted account.", true);
+      navigate("/login");
     } catch (e: any) {
-      const TOAST_ID = "FAILED_TO_LOGIN";
+      const TOAST_ID = "FAILED_TO_DELETE_ACCOUNT";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
     }
 
     (e.target as HTMLFormElement).reset();
-    setEmail("");
-    setPassword("");
     setLoading(false);
   };
 
-  return (
+  const confirmDeleteLayout = (
     <AuthLayout>
       <h1 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl sm:leading-tight lg:text-5xl lg:leading-tight">
-        Let's get started
+        Delete Account
       </h1>
       <form className="flex flex-col gap-8 pt-3" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-2 leading-3">
-          <label className="required" htmlFor="email">
-            Email
-          </label>
-          <input
-            className="border border-slate-400 p-2 rounded-md"
-            id="email"
-            type={"email"}
-            autoComplete="email"
-            required={true}
-            placeholder="your-email@email.com"
-            onChange={e => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col gap-2 leading-3">
-          <label className="required" htmlFor="password">
-            Password
-          </label>
-          <div className="flex flex-col gap-2">
-            <input
-              className="border border-slate-400 p-2 rounded-md"
-              id="password"
-              type={"password"}
-              autoComplete="current-password"
-              required={true}
-              onChange={e => setPassword(e.target.value)}
-            />
-            <a className="underline hover:opacity-70" href="/reset-password">
-              Forgot your password?
-            </a>
-          </div>
+        <div>
+          <h2 className="text-xl">
+            Are you sure you want to delete your account?
+          </h2>
+          <p>
+            Deleting your account removes all of your data and disconnects your
+            Prism.
+          </p>
         </div>
 
         <div className="flex flex-col gap-1">
           <button
             className="flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-5 py-3 text-md lg:text-xl font-semibold leading-7 text-white transition-all duration-200 hover:bg-transparent hover:text-slate-900 focus:bg-transparent focus:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2 disabled:opacity-50"
+            type="submit"
             disabled={loading}
           >
-            Login
+            Delete
           </button>
           <div className="flex gap-1">
-            <p>Need an account?</p>
-            <Link className="underline hover:opacity-70" to={"/register"}>
-              Register
+            <p>Change your mind?</p>
+            <Link className="underline hover:opacity-70" to={"/settings"}>
+              Cancel
             </Link>
           </div>
         </div>
       </form>
     </AuthLayout>
   );
+
+  return (
+    <>
+      {reauth ? (
+        <ReAuth toRoute="/delete-account" setReauth={setReauth} />
+      ) : (
+        confirmDeleteLayout
+      )}
+    </>
+  );
 });
-export { Login };
+
+export { DeleteAccount };

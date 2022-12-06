@@ -6,6 +6,7 @@ export interface Task {
   side: string | null;
   id: string;
   name: string;
+  color: string;
 }
 
 export class SettingsStore {
@@ -14,27 +15,32 @@ export class SettingsStore {
     {
       side: "1",
       id: "1-t",
-      name: "Task 1",
+      name: "Task A",
+      color: "#ff0000",
     },
     {
       side: "2",
       id: "2-t",
-      name: "Task 2",
+      name: "Task B",
+      color: "#0002fe",
     },
     {
       side: "3",
       id: "3-t",
-      name: "Task 3",
+      name: "Task C",
+      color: "#03480e",
     },
     {
       side: "4",
       id: "4-t",
-      name: "Task 4",
+      name: "Task D",
+      color: "#ca6e04",
     },
     {
       side: "5",
       id: "5-t",
-      name: "Task 5",
+      name: "Task E",
+      color: "#9808fe",
     },
   ];
 
@@ -59,6 +65,7 @@ export class SettingsStore {
       side: null,
       id: uuidv4(),
       name: "New Task",
+      color: "#eee",
     };
 
     // ! Arguably don't push to DB on blank entry?
@@ -96,9 +103,9 @@ export class SettingsStore {
 
     fromTask.id = next.id;
     fromTask.name = next.name;
+    fromTask.color = prev.color;
     toTask.id = prev.id;
     toTask.name = prev.name;
-
-    console.log(toJS(this.tasks), "assigned");
+    toTask.color = next.color;
   }
 }

@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ChangeEmail } from "./components/Auth/ChangeEmail";
+import { DeleteAccount } from "./components/Auth/DeleteAccount";
 import {
   FirebaseGuards,
   FirebaseProvider,
@@ -57,6 +58,14 @@ function App() {
                 <FirebaseGuards.RequireUnAuth>
                   <Register />
                 </FirebaseGuards.RequireUnAuth>
+              }
+            />
+            <Route
+              path="/delete-account"
+              element={
+                <FirebaseGuards.RequireAuth>
+                  <DeleteAccount />
+                </FirebaseGuards.RequireAuth>
               }
             />
             <Route

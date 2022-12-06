@@ -8,7 +8,7 @@ const CubeTaskItem = observer(({ id }: { id: string }) => {
   const task = settingsStore.getTaskById(id);
   const [label, setLabel] = useState("");
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleLabelChange = (e: ChangeEvent<HTMLInputElement>) => {
     setLabel(prev => (prev = e.target.value));
   };
 
@@ -84,16 +84,20 @@ const CubeTaskItem = observer(({ id }: { id: string }) => {
         id={`task-name-field-${task?.id}`}
         type={"text"}
         placeholder={task?.name}
-        onChange={handleChange}
+        onChange={handleLabelChange}
         value={label}
       />
     </div>
   );
 
-  const taskLabel = <h4 className="font-bold text-lg">{task?.name}</h4>;
+  const taskLabel = (
+    <div className="flex gap-2 justify-center items-center">
+      <h4 className="font-bold text-lg">{task?.name}</h4>
+    </div>
+  );
 
   return (
-    <li className=" bg-slate-100 rounded-xl" aria-expanded={false}>
+    <li className={`bg-slate-100 rounded-xl`} aria-expanded={false}>
       <form
         className="flex gap-4 p-6 justify-between items-center"
         onSubmit={handleSubmit}

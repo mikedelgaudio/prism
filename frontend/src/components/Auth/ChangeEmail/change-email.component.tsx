@@ -2,6 +2,7 @@ import { observer } from "mobx-react";
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTitle } from "../../../hooks/use-title";
+import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
 import { useFirebaseAuth } from "../firebase.context";
@@ -28,21 +29,8 @@ const ChangeEmail = observer(() => {
       TOAST_SERVICE.success(TOAST_ID, "Successfully updated email.", true);
       navigate("/settings");
     } catch (e: any) {
-      console.error(e);
-
-      let errorMsg =
-        "Unexpected error logging you in again. Please refresh the page and try again.";
-
-      if (e === "Invalid current email") {
-        errorMsg = "Invalid current email";
-      }
-
-      if (e === "Invalid input to update email") {
-        errorMsg = "Invalid fields to update email";
-      }
-
       const TOAST_ID = "FAILED_TO_UPDATE_EMAIL";
-      TOAST_SERVICE.error(TOAST_ID, errorMsg, true);
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
     }
 
     (e.target as HTMLFormElement).reset();

@@ -1,7 +1,9 @@
 import { observer } from "mobx-react-lite";
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
+import { AuthLayout } from "../../Shared";
 import { useFirebaseAuth } from "../firebase.context";
 import { ReAuth } from "../Login";
 
@@ -30,13 +32,8 @@ const AuthPwReset = observer(() => {
       TOAST_SERVICE.success(TOAST_ID, "Successfully updated password.", true);
       navigate("/settings");
     } catch (e: any) {
-      console.error(e);
-
-      let errorMsg =
-        "Unexpected error updating your password. Please refresh the page and try again.";
-
       const TOAST_ID = "FAILED_TO_UPDATE_PASSWORD";
-      TOAST_SERVICE.error(TOAST_ID, errorMsg, true);
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
     }
 
     (e.target as HTMLFormElement).reset();
@@ -46,50 +43,55 @@ const AuthPwReset = observer(() => {
   };
 
   const resetPwForm = (
-    <form className="flex flex-col gap-8 pt-3" onSubmit={handleSubmit}>
-      <div className="flex flex-col gap-2">
+    <AuthLayout>
+      <h1 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl sm:leading-tight lg:text-5xl lg:leading-tight">
+        Reset Password
+      </h1>
+      <form className="flex flex-col gap-8 pt-3" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2">
-          <label className="required" htmlFor="password">
-            New Password
-          </label>
-          <input
-            className="border border-slate-400 p-2 rounded-md"
-            id="password"
-            type={"password"}
-            required={true}
-            onChange={e => setNewPassword(e.target.value)}
-          />
+          <div className="flex flex-col gap-2">
+            <label className="required" htmlFor="password">
+              New Password
+            </label>
+            <input
+              className="border border-slate-400 p-2 rounded-md"
+              id="password"
+              type={"password"}
+              required={true}
+              onChange={e => setNewPassword(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="required" htmlFor="password-confirm">
+              Confirm New Password
+            </label>
+            <input
+              className="border border-slate-400 p-2 rounded-md"
+              id="password-confirm"
+              type={"password"}
+              required={true}
+              onChange={e => setNewPasswordConfirm(e.target.value)}
+            />
+          </div>
         </div>
-        <div className="flex flex-col gap-2">
-          <label className="required" htmlFor="password-confirm">
-            Confirm New Password
-          </label>
-          <input
-            className="border border-slate-400 p-2 rounded-md"
-            id="password-confirm"
-            type={"password"}
-            required={true}
-            onChange={e => setNewPasswordConfirm(e.target.value)}
-          />
-        </div>
-      </div>
 
-      <div className="flex flex-col gap-1">
-        <button
-          className="flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-5 py-3 text-md lg:text-xl font-semibold leading-7 text-white transition-all duration-200 hover:bg-transparent hover:text-slate-900 focus:bg-transparent focus:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2 disabled:opacity-50"
-          disabled={loading}
-        >
-          Reset
-        </button>
-        <div className="flex gap-1">
-          <p>Change your mind?</p>
+        <div className="flex flex-col gap-1">
+          <button
+            className="flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-5 py-3 text-md lg:text-xl font-semibold leading-7 text-white transition-all duration-200 hover:bg-transparent hover:text-slate-900 focus:bg-transparent focus:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2 disabled:opacity-50"
+            disabled={loading}
+          >
+            Reset
+          </button>
+          <div className="flex gap-1">
+            <p>Change your mind?</p>
 
-          <Link className="underline hover:opacity-70" to={"/settings"}>
-            Cancel
-          </Link>
+            <Link className="underline hover:opacity-70" to={"/settings"}>
+              Cancel
+            </Link>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </AuthLayout>
   );
 
   return (

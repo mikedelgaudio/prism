@@ -2,6 +2,7 @@ import { observer } from "mobx-react";
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTitle } from "../../../hooks/use-title";
+import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
 import { useFirebaseAuth } from "../firebase.context";
@@ -49,13 +50,8 @@ const Register = observer(() => {
         });
       navigate("/dashboard/day");
     } catch (e) {
-      console.error(e);
       const TOAST_ID = "FAILED_TO_REGISTER";
-      TOAST_SERVICE.error(
-        TOAST_ID,
-        "Unexpected error unable to register user. Please try again after refreshing the page",
-        true,
-      );
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
     }
 
     (e.target as HTMLFormElement).reset();

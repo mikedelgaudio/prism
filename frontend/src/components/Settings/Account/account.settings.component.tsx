@@ -36,7 +36,7 @@ const Account = observer(() => {
         <h2 className="font-bold text-3xl">Account</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
         <dl className="max-w-md text-slate-900 divide-y divide-slate-200">
           <div className="flex flex-col pb-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Name</dt>
@@ -142,44 +142,40 @@ const Account = observer(() => {
               </Link>
             </li>
           </ul>
-
-          <div className="flex flex-col gap-4 border-2 border-red-400 p-6 rounded-xl">
-            <h3 className="font-bold">Danger zone</h3>
-            <ul className="flex flex-col gap-4 text-lg">
-              <li className="flex justify-between items-center">
-                <div className="flex flex-col leading-5">
-                  <span>Disconnect Prism</span>
-                  <small>
-                    Removes connection between your Prism and account
-                  </small>
-                </div>
-
-                <button
-                  className="underline hover:no-underline disabled:opacity-50 disabled:no-underline"
-                  onClick={() => profileStore.disconnectPrism()}
-                  disabled={profileStore.user.prismId === null}
-                >
-                  Disconnect
-                </button>
-              </li>
-              <li className="flex justify-between items-center">
-                <div className="flex flex-col leading-5">
-                  <span>Delete account</span>
-                  <small>
-                    Removes all account data and resets Prism connection
-                  </small>
-                </div>
-
-                <button
-                  className="underline hover:no-underline"
-                  onClick={() => profileStore.deleteAccount()}
-                >
-                  Delete
-                </button>
-              </li>
-            </ul>
-          </div>
         </div>
+      </div>
+      <div className="flex flex-col gap-4 border-2 border-red-400 p-6 rounded-xl">
+        <h3 className="font-bold">Danger zone</h3>
+        <ul className="flex flex-col gap-4 text-lg">
+          <li className="flex justify-between items-center">
+            <div className="flex flex-col leading-5">
+              <span>Disconnect Prism</span>
+              <small>Removes connection between your Prism and account</small>
+            </div>
+
+            <button
+              className="underline hover:no-underline disabled:opacity-50 disabled:no-underline"
+              onClick={() => profileStore.disconnectPrism()}
+              disabled={profileStore.user.prismId === null}
+            >
+              Disconnect
+            </button>
+          </li>
+          <li className="flex justify-between items-center">
+            <div className="flex flex-col leading-5">
+              <span>Delete account</span>
+              <small>
+                Removes all account data and resets Prism connection
+              </small>
+            </div>
+            <Link
+              className="underline hover:no-underline"
+              to={"/delete-account"}
+            >
+              Delete
+            </Link>
+          </li>
+        </ul>
       </div>
     </Card>
   );
