@@ -167,14 +167,9 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// TODO
-// ! What type is children?
-function RequireAuth({ children }: { children: any }) {
+function RequireAuth({ children }: { children: ReactNode }) {
   const { currentUser } = useFirebaseAuth();
   const location = useLocation();
-
-  console.log(currentUser);
-
   if (!currentUser) {
     // Redirect them to the /login page, but save the current location they were
     // trying to go to when they were redirected. This allows us to send them
@@ -182,21 +177,16 @@ function RequireAuth({ children }: { children: any }) {
     // than dropping them off on the home page.
     return <Navigate to="/login" state={{ from: location }} />;
   }
-
   return children;
 }
 
-// TODO
-// ! What type is children?
-function RequireUnAuth({ children }: { children: any }) {
+function RequireUnAuth({ children }: { children: ReactNode }) {
   const { currentUser } = useFirebaseAuth();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
-
   if (currentUser) {
     return <Navigate to={from} state={{ from: location }} />;
   }
-
   return children;
 }
 

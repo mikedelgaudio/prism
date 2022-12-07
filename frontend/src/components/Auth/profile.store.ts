@@ -1,6 +1,12 @@
+import { doc, DocumentData, DocumentReference } from "firebase/firestore";
 import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from "uuid";
-import { ToastService } from "../../services/toast.service";
+import {
+  auth,
+  db,
+  FIREBASE_USER_COLLECTION,
+} from "../../services/firebase.service";
+import { TOAST_SERVICE } from "../../services/toast.service";
 
 export interface User {
   prismId: string | null;
@@ -15,8 +21,17 @@ export class ProfileStore {
     timeToStand: true,
   };
 
-  constructor(private readonly toastService: ToastService) {
+  private userDocRef: DocumentReference<DocumentData> | undefined;
+
+  constructor() {
     makeAutoObservable(this);
+    try {
+      console.log(auth);
+      if (!1) throw new Error();
+      this.userDocRef = doc(db, FIREBASE_USER_COLLECTION, "1");
+    } catch (e) {
+      TOAST_SERVICE.error("TODO", "Unable to get user profile", false);
+    }
   }
 
   get user() {
@@ -33,45 +48,11 @@ export class ProfileStore {
     this.userProfile.timeToStand = !this.user.timeToStand;
   }
 
-  // changeEmail(newEmail: string | undefined) {
-  //   // ! Add error handling and db call
-  //   if (!validString(newEmail)) return;
-  //   // this.userProfile.email = newEmail ?? "";
-
-  //   const TOAST_ID = "EMAIL_CHANGE";
-  //   this.toastService.success(
-  //     TOAST_ID,
-  //     "Successfully changed account email",
-  //     true,
-  //   );
-  // }
-
-  // resetPasswordAuth(
-  //   currentPassword: string | undefined,
-  //   newPassword: string | undefined,
-  // ) {
-  //   if (!validString(currentPassword) || !validString(newPassword)) return;
-
-  //   const TOAST_ID = "RESET_PASSWORD_AUTH";
-
-  //   // Verify current password
-
-  //   // Update to new password
-
-  //   // Confirm change
-
-  //   this.toastService.success(
-  //     TOAST_ID,
-  //     "Successfully updated account password.",
-  //     true,
-  //   );
-  // }
-
   disconnectPrism() {
     const TOAST_ID = "DISCONNECT_PRISM";
 
     if (this.user.prismId === null) {
-      this.toastService.error(
+      TOAST_SERVICE.error(
         TOAST_ID,
         "Error: No prism found with account.",
         true,
@@ -84,11 +65,7 @@ export class ProfileStore {
 
     this.userProfile.prismId = null;
 
-    this.toastService.success(
-      TOAST_ID,
-      "Successfully disconnected Prism.",
-      true,
-    );
+    TOAST_SERVICE.success(TOAST_ID, "Successfully disconnected Prism.", true);
   }
 
   deleteAccount() {
@@ -98,10 +75,6 @@ export class ProfileStore {
 
     // Logout user
 
-    this.toastService.success(
-      TOAST_ID,
-      "Successfully deleted your account.",
-      true,
-    );
+    TOAST_SERVICE.success(TOAST_ID, "Successfully deleted your account.", true);
   }
 }
