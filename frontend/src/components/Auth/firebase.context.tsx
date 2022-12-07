@@ -4,7 +4,6 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
   sendEmailVerification,
-  signInWithEmailAndPassword,
   signOut,
   updateEmail,
   updatePassword,
@@ -65,12 +64,12 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  const login = async (email: string, password: string) => {
-    if (!validString(email) || !validString(password))
-      return Promise.reject({ message: ERROR_INVALID_INPUT });
+  // const login = async (email: string, password: string) => {
+  //   if (!validString(email) || !validString(password))
+  //     return Promise.reject({ message: ERROR_INVALID_INPUT });
 
-    return signInWithEmailAndPassword(auth, email, password);
-  };
+  //   return signInWithEmailAndPassword(auth, email, password);
+  // };
 
   const updateDisplayName = async (firstName: string, lastName: string) => {
     if (!auth.currentUser)
@@ -149,7 +148,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
 
   const value = {
     currentUser,
-    login,
+    // login,
     register,
     logout,
     updateDisplayName,
@@ -167,7 +166,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   );
 }
 
-function RequireAuth({ children }: { children: ReactNode }) {
+function RequireAuth({ children }: { children: any }) {
   const { currentUser } = useFirebaseAuth();
   const location = useLocation();
   if (!currentUser) {
@@ -180,7 +179,7 @@ function RequireAuth({ children }: { children: ReactNode }) {
   return children;
 }
 
-function RequireUnAuth({ children }: { children: ReactNode }) {
+function RequireUnAuth({ children }: { children: any }) {
   const { currentUser } = useFirebaseAuth();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";

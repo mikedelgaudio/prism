@@ -9,7 +9,7 @@ import {
   updateEmail,
   updatePassword,
   updateProfile,
-  User,
+  UserCredential,
 } from "firebase/auth";
 import { makeAutoObservable } from "mobx";
 import {
@@ -21,7 +21,7 @@ import { auth } from "../../services/firebase.service";
 import { validString } from "../../services/util.service";
 
 export class FirebaseAuthStore {
-  public currentUser: User | null = null;
+  public currentUser: UserCredential | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -31,7 +31,8 @@ export class FirebaseAuthStore {
     return this.currentUser;
   }
 
-  setUser(user: User | null) {
+  setUser(user: UserCredential | null) {
+    console.log(user, "User here");
     if (!user) return;
     this.currentUser = user;
   }
@@ -44,6 +45,7 @@ export class FirebaseAuthStore {
   }
 
   async login(email: string, password: string) {
+    console.log(1);
     if (!validString(email) || !validString(password))
       return Promise.reject({ message: ERROR_INVALID_INPUT });
 

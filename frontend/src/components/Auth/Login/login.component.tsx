@@ -5,13 +5,13 @@ import { useTitle } from "../../../hooks/use-title";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
-import { useFirebaseAuth } from "../firebase.context";
+import { useFirebaseAuth_N } from "../firebase.auth.context";
 
 const Login = observer(() => {
   useTitle("Login - Prism");
 
   const navigate = useNavigate();
-  const { login } = useFirebaseAuth();
+  const { store } = useFirebaseAuth_N();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +22,9 @@ const Login = observer(() => {
 
     try {
       setLoading(true);
-      if (login) await login(email, password);
+      const user = await store.login(email, password);
+      console.log(user);
+      store.setUser(user);
       navigate("/dashboard/day");
     } catch (e: any) {
       const TOAST_ID = "FAILED_TO_LOGIN";
