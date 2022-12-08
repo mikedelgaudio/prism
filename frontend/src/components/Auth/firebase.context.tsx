@@ -12,6 +12,7 @@ import {
   User,
   UserCredential,
 } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import {
   createContext,
   ReactNode,
@@ -25,11 +26,12 @@ import {
   ERROR_INVALID_INPUT,
   ERROR_USER_IS_NULL,
 } from "../../services/errors.service";
-import { auth } from "../../services/firebase.service";
+import { auth, db } from "../../services/firebase.service";
 import { validString } from "../../services/util.service";
 
 interface FirebaseContext {
   currentUser: User | null;
+  profile?: UserProfile;
   login?: (email: string, password: string) => Promise<UserCredential>;
   register?: (email: string, password: string) => Promise<UserCredential>;
   logout?: () => Promise<void>;
@@ -39,6 +41,12 @@ interface FirebaseContext {
   updateUserEmail?: (currentEmail: string, newEmail: string) => Promise<void>;
   updateUserPassword?: (newPassword: string) => Promise<void>;
   deleteAccount?: () => Promise<void>;
+  fetchUserProfile?: () => Promise<UserProfile | undefined>;
+}
+export interface UserProfile {
+  prismId: string;
+  progressEmail: boolean;
+  timeToStand: boolean;
 }
 
 const defaultValue: FirebaseContext = {
@@ -52,8 +60,13 @@ export function useFirebaseAuth() {
 }
 
 export function FirebaseProvider({ children }: { children: ReactNode }) {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [profile, setProfile] = useState<UserProfile>({
+    prismId: "N/A",
+    progressEmail: false,
+    timeToStand: false,
+  });
 
   // TODO
   // ! Must ensure input is sanitized with XSS or validString()?
@@ -135,12 +148,27 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     return signOut(auth);
   };
 
+  const fetchUserProfile = async () => {
+    if (!auth.currentUser?.uid) return;
+    const docRef = doc(db, "users", auth.currentUser?.uid);
+    if (!docRef) return;
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) return;
+    const snap = docSnap.data() as UserProfile;
+    console.log(snap);
+    setProfile({
+      ...profile,
+      prismId: snap?.prismId ?? "N/A",
+      progressEmail: snap?.progressEmail ?? false,
+      timeToStand: snap?.timeToStand ?? false,
+    });
+    return profile;
+  };
+
   useEffect(() => {
-    // TODO
-    // ! What type is user?
-    // ! How can we merge this into MobX?
-    const unsubscribe = auth.onAuthStateChanged((user: any) => {
+    const unsubscribe = auth.onAuthStateChanged((user: User | null) => {
       setCurrentUser(user);
+
       setLoading(false);
     });
 
@@ -149,6 +177,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
 
   const value = {
     currentUser,
+    profile,
     login,
     register,
     logout,
@@ -158,6 +187,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     updateUserEmail,
     updateUserPassword,
     deleteAccount,
+    fetchUserProfile,
   };
 
   return (
@@ -172,8 +202,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
 function RequireAuth({ children }: { children: any }) {
   const { currentUser } = useFirebaseAuth();
   const location = useLocation();
-
-  console.log(currentUser);
 
   if (!currentUser) {
     // Redirect them to the /login page, but save the current location they were

@@ -1,14 +1,11 @@
 import { observer } from "mobx-react";
-import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { useFirebaseAuth } from "../../Auth/firebase.context";
-import { ProfileContext } from "../../Auth/profile.context";
 import { Card } from "../../Shared";
 
 const Account = observer(() => {
-  const { profileStore } = useContext(ProfileContext);
-  const { currentUser, sendVerificationEmail } = useFirebaseAuth();
+  const { currentUser, sendVerificationEmail, profile } = useFirebaseAuth();
 
   // TODO
   // ! Update a11y on toggle switches
@@ -70,7 +67,7 @@ const Account = observer(() => {
           <div className="flex flex-col pt-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Prism serial</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              {profileStore.user.prismId ?? "No serial found"}
+              {profile?.prismId}
             </dd>
           </div>
         </dl>
@@ -91,8 +88,8 @@ const Account = observer(() => {
                   type="checkbox"
                   id="default-toggle"
                   className="sr-only peer"
-                  checked={profileStore.user.progressEmail}
-                  onChange={() => profileStore.toggleProgressEmail()}
+                  checked={profile?.progressEmail}
+                  // onChange={() => profileStore.toggleProgressEmail()}
                 />
                 <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
               </label>
@@ -111,8 +108,8 @@ const Account = observer(() => {
                   type="checkbox"
                   id="default-toggle2"
                   className="sr-only peer"
-                  checked={profileStore.user.timeToStand}
-                  onChange={() => profileStore.toggleTimeToStand()}
+                  checked={profile?.timeToStand}
+                  // onChange={() => profileStore.toggleTimeToStand()}
                 />
                 <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
               </label>
@@ -155,8 +152,8 @@ const Account = observer(() => {
 
             <button
               className="underline hover:no-underline disabled:opacity-50 disabled:no-underline"
-              onClick={() => profileStore.disconnectPrism()}
-              disabled={profileStore.user.prismId === null}
+              // onClick={() => profileStore.disconnectPrism()}
+              disabled={profile?.prismId === ""}
             >
               Disconnect
             </button>
