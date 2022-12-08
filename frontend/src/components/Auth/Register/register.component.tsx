@@ -1,11 +1,11 @@
 import { observer } from "mobx-react";
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { useTitle } from "../../../hooks/use-title";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
-import { useFirebaseAuth } from "../firebase.context";
 
 const Register = observer(() => {
   useTitle("Register - Prism");
@@ -14,14 +14,20 @@ const Register = observer(() => {
   // Need firestore for Prism ID
 
   const navigate = useNavigate();
-  const { currentUser, register, updateDisplayName, sendVerificationEmail } =
-    useFirebaseAuth();
+  const {
+    currentUser,
+    register,
+    updateDisplayName,
+    sendVerificationEmail,
+    addNewUser,
+  } = useFirebaseAuth();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [prismId, setPrismId] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -43,13 +49,25 @@ const Register = observer(() => {
       setLoading(true);
       if (register) await register(email, password);
       if (updateDisplayName) await updateDisplayName(firstName, lastName);
+      if (addNewUser) await addNewUser(prismId);
+
       if (sendVerificationEmail)
-        await sendVerificationEmail().then(() => {
-          const TOAST_ID = "VERIFY_YOUR_EMAIL";
-          TOAST_SERVICE.success(TOAST_ID, `Verify your email ${email}`, false);
-        });
+        await sendVerificationEmail()
+          .then(() => {
+            const TOAST_ID = "VERIFY_YOUR_EMAIL";
+            TOAST_SERVICE.success(
+              TOAST_ID,
+              `Verify your email ${email}`,
+              false,
+            );
+          })
+          .catch(e => null);
+
       navigate("/dashboard/day");
     } catch (e) {
+      // TODO
+      // ! If failure, ensure to delete all progress made to ensure start over...
+
       const TOAST_ID = "FAILED_TO_REGISTER";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
     }
@@ -59,6 +77,7 @@ const Register = observer(() => {
     setLastName("");
     setEmail("");
     setPassword("");
+    setPrismId("");
     setLoading(false);
   };
 
@@ -151,6 +170,7 @@ const Register = observer(() => {
               type={"text"}
               required={true}
               placeholder="XXXX-XXXX-XXXX"
+              onChange={e => setPrismId(e.target.value)}
             />
           </div>
         </div>

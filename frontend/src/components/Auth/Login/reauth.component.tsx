@@ -1,10 +1,10 @@
 import { observer } from "mobx-react";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
-import { useFirebaseAuth } from "../firebase.context";
 
 const ReAuth = observer(
   ({

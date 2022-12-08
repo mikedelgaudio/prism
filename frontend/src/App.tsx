@@ -3,10 +3,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ChangeEmail } from "./components/Auth/ChangeEmail";
 import { DeleteAccount } from "./components/Auth/DeleteAccount";
-import {
-  FirebaseGuards,
-  FirebaseProvider,
-} from "./components/Auth/firebase.context";
 import { Login } from "./components/Auth/Login";
 import { Logout } from "./components/Auth/Logout";
 import { PasswordReset } from "./components/Auth/PasswordReset";
@@ -17,6 +13,7 @@ import { E404 } from "./components/Errors";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
 import { Settings } from "./components/Settings";
+import { FirebaseGuards, FirebaseProvider } from "./firebase/firebase.context";
 
 function App() {
   return (

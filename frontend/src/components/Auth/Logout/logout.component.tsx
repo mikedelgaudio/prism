@@ -1,10 +1,10 @@
 import { observer } from "mobx-react";
 import { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { useTitle } from "../../../hooks/use-title";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
-import { useFirebaseAuth } from "../firebase.context";
 
 const Logout = observer(() => {
   useTitle("Logged out - Prism");

@@ -1,11 +1,11 @@
 import { observer } from "mobx-react";
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { useTitle } from "../../../hooks/use-title";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
-import { useFirebaseAuth } from "../firebase.context";
 import { ReAuth } from "../Login";
 
 const ChangeEmail = observer(() => {

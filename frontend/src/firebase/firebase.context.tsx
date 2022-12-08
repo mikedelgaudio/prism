@@ -12,7 +12,7 @@ import {
   User,
   UserCredential,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import {
   createContext,
   ReactNode,
@@ -25,9 +25,13 @@ import {
   ERROR_INVALID_CURRENT_EMAIL,
   ERROR_INVALID_INPUT,
   ERROR_USER_IS_NULL,
-} from "../../services/errors.service";
-import { auth, db } from "../../services/firebase.service";
-import { validString } from "../../services/util.service";
+} from "../services/errors.service";
+import {
+  auth,
+  db,
+  FIREBASE_USERS_COLLECTION,
+} from "../services/firebase.service";
+import { validString } from "../services/util.service";
 
 interface FirebaseContext {
   currentUser: User | null;
@@ -42,6 +46,7 @@ interface FirebaseContext {
   updateUserPassword?: (newPassword: string) => Promise<void>;
   deleteAccount?: () => Promise<void>;
   fetchUserProfile?: () => Promise<UserProfile | undefined>;
+  addNewUser?: (prismId: string) => Promise<void>;
 }
 export interface UserProfile {
   prismId: string;
@@ -68,9 +73,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     timeToStand: false,
   });
 
-  // TODO
-  // ! Must ensure input is sanitized with XSS or validString()?
-
   const register = async (email: string, password: string) => {
     if (!validString(email) || !validString(password))
       return Promise.reject({ message: ERROR_INVALID_INPUT });
@@ -88,6 +90,10 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   const updateDisplayName = async (firstName: string, lastName: string) => {
     if (!auth.currentUser)
       return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+    if (!validString(firstName) || !validString(lastName))
+      return Promise.reject({ message: ERROR_INVALID_INPUT });
+
     return updateProfile(auth.currentUser, {
       displayName: `${firstName} ${lastName}`,
     });
@@ -126,6 +132,9 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     if (!auth.currentUser)
       return Promise.reject({ message: ERROR_USER_IS_NULL });
 
+    if (!validString(email) || !validString(password))
+      return Promise.reject({ message: ERROR_INVALID_INPUT });
+
     const credential = EmailAuthProvider.credential(email, password);
     return reauthenticateWithCredential(auth.currentUser, credential);
   };
@@ -148,12 +157,37 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     return signOut(auth);
   };
 
+  // TODO
+  // ! Ensure user with same email doesn't register
+  // ! Ensure PrismID is only used once
+  const addNewUser = async (prismId: string) => {
+    if (!validString(prismId))
+      return Promise.reject({ message: ERROR_INVALID_INPUT });
+
+    if (!auth.currentUser?.uid)
+      return Promise.reject({ message: ERROR_USER_IS_NULL });
+    const docRef = doc(db, FIREBASE_USERS_COLLECTION, auth.currentUser?.uid);
+    if (!docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+    // TODO
+    // ! Validate PrismID?
+
+    const profile: UserProfile = {
+      prismId,
+      progressEmail: false,
+      timeToStand: false,
+    };
+    return setDoc(docRef, profile);
+  };
+
   const fetchUserProfile = async () => {
-    if (!auth.currentUser?.uid) return;
-    const docRef = doc(db, "users", auth.currentUser?.uid);
-    if (!docRef) return;
+    if (!auth.currentUser?.uid)
+      return Promise.reject({ message: ERROR_USER_IS_NULL });
+    const docRef = doc(db, FIREBASE_USERS_COLLECTION, auth.currentUser?.uid);
+    if (!docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
     const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) return;
+    if (!docSnap.exists())
+      return Promise.reject({ message: ERROR_USER_IS_NULL });
     const snap = docSnap.data() as UserProfile;
     console.log(snap);
     setProfile({
@@ -168,7 +202,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user: User | null) => {
       setCurrentUser(user);
-
       setLoading(false);
     });
 
@@ -188,6 +221,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     updateUserPassword,
     deleteAccount,
     fetchUserProfile,
+    addNewUser,
   };
 
   return (

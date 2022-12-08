@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { AuthPwReset, UnauthPwReset } from ".";
+import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { useTitle } from "../../../hooks/use-title";
-import { useFirebaseAuth } from "../firebase.context";
 
 const PasswordReset = observer(() => {
   useTitle("Reset Password - Prism");

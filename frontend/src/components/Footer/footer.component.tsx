@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
-import { useFirebaseAuth } from "../Auth/firebase.context";
+import { useFirebaseAuth } from "../../firebase/firebase.context";
 
 const Footer = observer(() => {
   const { currentUser } = useFirebaseAuth();

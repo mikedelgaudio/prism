@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
+import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { TOAST_SERVICE } from "../../../services/toast.service";
-import { useFirebaseAuth } from "../../Auth/firebase.context";
 import { Card } from "../../Shared";
 
 const Account = observer(() => {

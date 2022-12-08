@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { useEffect } from "react";
+import { useFirebaseAuth } from "../../firebase/firebase.context";
 import { useTitle } from "../../hooks/use-title";
-import { useFirebaseAuth } from "../Auth/firebase.context";
 import { Account } from "./Account/account.settings.component";
 import { Cube } from "./Cube/cube.settings.component";
 import { OnboardingCube } from "./OnboardingCube";

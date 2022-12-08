@@ -19,3 +19,5 @@ export const app = initializeApp(firebaseConfig);
 // gives us an auth instance
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+export const FIREBASE_USERS_COLLECTION = "users";

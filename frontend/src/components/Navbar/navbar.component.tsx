@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useFirebaseAuth } from "../Auth/firebase.context";
+import { useFirebaseAuth } from "../../firebase/firebase.context";
 import "./navbar.component.css";
 
 const Navbar = observer(() => {
