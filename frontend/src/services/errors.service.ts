@@ -11,6 +11,10 @@ const ERROR_FIREBASE_USER_NOT_FOUND = "Firebase: Error (auth/user-not-found).";
 const ERROR_FIREBASE_USER_MISMATCH = "Firebase: Error (auth/user-mismatch).";
 const ERROR_INVALID_CREDENTIALS =
   "The provided email or password are not valid. Please verify there are no typos.";
+const ERROR_FIREBASE_USER_EXISTS =
+  "Firebase: Error (auth/email-already-in-use).";
+const ERROR_USER_EXISTS =
+  "The email provided is already a registered user. Please login or register with a new email.";
 
 export const errorToMsg = (e: any): string => {
   let message = ERROR_UNEXPECTED;
@@ -32,6 +36,10 @@ export const errorToMsg = (e: any): string => {
 
     case ERROR_INVALID_CURRENT_EMAIL:
       message = ERROR_INVALID_CURRENT_EMAIL;
+      break;
+
+    case ERROR_FIREBASE_USER_EXISTS:
+      message = ERROR_USER_EXISTS;
       break;
 
     default:

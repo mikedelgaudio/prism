@@ -32,6 +32,7 @@ import {
   FIREBASE_USERS_COLLECTION,
 } from "../services/firebase.service";
 import { validString } from "../services/util.service";
+import { validPrismId } from "./firebase.util";
 
 interface FirebaseContext {
   currentUser: User | null;
@@ -73,8 +74,15 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     timeToStand: false,
   });
 
-  const register = async (email: string, password: string) => {
+  const register = async (email: string, password: string, prismId: string) => {
     if (!validString(email) || !validString(password))
+      return Promise.reject({ message: ERROR_INVALID_INPUT });
+
+    // TODO
+    // ! Ensure user with same email doesn't register
+    // ! Ensure PrismID is only used once
+
+    if (!validPrismId(db, prismId))
       return Promise.reject({ message: ERROR_INVALID_INPUT });
 
     return createUserWithEmailAndPassword(auth, email, password);
