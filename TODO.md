@@ -1,3 +1,5 @@
 - Create banner if API offline
 - Ensure all user input goes thru validString()
 - Add Error Boundary to components like Login/Registration
+- Ensure that multiple Prism IDs do not register
+- Ensure that if registration fails roll back all changes

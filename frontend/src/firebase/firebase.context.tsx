@@ -38,7 +38,11 @@ interface FirebaseContext {
   currentUser: User | null;
   profile?: UserProfile;
   login?: (email: string, password: string) => Promise<UserCredential>;
-  register?: (email: string, password: string) => Promise<UserCredential>;
+  register?: (
+    email: string,
+    password: string,
+    prismId: string,
+  ) => Promise<UserCredential>;
   logout?: () => Promise<void>;
   updateDisplayName?: (firstName: string, lastName: string) => Promise<void>;
   sendVerificationEmail?: () => Promise<void>;

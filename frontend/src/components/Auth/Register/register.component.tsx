@@ -47,7 +47,7 @@ const Register = observer(() => {
 
     try {
       setLoading(true);
-      if (register) await register(email, password);
+      if (register) await register(email, password, prismId);
       if (updateDisplayName) await updateDisplayName(firstName, lastName);
       if (addNewUser) await addNewUser(prismId);
 
