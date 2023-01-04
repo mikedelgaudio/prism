@@ -9,10 +9,6 @@ import { AuthLayout } from "../../Shared";
 
 const Register = observer(() => {
   useTitle("Register - Prism");
-
-  // TODO
-  // Need firestore for Prism ID
-
   const navigate = useNavigate();
   const {
     currentUser,
