@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { Bar } from "react-chartjs-2";
+import { colors } from "../../../services/util.service";
 import { Card } from "../../Shared";
 
 const DayCard = () => {
@@ -14,42 +15,51 @@ const DayCard = () => {
         text: "November 2, 2022 Tracked",
       },
     },
+    scales: {
+      x: {
+        stacked: true,
+      },
+      y: {
+        stacked: true,
+      },
+    },
   };
 
   const labels = [];
   for (let i = 0; i < 24; i++) {
-    let suffix = i < 12 ? "am" : "pm";
+    const suffix = i < 12 ? "am" : "pm";
     const prefix = i < 12 ? i : i - 12;
-    labels.push(`${prefix}${suffix}`);
+    if (prefix === 0) labels.push(`12${suffix}`);
+    else labels.push(`${prefix}${suffix}`);
   }
 
   const data = {
     labels,
     datasets: [
       {
-        label: "Chemical Engineering",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 24 })),
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        label: "Study Chemical Engineering",
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
+        backgroundColor: `${colors.indigo[100]}`,
       },
       {
         label: "Watch YouTube",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 24 })),
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
+        backgroundColor: `${colors.indigo[300]}`,
       },
       {
         label: "Hang with Friends",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-        backgroundColor: "rgba(255, 162, 235, 0.5)",
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
+        backgroundColor: `${colors.indigo[600]}`,
       },
       {
-        label: "Dataset 2",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-        backgroundColor: "rgba(53, 255, 235, 0.75)",
+        label: "Read Book",
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
+        backgroundColor: `${colors.indigo[800]}`,
       },
       {
-        label: "Dataset 2",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-        backgroundColor: "rgba(53, 162, 0, 0.5)",
+        label: "Study Math",
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
+        backgroundColor: `${colors.indigo[900]}`,
       },
     ],
   };
