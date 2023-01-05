@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "husky:prepare": "cd .. && husky install frontend/.husky"
   },
   "dependencies": {
     "chart.js": "^3.9.1",
