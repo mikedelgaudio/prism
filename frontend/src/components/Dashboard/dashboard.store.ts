@@ -14,10 +14,15 @@ export interface IRawUploadedDay {
   lastUploadDate: number;
 }
 
-// export interface IUploadedDay {
-//   date: 1672885784803,
+interface IDayChartBreakdown {
+  side1: number[];
+  side2: number[];
+  side3: number[];
+  side4: number[];
+  side5: number[];
+}
 
-// }
+// Ideal data format
 
 export class DashboardStore {
   // Such as translate date to "1/4/23"
@@ -27,7 +32,7 @@ export class DashboardStore {
 
   public dayView = true;
 
-  public data: IRawUploadedDay[] = [
+  public raw_data: IRawUploadedDay[] = [
     {
       uploadDate: 1672885784803,
       side1: [
@@ -52,29 +57,40 @@ export class DashboardStore {
     },
   ];
 
+  public dayChartBreakdown: IDayChartBreakdown = {
+    side1: new Array(24).fill(0),
+    side2: new Array(24).fill(0),
+    side3: new Array(24).fill(0),
+    side4: new Array(24).fill(0),
+    side5: new Array(24).fill(0),
+  };
+
   constructor() {
     makeAutoObservable(this);
+  }
+
+  get rawData(): IRawUploadedDay[] {
+    return this.raw_data;
   }
 
   changeView() {
     this.dayView = !this.dayView;
   }
 
-  collectToday() {
-    // If uploadDate is within today track as today
+  distributeTimeLoad(sideSlot: number[]) {
+    const MINUTES_IN_HOUR = 60;
+    for (let i = 0; i < sideSlot.length; i++) {
+      const slot = sideSlot[i];
+      if (sideSlot[i] > MINUTES_IN_HOUR) {
+        const remainder =
+          slot >= MINUTES_IN_HOUR
+            ? Math.abs(slot - MINUTES_IN_HOUR)
+            : slot % MINUTES_IN_HOUR;
 
-    // ! Does this logic belong in backend?
-    this.data.forEach(day => {
-      const uploadDate = this.DATE_FORMAT?.format(day?.uploadDate);
-      const lastUploadDate = this.DATE_FORMAT?.format(day?.lastUploadDate);
+        sideSlot[i] = 60;
 
-      if (uploadDate === lastUploadDate) {
-        // Then it is the same day so add up
+        if (i + 1 < 24) sideSlot[i + 1] += remainder;
       }
-    });
+    }
   }
 }
-
-// DATA FLOW
-// CUBE TRACKS EACH SIDE
-//
