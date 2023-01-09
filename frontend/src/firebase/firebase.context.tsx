@@ -1,3 +1,4 @@
+import { uuidv4 } from "@firebase/util";
 import {
   createUserWithEmailAndPassword,
   deleteUser,
@@ -21,6 +22,7 @@ import {
   useState,
 } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { Task } from "../components/Settings/settings.store";
 import {
   ERROR_INVALID_CURRENT_EMAIL,
   ERROR_INVALID_INPUT,
@@ -53,10 +55,12 @@ interface FirebaseContext {
   fetchUserProfile?: () => Promise<UserProfile | undefined>;
   addNewUser?: (prismId: string) => Promise<void>;
 }
+
 export interface UserProfile {
   prismId: string;
   progressEmail: boolean;
   timeToStand: boolean;
+  sides: Task[];
 }
 
 const defaultValue: FirebaseContext = {
@@ -76,6 +80,38 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     prismId: "N/A",
     progressEmail: false,
     timeToStand: false,
+    sides: [
+      {
+        side: "1",
+        id: "1-t",
+        name: "Task A",
+        color: "#ff0000",
+      },
+      {
+        side: "2",
+        id: "2-t",
+        name: "Task B",
+        color: "#0002fe",
+      },
+      {
+        side: "3",
+        id: "3-t",
+        name: "Task C",
+        color: "#03480e",
+      },
+      {
+        side: "4",
+        id: "4-t",
+        name: "Task D",
+        color: "#ca6e04",
+      },
+      {
+        side: "5",
+        id: "5-t",
+        name: "Task E",
+        color: "#9808fe",
+      },
+    ],
   });
 
   const register = async (email: string, password: string, prismId: string) => {
@@ -83,7 +119,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
       return Promise.reject({ message: ERROR_INVALID_INPUT });
 
     // TODO
-    // ! Ensure user with same email doesn't register
     // ! Ensure PrismID is only used once
 
     if (!validPrismId(db, prismId))
@@ -170,7 +205,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   };
 
   // TODO
-  // ! Ensure user with same email doesn't register
   // ! Ensure PrismID is only used once
   const addNewUser = async (prismId: string) => {
     if (!validString(prismId))
@@ -188,10 +222,44 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
       prismId,
       progressEmail: false,
       timeToStand: false,
+      sides: [
+        {
+          side: "1",
+          id: uuidv4(),
+          name: "Task A",
+          color: "#ff0000",
+        },
+        {
+          side: "2",
+          id: uuidv4(),
+          name: "Task B",
+          color: "#0002fe",
+        },
+        {
+          side: "3",
+          id: uuidv4(),
+          name: "Task C",
+          color: "#03480e",
+        },
+        {
+          side: "4",
+          id: uuidv4(),
+          name: "Task D",
+          color: "#ca6e04",
+        },
+        {
+          side: "5",
+          id: uuidv4(),
+          name: "Task E",
+          color: "#9808fe",
+        },
+      ],
     };
     return setDoc(docRef, profile);
   };
 
+  // TODO
+  //! Delete this and setup in Mobx
   const fetchUserProfile = async () => {
     if (!auth.currentUser?.uid)
       return Promise.reject({ message: ERROR_USER_IS_NULL });
@@ -201,7 +269,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     if (!docSnap.exists())
       return Promise.reject({ message: ERROR_USER_IS_NULL });
     const snap = docSnap.data() as UserProfile;
-    console.log(snap);
     setProfile({
       ...profile,
       prismId: snap?.prismId ?? "N/A",

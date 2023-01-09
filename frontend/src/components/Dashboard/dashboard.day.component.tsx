@@ -10,6 +10,8 @@ const DashboardDay = observer(() => {
   // If last entry !== today (meaning no data) then display empty card to prompt upload
   // Otherwise for loop over google sheet data
 
+  // Fetch
+
   return (
     <Dashboard>
       <EmptyCard />
