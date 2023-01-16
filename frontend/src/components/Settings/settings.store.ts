@@ -1,6 +1,10 @@
-import { makeAutoObservable, toJS } from "mobx";
+import { doc, getDoc } from "firebase/firestore";
+import { makeAutoObservable, runInAction } from "mobx";
 import { v4 as uuidv4 } from "uuid";
-import { ToastService } from "../../services/toast.service";
+import { UserProfile } from "../../firebase/firebase.context";
+import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
+import { db, FIREBASE_USERS_COLLECTION } from "../../services/firebase.service";
+import { TOAST_SERVICE } from "../../services/toast.service";
 
 export interface Task {
   side: string | null;
@@ -11,41 +15,38 @@ export interface Task {
 
 export class SettingsStore {
   // ! Populate from database
-  public tasksPool: Task[] = [
-    {
-      side: "1",
-      id: "1-t",
-      name: "Task A",
-      color: "#ff0000",
-    },
-    {
-      side: "2",
-      id: "2-t",
-      name: "Task B",
-      color: "#0002fe",
-    },
-    {
-      side: "3",
-      id: "3-t",
-      name: "Task C",
-      color: "#03480e",
-    },
-    {
-      side: "4",
-      id: "4-t",
-      name: "Task D",
-      color: "#ca6e04",
-    },
-    {
-      side: "5",
-      id: "5-t",
-      name: "Task E",
-      color: "#9808fe",
-    },
-  ];
+  public tasksPool: Task[] = [];
+  private userId = "";
 
-  constructor(private readonly toastService: ToastService) {
+  constructor() {
     makeAutoObservable(this);
+  }
+
+  // Sets the user's Firebase UID
+  init(id: string | undefined) {
+    if (!id) return;
+    this.userId = id;
+  }
+
+  async getTasks() {
+    try {
+      if (!this.userId) return;
+      const docRef = doc(db, FIREBASE_USERS_COLLECTION, this.userId);
+      if (!docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists())
+        return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+      const snap = docSnap.data() as UserProfile;
+      runInAction(() => {
+        this.tasksPool = snap.sides;
+      });
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_LOAD_ACCOUNT_SETTINGS";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+    }
   }
 
   get tasks() {
@@ -77,17 +78,14 @@ export class SettingsStore {
     // ! Do database change or error handling here
     const index = this.tasks.findIndex(task => task.id === id);
     this.tasksPool[index].name = newName;
-    console.log(toJS(this.tasks), toJS(this.tasksPool));
   }
 
   deleteTask(id: string | undefined) {
-    console.log(id);
     if (!id) return;
     // ! Do database change or error handling here
     if (this.getTaskById(id)?.side === null) {
       this.tasksPool = this.tasks.filter(task => task.id !== id);
     }
-    console.log(toJS(this.tasks), toJS(this.tasksPool));
   }
 
   assignTask(fromId: string | undefined, toId: string | undefined) {

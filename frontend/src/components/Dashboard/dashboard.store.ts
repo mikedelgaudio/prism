@@ -4,6 +4,7 @@ export interface IRawUploadedSide {
   trackingStartTime: number;
   trackingEndTime: number;
 }
+
 export interface IRawUploadedDay {
   uploadDate: number;
   side1: IRawUploadedSide[];
@@ -14,12 +15,15 @@ export interface IRawUploadedDay {
   lastUploadDate: number;
 }
 
-interface IDayChartBreakdown {
+export interface IDayChartBreakdown {
+  title: string;
+  date: string;
   side1: number[];
   side2: number[];
   side3: number[];
   side4: number[];
   side5: number[];
+  lastUploadTime: string;
 }
 
 // Ideal data format
@@ -57,12 +61,17 @@ export class DashboardStore {
     },
   ];
 
+  public dayCharts: IDayChartBreakdown[] = [];
+
   public dayChartBreakdown: IDayChartBreakdown = {
+    title: "N/A",
+    date: this.DATE_FORMAT.format(new Date()),
     side1: new Array(24).fill(0),
     side2: new Array(24).fill(0),
     side3: new Array(24).fill(0),
     side4: new Array(24).fill(0),
     side5: new Array(24).fill(0),
+    lastUploadTime: this.DATE_FORMAT.format(new Date()),
   };
 
   constructor() {
