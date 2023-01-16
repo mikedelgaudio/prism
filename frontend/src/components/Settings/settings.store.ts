@@ -1,10 +1,10 @@
 import { doc, getDoc } from "firebase/firestore";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { v4 as uuidv4 } from "uuid";
 import { UserProfile } from "../../firebase/firebase.context";
-import { ERROR_USER_IS_NULL } from "../../services/errors.service";
+import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
 import { db, FIREBASE_USERS_COLLECTION } from "../../services/firebase.service";
-import { ToastService } from "../../services/toast.service";
+import { TOAST_SERVICE } from "../../services/toast.service";
 
 export interface Task {
   side: string | null;
@@ -18,7 +18,7 @@ export class SettingsStore {
   public tasksPool: Task[] = [];
   private userId = "";
 
-  constructor(private readonly toastService: ToastService) {
+  constructor() {
     makeAutoObservable(this);
   }
 
@@ -29,13 +29,24 @@ export class SettingsStore {
   }
 
   async getTasks() {
-    const docRef = doc(db, FIREBASE_USERS_COLLECTION, this.userId);
-    if (!docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists())
-      return Promise.reject({ message: ERROR_USER_IS_NULL });
-    const snap = docSnap.data() as UserProfile;
-    this.tasksPool = snap.sides;
+    try {
+      if (!this.userId) return;
+      const docRef = doc(db, FIREBASE_USERS_COLLECTION, this.userId);
+      if (!docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists())
+        return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+      const snap = docSnap.data() as UserProfile;
+      runInAction(() => {
+        this.tasksPool = snap.sides;
+      });
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_LOAD_ACCOUNT_SETTINGS";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+    }
   }
 
   get tasks() {

@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.min.css";
 import { ChangeEmail } from "./components/Auth/ChangeEmail";
 import { DeleteAccount } from "./components/Auth/DeleteAccount";
 import { Login } from "./components/Auth/Login";
