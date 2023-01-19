@@ -1,11 +1,14 @@
 import { observer } from "mobx-react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { Card } from "../../Shared";
+import { SettingsContext } from "../settings.context";
 
 const Account = observer(() => {
   const { currentUser, sendVerificationEmail, profile } = useFirebaseAuth();
+  const { settingsStore } = useContext(SettingsContext);
 
   // TODO
   // ! Update a11y on toggle switches
@@ -67,7 +70,7 @@ const Account = observer(() => {
           <div className="flex flex-col pt-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Prism serial</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              {profile?.prismId}
+              {settingsStore?.profile?.prismId}
             </dd>
           </div>
         </dl>

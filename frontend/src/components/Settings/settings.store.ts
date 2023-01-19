@@ -2,27 +2,19 @@ import { getAuth } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
 import { v4 as uuidv4 } from "uuid";
-import { UserProfile } from "../../firebase/firebase.context";
+import { Task, UserProfile } from "../../firebase/firebase.models";
 import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
 import { db, FIREBASE_USERS_COLLECTION } from "../../services/firebase.service";
 import { TOAST_SERVICE } from "../../services/toast.service";
 
-export interface Task {
-  side: string | null;
-  id: string;
-  name: string;
-  color: string;
-}
-
 export class SettingsStore {
-  // ! Populate from database
-  public tasksPool: Task[] = [];
+  public profile: UserProfile | undefined;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  async getTasks() {
+  async getProfile() {
     try {
       const auth = getAuth();
       const userId = auth.currentUser?.uid;
@@ -37,7 +29,7 @@ export class SettingsStore {
 
       const snap = docSnap.data() as UserProfile;
       runInAction(() => {
-        this.tasksPool = snap.sides;
+        this.profile = snap;
       });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_LOAD_ACCOUNT_SETTINGS";
@@ -46,15 +38,15 @@ export class SettingsStore {
   }
 
   get tasks() {
-    return this.tasksPool;
+    return this.profile?.sides;
   }
 
   get assignedTasks() {
-    return this.tasks.filter(task => task.side !== null);
+    return this.tasks?.filter(task => task.side !== null);
   }
 
   getTaskById(id: string): Task | undefined {
-    return this.tasks.find(task => task.id === id);
+    return this.tasks?.find(task => task.id === id);
   }
 
   addTask() {
@@ -66,21 +58,21 @@ export class SettingsStore {
     };
 
     // ! Arguably don't push to DB on blank entry?
-    this.tasks.unshift(task);
+    this.tasks?.unshift(task);
   }
 
   editTaskName(id: string | undefined, newName: string | undefined) {
-    if (!id || !newName) return;
+    if (!id || !newName || !this.profile?.sides) return;
     // ! Do database change or error handling here
-    const index = this.tasks.findIndex(task => task.id === id);
-    this.tasksPool[index].name = newName;
+    const index = this.profile.sides.findIndex(task => task.id === id);
+    this.profile.sides[index].name = newName;
   }
 
   deleteTask(id: string | undefined) {
-    if (!id) return;
+    if (!id || !this.profile?.sides) return;
     // ! Do database change or error handling here
     if (this.getTaskById(id)?.side === null) {
-      this.tasksPool = this.tasks.filter(task => task.id !== id);
+      this.profile.sides = this.profile.sides.filter(task => task.id !== id);
     }
   }
 

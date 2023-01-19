@@ -1,18 +1,18 @@
 import { observer } from "mobx-react";
-import { useEffect } from "react";
-import { useFirebaseAuth } from "../../firebase/firebase.context";
+import { useContext, useEffect } from "react";
 import { useTitle } from "../../hooks/use-title";
 import { Account } from "./Account/account.settings.component";
 import { Cube } from "./Cube/cube.settings.component";
 import { OnboardingCube } from "./OnboardingCube";
+import { SettingsContext } from "./settings.context";
 
 const Settings = observer(() => {
   useTitle("Settings - Prism");
 
-  const { fetchUserProfile, profile } = useFirebaseAuth();
+  const { settingsStore } = useContext(SettingsContext);
 
   useEffect(() => {
-    (async () => (fetchUserProfile ? await fetchUserProfile() : null))();
+    (async () => settingsStore.getProfile())();
   }, []);
 
   return (
@@ -28,7 +28,7 @@ const Settings = observer(() => {
         </div>
 
         <div className="flex flex-col pt-6 gap-6">
-          {profile?.prismId ? <Cube /> : <OnboardingCube />}
+          {settingsStore?.profile?.prismId ? <Cube /> : <OnboardingCube />}
           <Account />
         </div>
       </div>

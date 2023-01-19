@@ -15,7 +15,7 @@ const CubeAssigned = observer(() => {
       </div>
 
       <ol className="flex flex-col gap-6">
-        {tasks.map(task => {
+        {tasks?.map(task => {
           return (
             <CubeAssignedItem key={`${task.id}-assigned-key`} id={task.id} />
           );

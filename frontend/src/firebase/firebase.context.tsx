@@ -13,7 +13,7 @@ import {
   User,
   UserCredential,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import {
   createContext,
   ReactNode,
@@ -22,7 +22,6 @@ import {
   useState,
 } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { Task } from "../components/Settings/settings.store";
 import {
   ERROR_INVALID_CURRENT_EMAIL,
   ERROR_INVALID_INPUT,
@@ -34,6 +33,7 @@ import {
   FIREBASE_USERS_COLLECTION,
 } from "../services/firebase.service";
 import { validString } from "../services/util.service";
+import { UserProfile } from "./firebase.models";
 import { validPrismId } from "./firebase.util";
 
 interface FirebaseContext {
@@ -52,15 +52,7 @@ interface FirebaseContext {
   updateUserEmail?: (currentEmail: string, newEmail: string) => Promise<void>;
   updateUserPassword?: (newPassword: string) => Promise<void>;
   deleteAccount?: () => Promise<void>;
-  fetchUserProfile?: () => Promise<UserProfile | undefined>;
   addNewUser?: (prismId: string) => Promise<void>;
-}
-
-export interface UserProfile {
-  prismId: string;
-  progressEmail: boolean;
-  timeToStand: boolean;
-  sides: Task[];
 }
 
 const defaultValue: FirebaseContext = {
@@ -258,26 +250,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     return setDoc(docRef, profile);
   };
 
-  // TODO
-  //! Delete this and setup in Mobx
-  const fetchUserProfile = async () => {
-    if (!auth.currentUser?.uid)
-      return Promise.reject({ message: ERROR_USER_IS_NULL });
-    const docRef = doc(db, FIREBASE_USERS_COLLECTION, auth.currentUser?.uid);
-    if (!docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists())
-      return Promise.reject({ message: ERROR_USER_IS_NULL });
-    const snap = docSnap.data() as UserProfile;
-    setProfile({
-      ...profile,
-      prismId: snap?.prismId ?? "N/A",
-      progressEmail: snap?.progressEmail ?? false,
-      timeToStand: snap?.timeToStand ?? false,
-    });
-    return profile;
-  };
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user: User | null) => {
       setCurrentUser(user);
@@ -299,7 +271,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     updateUserEmail,
     updateUserPassword,
     deleteAccount,
-    fetchUserProfile,
     addNewUser,
   };
 

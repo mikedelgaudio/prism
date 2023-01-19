@@ -5,6 +5,8 @@
 - [] Modify navigation bar to support account dropdown rather than logout button
 - [] Add error boundaries to additional components
 - [] Email verification notification should be an observable?
+- [] Add password strength for registration
+- [] Some components are missing index.ts for Cube, Account, and WeekCard
 
 # Settings
 - [x] Ability to read tasks pool from Firebase
