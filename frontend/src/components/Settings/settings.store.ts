@@ -1,3 +1,4 @@
+import { getAuth } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
 import { v4 as uuidv4 } from "uuid";
@@ -16,22 +17,17 @@ export interface Task {
 export class SettingsStore {
   // ! Populate from database
   public tasksPool: Task[] = [];
-  private userId = "";
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  // Sets the user's Firebase UID
-  init(id: string | undefined) {
-    if (!id) return;
-    this.userId = id;
-  }
-
   async getTasks() {
     try {
-      if (!this.userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, this.userId);
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
+      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
       if (!docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
 
       const docSnap = await getDoc(docRef);

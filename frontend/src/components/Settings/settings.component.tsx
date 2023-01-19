@@ -1,21 +1,18 @@
 import { observer } from "mobx-react";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useFirebaseAuth } from "../../firebase/firebase.context";
 import { useTitle } from "../../hooks/use-title";
 import { Account } from "./Account/account.settings.component";
 import { Cube } from "./Cube/cube.settings.component";
 import { OnboardingCube } from "./OnboardingCube";
-import { SettingsContext } from "./settings.context";
 
 const Settings = observer(() => {
   useTitle("Settings - Prism");
 
-  const { fetchUserProfile, profile, currentUser } = useFirebaseAuth();
-  const { settingsStore } = useContext(SettingsContext);
+  const { fetchUserProfile, profile } = useFirebaseAuth();
 
   useEffect(() => {
     (async () => (fetchUserProfile ? await fetchUserProfile() : null))();
-    settingsStore.init(currentUser?.uid);
   }, []);
 
   return (
