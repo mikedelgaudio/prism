@@ -1,4 +1,4 @@
-# Prism Productivity
+# Prism Productivity [![FE Vite Build](https://github.com/mikedelgaudio/prism/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/mikedelgaudio/prism/actions/workflows/node.js.yml)
 
 ## Technical stack:
 
