@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
 import { v4 as uuidv4 } from "uuid";
 import { Task, UserProfile } from "../../firebase/firebase.models";
@@ -71,11 +71,14 @@ export class SettingsStore {
       const auth = getAuth();
       const userId = auth.currentUser?.uid;
       if (!userId) return;
-      await updateDoc(doc(db, FIREBASE_USERS_COLLECTION, userId), {
-        sides: task,
+      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
+      await updateDoc(docRef, {
+        sides: arrayUnion(task),
       });
 
-      this.tasks?.unshift(task);
+      runInAction(() => {
+        this.profile?.sides?.unshift(task);
+      });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_ADD_TASK";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
