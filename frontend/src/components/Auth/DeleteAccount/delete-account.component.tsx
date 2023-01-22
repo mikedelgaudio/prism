@@ -24,10 +24,6 @@ const DeleteAccount = observer(() => {
       setLoading(true);
       if (deleteAccount) await deleteAccount();
       else throw new Error();
-
-      // TODO
-      // ! Must disconnect Prism too
-
       const TOAST_ID = "SUCCESS_DELETE_ACCOUNT";
       TOAST_SERVICE.success(TOAST_ID, "Successfully deleted account.", true);
       navigate("/login");

@@ -43,6 +43,7 @@ export const errorToMsg = (e: any): string => {
       break;
 
     default:
+      console.warn("Failed to hit error given: " + e);
       break;
   }
 

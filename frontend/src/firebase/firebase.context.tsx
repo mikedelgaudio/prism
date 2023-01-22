@@ -1,4 +1,3 @@
-import { uuidv4 } from "@firebase/util";
 import {
   createUserWithEmailAndPassword,
   deleteUser,
@@ -13,7 +12,7 @@ import {
   User,
   UserCredential,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import {
   createContext,
   ReactNode,
@@ -33,7 +32,7 @@ import {
   FIREBASE_USERS_COLLECTION,
 } from "../services/firebase.service";
 import { validString } from "../services/util.service";
-import { UserProfile } from "./firebase.models";
+import { DEFAULT_PROFILE, UserProfile } from "./firebase.models";
 import { validPrismId } from "./firebase.util";
 
 interface FirebaseContext {
@@ -68,43 +67,6 @@ export function useFirebaseAuth() {
 export function FirebaseProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [profile, setProfile] = useState<UserProfile>({
-    prismId: "N/A",
-    progressEmail: false,
-    timeToStand: false,
-    sides: [
-      {
-        side: "1",
-        id: "1-t",
-        name: "Task A",
-        color: "#ff0000",
-      },
-      {
-        side: "2",
-        id: "2-t",
-        name: "Task B",
-        color: "#0002fe",
-      },
-      {
-        side: "3",
-        id: "3-t",
-        name: "Task C",
-        color: "#03480e",
-      },
-      {
-        side: "4",
-        id: "4-t",
-        name: "Task D",
-        color: "#ca6e04",
-      },
-      {
-        side: "5",
-        id: "5-t",
-        name: "Task E",
-        color: "#9808fe",
-      },
-    ],
-  });
 
   const register = async (email: string, password: string, prismId: string) => {
     if (!validString(email) || !validString(password))
@@ -185,9 +147,12 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     return sendEmailVerification(auth.currentUser);
   };
 
+  // Deletes user from Firebase Auth and Firestore
   const deleteAccount = async () => {
     if (!auth.currentUser)
       return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+    await deleteDoc(doc(db, FIREBASE_USERS_COLLECTION, auth.currentUser.uid));
 
     return deleteUser(auth.currentUser);
   };
@@ -210,44 +175,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     // TODO
     // ! Validate PrismID?
 
-    const profile: UserProfile = {
-      prismId,
-      progressEmail: false,
-      timeToStand: false,
-      sides: [
-        {
-          side: "1",
-          id: uuidv4(),
-          name: "Task A",
-          color: "#ff0000",
-        },
-        {
-          side: "2",
-          id: uuidv4(),
-          name: "Task B",
-          color: "#0002fe",
-        },
-        {
-          side: "3",
-          id: uuidv4(),
-          name: "Task C",
-          color: "#03480e",
-        },
-        {
-          side: "4",
-          id: uuidv4(),
-          name: "Task D",
-          color: "#ca6e04",
-        },
-        {
-          side: "5",
-          id: uuidv4(),
-          name: "Task E",
-          color: "#9808fe",
-        },
-      ],
-    };
-    return setDoc(docRef, profile);
+    return setDoc(docRef, DEFAULT_PROFILE);
   };
 
   useEffect(() => {
@@ -261,7 +189,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
 
   const value = {
     currentUser,
-    profile,
     login,
     register,
     logout,

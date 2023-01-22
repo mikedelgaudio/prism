@@ -5,7 +5,7 @@ import { SettingsContext } from "../../../settings.context";
 const CubeAssignedItem = observer(({ id }: { id: string }) => {
   const [editing, setEditing] = useState(false);
   const { settingsStore } = useContext(SettingsContext);
-  const tasks = settingsStore.tasks;
+  const tasks = settingsStore?.tasks;
   const task = tasks?.find(task => task.id === id);
   const [selected, setSelected] = useState(task?.id ?? "");
 

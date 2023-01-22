@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
 import { v4 as uuidv4 } from "uuid";
 import { Task, UserProfile } from "../../firebase/firebase.models";
@@ -38,7 +38,17 @@ export class SettingsStore {
   }
 
   get tasks() {
+    // if (Array.isArray(this.profile?.sides)) {
     return this.profile?.sides;
+    // }
+
+    // ! Build logic to recover gracefully but notify the user?
+    // const auth = getAuth();
+    // const userId = auth.currentUser?.uid;
+    // if (!userId) return;
+    // const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
+    // Tasks pool/sides corrupted (reformat)
+    // if (this.) this.tasks = [];
   }
 
   get assignedTasks() {
@@ -49,7 +59,7 @@ export class SettingsStore {
     return this.tasks?.find(task => task.id === id);
   }
 
-  addTask() {
+  async addTask() {
     const task: Task = {
       side: null,
       id: uuidv4(),
@@ -57,8 +67,19 @@ export class SettingsStore {
       color: "#eee",
     };
 
-    // ! Arguably don't push to DB on blank entry?
-    this.tasks?.unshift(task);
+    try {
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
+      await updateDoc(doc(db, FIREBASE_USERS_COLLECTION, userId), {
+        sides: task,
+      });
+
+      this.tasks?.unshift(task);
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_ADD_TASK";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+    }
   }
 
   editTaskName(id: string | undefined, newName: string | undefined) {

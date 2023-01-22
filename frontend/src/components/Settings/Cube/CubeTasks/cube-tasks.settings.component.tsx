@@ -16,7 +16,7 @@ const CubeTasks = observer(() => {
 
         <button
           className="underline hover:no-underline"
-          onClick={() => settingsStore.addTask()}
+          onClick={async () => await settingsStore.addTask()}
         >
           Add task
         </button>
