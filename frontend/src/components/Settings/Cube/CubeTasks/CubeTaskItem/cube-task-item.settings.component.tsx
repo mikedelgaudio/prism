@@ -25,7 +25,7 @@ const CubeTaskItem = observer(({ id }: { id: string }) => {
     <button
       aria-label={`Delete task ${task?.name}`}
       className="p-3 rounded-xl hover:bg-slate-200 disabled:opacity-50 transition-colors"
-      onClick={() => settingsStore.deleteTask(task?.id)}
+      onClick={async () => await settingsStore.deleteTask(task?.id)}
       type="button"
       disabled={task?.side !== null}
     >
@@ -97,7 +97,7 @@ const CubeTaskItem = observer(({ id }: { id: string }) => {
   );
 
   return (
-    <li className={`bg-slate-100 rounded-xl`} aria-expanded={false}>
+    <li className={"bg-slate-100 rounded-xl"} aria-expanded={false}>
       <form
         className="flex gap-4 p-6 justify-between items-center"
         onSubmit={handleSubmit}

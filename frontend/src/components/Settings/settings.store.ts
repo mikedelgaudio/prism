@@ -92,11 +92,25 @@ export class SettingsStore {
     this.profile.sides[index].name = newName;
   }
 
-  deleteTask(id: string | undefined) {
-    if (!id || !this.profile?.sides) return;
-    // ! Do database change or error handling here
-    if (this.getTaskById(id)?.side === null) {
-      this.profile.sides = this.profile.sides.filter(task => task.id !== id);
+  async deleteTask(id: string | undefined) {
+    if (!id || !this.tasks || !this.profile) return;
+    if (this.getTaskById(id)?.side !== null) return;
+
+    try {
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
+      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
+      await updateDoc(docRef, {
+        sides: this.tasks.filter(task => task.id !== id),
+      });
+      runInAction(() => {
+        if (!this.profile?.sides || !this.tasks) return;
+        this.profile.sides = this.tasks.filter(task => task.id !== id);
+      });
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_DELETE_TASK";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
     }
   }
 

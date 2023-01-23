@@ -5,8 +5,7 @@ import { SettingsContext } from "../../../settings.context";
 const CubeAssignedItem = observer(({ id }: { id: string }) => {
   const [editing, setEditing] = useState(false);
   const { settingsStore } = useContext(SettingsContext);
-  const tasks = settingsStore?.tasks;
-  const task = tasks?.find(task => task.id === id);
+  const task = settingsStore.getTaskById(id);
   const [selected, setSelected] = useState(task?.id ?? "");
 
   const handleSelection = (e: any) => {
@@ -67,7 +66,7 @@ const CubeAssignedItem = observer(({ id }: { id: string }) => {
         value={selected}
         onChange={handleSelection}
       >
-        {tasks?.map(task => {
+        {settingsStore.tasks?.map(task => {
           return (
             <option key={`${task.side}-${task.id}-option-key`} value={task.id}>
               {task.name}
