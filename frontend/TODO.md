@@ -24,7 +24,6 @@
 - [x] Ability to add task to Firebase
 - [] Ability to connect a new Prism to the account after disconnect
 - [] Ability to change account display name
-- [] Ability to delete account in Firebase
 
 # Dashboard
 

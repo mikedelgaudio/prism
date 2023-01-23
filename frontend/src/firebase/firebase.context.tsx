@@ -161,8 +161,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     return signOut(auth);
   };
 
-  // TODO
-  // ! Ensure PrismID is only used once
   const addNewUser = async (prismId: string) => {
     if (!validString(prismId))
       return Promise.reject({ message: ERROR_INVALID_INPUT });
@@ -174,8 +172,10 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
 
     // TODO
     // ! Validate PrismID?
+    const newUserProfile = DEFAULT_PROFILE;
+    newUserProfile.prismId = prismId;
 
-    return setDoc(docRef, DEFAULT_PROFILE);
+    return setDoc(docRef, newUserProfile);
   };
 
   useEffect(() => {
