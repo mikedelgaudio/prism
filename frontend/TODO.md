@@ -21,7 +21,7 @@
 - [x] Ability to read tasks pool from Firebase
 - [] Ability to save side task changes to Firebase
 - [x] Ability to delete task change to Firebase
-- [] Ability to modify task name change to Firebase
+- [x] Ability to modify task name change to Firebase
 - [x] Ability to add task to Firebase
 - [] Ability to connect a new Prism to the account after disconnect
 - [] Ability to change account display name

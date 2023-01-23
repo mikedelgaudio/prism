@@ -85,11 +85,35 @@ export class SettingsStore {
     }
   }
 
-  editTaskName(id: string | undefined, newName: string | undefined) {
-    if (!id || !newName || !this.profile?.sides) return;
-    // ! Do database change or error handling here
-    const index = this.profile.sides.findIndex(task => task.id === id);
-    this.profile.sides[index].name = newName;
+  async editTaskName(id: string | undefined, newName: string | undefined) {
+    if (!id || !newName || !this.profile?.sides || !this.tasks) return;
+
+    try {
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
+      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
+      let index = 0;
+      const updatedTasks = this.tasks.map((task, i) => {
+        if (task.id === id) {
+          index = i;
+          task.name = newName;
+        }
+        return task;
+      });
+
+      await updateDoc(docRef, {
+        sides: updatedTasks,
+      });
+
+      runInAction(() => {
+        if (!this.profile?.sides) return;
+        this.profile.sides[index].name = newName;
+      });
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_EDIT_TASK";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+    }
   }
 
   async deleteTask(id: string | undefined) {

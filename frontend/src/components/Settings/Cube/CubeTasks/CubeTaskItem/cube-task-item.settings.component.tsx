@@ -12,9 +12,9 @@ const CubeTaskItem = observer(({ id }: { id: string }) => {
     setLabel(prev => (prev = e.target.value));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    settingsStore.editTaskName(task?.id, label);
+    await settingsStore.editTaskName(task?.id, label);
     setLabel(prev => (prev = ""));
   };
 
