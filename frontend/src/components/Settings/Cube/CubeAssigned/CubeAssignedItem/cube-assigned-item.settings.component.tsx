@@ -14,9 +14,9 @@ const CubeAssignedItem = observer(({ id }: { id: string }) => {
     // ! Error handling?
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    settingsStore.assignTask(id, selected);
+    await settingsStore.assignTask(id, selected);
   };
 
   const editBtn = (

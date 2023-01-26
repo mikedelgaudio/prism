@@ -7,6 +7,7 @@
 - [] Modify navigation bar to support account dropdown rather than logout button
 - [] Add error boundaries to additional components
 - [] Some components are missing index.ts for Cube, Account, and WeekCard
+- [] Research React Query instead of useEffect
 
 # Register / Login
 
@@ -19,7 +20,7 @@
 # Settings
 
 - [x] Ability to read tasks pool from Firebase
-- [] Ability to save side task changes to Firebase
+- [x] Ability to save side task changes to Firebase
 - [x] Ability to delete task change to Firebase
 - [x] Ability to modify task name change to Firebase
 - [x] Ability to add task to Firebase

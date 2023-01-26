@@ -38,17 +38,7 @@ export class SettingsStore {
   }
 
   get tasks() {
-    // if (Array.isArray(this.profile?.sides)) {
     return this.profile?.sides;
-    // }
-
-    // ! Build logic to recover gracefully but notify the user?
-    // const auth = getAuth();
-    // const userId = auth.currentUser?.uid;
-    // if (!userId) return;
-    // const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-    // Tasks pool/sides corrupted (reformat)
-    // if (this.) this.tasks = [];
   }
 
   get assignedTasks() {
@@ -138,22 +128,37 @@ export class SettingsStore {
     }
   }
 
-  assignTask(fromId: string | undefined, toId: string | undefined) {
+  async assignTask(fromId: string | undefined, toId: string | undefined) {
     if (!fromId || !toId) return;
+    if (fromId === toId) return;
+    try {
+      const toTask = this.getTaskById(toId);
+      const fromTask = this.getTaskById(fromId);
 
-    const toTask = this.getTaskById(toId);
-    const fromTask = this.getTaskById(fromId);
+      if (!toTask || !fromTask) throw new Error();
 
-    if (!toTask || !fromTask) return;
+      runInAction(() => {
+        const prev = { ...fromTask };
+        const next = { ...toTask };
 
-    const prev = { ...fromTask };
-    const next = { ...toTask };
+        fromTask.id = next.id;
+        fromTask.name = next.name;
+        fromTask.color = prev.color;
+        toTask.id = prev.id;
+        toTask.name = prev.name;
+        toTask.color = next.color;
+      });
 
-    fromTask.id = next.id;
-    fromTask.name = next.name;
-    fromTask.color = prev.color;
-    toTask.id = prev.id;
-    toTask.name = prev.name;
-    toTask.color = next.color;
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
+      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
+      await updateDoc(docRef, {
+        sides: this.tasks,
+      });
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_ASSIGN_TASK";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+    }
   }
 }
