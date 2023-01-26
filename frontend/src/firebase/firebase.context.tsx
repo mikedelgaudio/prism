@@ -208,9 +208,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// TODO
-// ! What type is children?
-function RequireAuth({ children }: { children: any }) {
+function RequireAuth({ children }: { children: ReactNode }) {
   const { currentUser } = useFirebaseAuth();
   const location = useLocation();
 
@@ -225,9 +223,7 @@ function RequireAuth({ children }: { children: any }) {
   return children;
 }
 
-// TODO
-// ! What type is children?
-function RequireUnAuth({ children }: { children: any }) {
+function RequireUnAuth({ children }: { children: ReactNode }) {
   const { currentUser } = useFirebaseAuth();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";

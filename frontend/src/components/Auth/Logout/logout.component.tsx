@@ -1,9 +1,10 @@
 import { observer } from "mobx-react";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { useTitle } from "../../../hooks/use-title";
 import { TOAST_SERVICE } from "../../../services/toast.service";
+import { SettingsContext } from "../../Settings/settings.context";
 import { AuthLayout } from "../../Shared";
 
 const Logout = observer(() => {
@@ -11,11 +12,13 @@ const Logout = observer(() => {
 
   const navigate = useNavigate();
   const { currentUser, logout } = useFirebaseAuth();
+  const { settingsStore } = useContext(SettingsContext);
 
   useEffect(() => {
     async function handleLogout() {
       try {
         if (logout) await logout();
+        settingsStore.clearProfile();
         const TOAST_ID = "SUCCESS_LOGOUT";
         TOAST_SERVICE.success(TOAST_ID, "Successfully logged out.", true);
       } catch {

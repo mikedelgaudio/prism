@@ -49,6 +49,10 @@ export class SettingsStore {
     return this.tasks?.find(task => task.id === id);
   }
 
+  clearProfile() {
+    this.profile = undefined;
+  }
+
   async addTask() {
     const task: Task = {
       side: null,
@@ -155,6 +159,26 @@ export class SettingsStore {
       const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
       await updateDoc(docRef, {
         sides: this.tasks,
+      });
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_ASSIGN_TASK";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+    }
+  }
+
+  async disconnectPrism() {
+    try {
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
+      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
+      await updateDoc(docRef, {
+        prismId: "",
+      });
+
+      runInAction(() => {
+        if (!this.profile?.prismId) return;
+        this.profile.prismId = "";
       });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_ASSIGN_TASK";

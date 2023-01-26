@@ -10,8 +10,6 @@ const CubeAssignedItem = observer(({ id }: { id: string }) => {
 
   const handleSelection = (e: any) => {
     setSelected(prev => (prev = e.target.value));
-    // ! Watch out mixing props vs store will this be an issue?
-    // ! Error handling?
   };
 
   const handleSubmit = async (e: any) => {

@@ -24,6 +24,7 @@
 - [x] Ability to delete task change to Firebase
 - [x] Ability to modify task name change to Firebase
 - [x] Ability to add task to Firebase
+- [x] Ability to disconnect Prism from account
 - [] Ability to connect a new Prism to the account after disconnect
 - [] Ability to change account display name
 

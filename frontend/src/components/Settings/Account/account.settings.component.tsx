@@ -7,7 +7,7 @@ import { Card } from "../../Shared";
 import { SettingsContext } from "../settings.context";
 
 const Account = observer(() => {
-  const { currentUser, sendVerificationEmail, profile } = useFirebaseAuth();
+  const { currentUser, sendVerificationEmail } = useFirebaseAuth();
   const { settingsStore } = useContext(SettingsContext);
 
   // TODO
@@ -70,7 +70,7 @@ const Account = observer(() => {
           <div className="flex flex-col pt-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Prism serial</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              {settingsStore?.profile?.prismId}
+              {settingsStore?.profile?.prismId || "N/A"}
             </dd>
           </div>
         </dl>
@@ -155,8 +155,8 @@ const Account = observer(() => {
 
             <button
               className="underline hover:no-underline disabled:opacity-50 disabled:no-underline"
-              // onClick={() => profileStore.disconnectPrism()}
-              disabled={profile?.prismId === ""}
+              onClick={async () => await settingsStore.disconnectPrism()}
+              disabled={settingsStore.profile?.prismId === ""}
             >
               Disconnect
             </button>
