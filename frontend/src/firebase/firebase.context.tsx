@@ -208,7 +208,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   );
 }
 
-function RequireAuth({ children }: { children: ReactNode }) {
+function RequireAuth({ children }: { children: any }) {
   const { currentUser } = useFirebaseAuth();
   const location = useLocation();
 
@@ -223,7 +223,7 @@ function RequireAuth({ children }: { children: ReactNode }) {
   return children;
 }
 
-function RequireUnAuth({ children }: { children: ReactNode }) {
+function RequireUnAuth({ children }: { children: any }) {
   const { currentUser } = useFirebaseAuth();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
