@@ -10,9 +10,8 @@ import {
   Tooltip,
 } from "chart.js";
 import { observer } from "mobx-react";
-import { ReactNode, useContext, useEffect } from "react";
+import { ReactNode } from "react";
 import { GenericErrorBoundary } from "../../error-boundaries";
-import { DashboardContext } from "./dashboard.context";
 import { Header } from "./Header";
 
 ChartJS.register(
@@ -27,12 +26,6 @@ ChartJS.register(
 );
 
 const Dashboard = observer(({ children }: { children: ReactNode }) => {
-  const { dashboardStore } = useContext(DashboardContext);
-
-  useEffect(() => {
-    (async () => await dashboardStore.getProfile())();
-  }, []);
-
   return (
     <GenericErrorBoundary>
       <div className="relative py-6 bg-slate-100">

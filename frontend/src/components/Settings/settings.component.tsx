@@ -1,5 +1,6 @@
 import { observer } from "mobx-react";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
+import { useQuery } from "react-query";
 import { useTitle } from "../../hooks/use-title";
 import { Account } from "./Account/account.settings.component";
 import { Cube } from "./Cube/cube.settings.component";
@@ -11,9 +12,18 @@ const Settings = observer(() => {
 
   const { settingsStore } = useContext(SettingsContext);
 
-  useEffect(() => {
-    (async () => await settingsStore.getProfile())();
-  }, []);
+  const { data, status, refetch } = useQuery(
+    "loadProfile",
+    async () => {
+      await settingsStore.getProfile();
+    },
+    {
+      // Enable retries on error
+      retry: true,
+      // Start with a delay of 1 second, and double the delay after each retry
+      retryDelay: attemptIndex => Math.pow(2, attemptIndex) * 1000,
+    },
+  );
 
   return (
     <div className="relative py-6 bg-slate-100">

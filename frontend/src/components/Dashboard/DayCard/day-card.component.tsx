@@ -34,27 +34,27 @@ const DayCard = () => {
     labels,
     datasets: [
       {
-        label: "Study Chemical Engineering",
+        label: dashboardStore.assignedTasks[0].name,
         data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
         backgroundColor: `${colors.indigo[400]}`,
       },
       {
-        label: "Watch YouTube",
+        label: dashboardStore.assignedTasks[1].name,
         data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
         backgroundColor: `${colors.indigo[300]}`,
       },
       {
-        label: "Hang with Friends",
+        label: dashboardStore.assignedTasks[2].name,
         data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
         backgroundColor: `${colors.indigo[600]}`,
       },
       {
-        label: "Read Book",
+        label: dashboardStore.assignedTasks[3].name,
         data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
         backgroundColor: `${colors.indigo[800]}`,
       },
       {
-        label: "Study Math",
+        label: dashboardStore.assignedTasks[4].name,
         data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
         backgroundColor: `${colors.indigo[900]}`,
       },

@@ -7,7 +7,7 @@
 - [] Modify navigation bar to support account dropdown rather than logout button
 - [] Add error boundaries to additional components
 - [] Some components are missing index.ts for Cube, Account, and WeekCard
-- [] Research React Query instead of useEffect
+- [x] Research React Query instead of useEffect
 
 # Register / Login
 
@@ -27,7 +27,10 @@
 - [x] Ability to disconnect Prism from account
 - [] Ability to connect a new Prism to the account after disconnect
 - [] Ability to change account display name
+- [] Creative ways to do skeleton loading for Cards
 
 # Dashboard
 
 - [] Logic to consume API response from Google Sheet / Zapio from cube
+- [] Determine logic in case user changes Task name it should not affect older days. For example, Day A side 1 was: "Read" and Day B side 1 was: "Math". The cube should remember that Day A's side was "Read" rather than "Math.
+- [] Creative ways to do skeleton loading for Cards
