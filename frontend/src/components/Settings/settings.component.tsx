@@ -12,7 +12,7 @@ const Settings = observer(() => {
   const { settingsStore } = useContext(SettingsContext);
 
   useEffect(() => {
-    (async () => settingsStore.getProfile())();
+    (async () => await settingsStore.getProfile())();
   }, []);
 
   return (

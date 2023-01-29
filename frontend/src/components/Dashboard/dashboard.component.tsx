@@ -30,7 +30,7 @@ const Dashboard = observer(({ children }: { children: ReactNode }) => {
   const { dashboardStore } = useContext(DashboardContext);
 
   useEffect(() => {
-    (async () => dashboardStore.getProfile())();
+    (async () => await dashboardStore.getProfile())();
   }, []);
 
   return (

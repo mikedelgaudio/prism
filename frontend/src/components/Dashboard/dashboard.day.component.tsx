@@ -12,6 +12,8 @@ const DashboardDay = observer(() => {
 
   // Fetch
 
+  // Infinite lazy load cards in?
+
   return (
     <Dashboard>
       <EmptyCard />

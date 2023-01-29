@@ -41,6 +41,7 @@ export class DashboardStore {
   });
 
   public profile: UserProfile | undefined;
+  private dayLabels: string[] = [];
 
   public raw_data: IRawUploadedDay[] = [
     {
@@ -82,6 +83,18 @@ export class DashboardStore {
 
   constructor() {
     makeAutoObservable(this);
+
+    // Load in day labels
+    for (let i = 0; i < 24; i++) {
+      const suffix = i < 12 ? "am" : "pm";
+      const prefix = i < 12 ? i : i - 12;
+      if (prefix === 0) this.dayLabels.push(`12${suffix}`);
+      else this.dayLabels.push(`${prefix}${suffix}`);
+    }
+  }
+
+  get dayLabelList(): string[] {
+    return this.dayLabels;
   }
 
   get rawData(): IRawUploadedDay[] {
@@ -116,10 +129,27 @@ export class DashboardStore {
   }
 
   get assignedTasks() {
-    return this.tasks?.filter(task => task.side !== null);
+    if (!this.tasks) return [];
+    return this.tasks.filter(task => task.side !== null);
   }
 
   distributeTimeLoad(sideSlot: number[]) {
+    // const side1Breakdown = new Array(24).fill(0);
+    // const MINUTES_IN_HOUR = 60;
+
+    // // Must guarantee that all data is associated with particular day
+    // dashboardStore.rawData.map(upload => {
+    //   upload.side1.map(record => {
+    //     const day = new Date(record.trackingStartTime);
+    //     const timeSpent = Math.ceil(
+    //       (record.trackingEndTime - record.trackingStartTime) / 60000,
+    //     );
+
+    //     // Calculate total time spent during recorded side
+    //     side1Breakdown[day.getHours()] += timeSpent;
+    //   });
+    // });
+
     const MINUTES_IN_HOUR = 60;
     for (let i = 0; i < sideSlot.length; i++) {
       const slot = sideSlot[i];
