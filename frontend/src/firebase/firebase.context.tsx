@@ -32,12 +32,11 @@ import {
   FIREBASE_USERS_COLLECTION,
 } from "../services/firebase.service";
 import { validString } from "../services/util.service";
-import { DEFAULT_PROFILE, UserProfile } from "./firebase.models";
+import { DEFAULT_PROFILE } from "./firebase.models";
 import { validPrismId } from "./firebase.util";
 
 interface FirebaseContext {
   currentUser: User | null;
-  profile?: UserProfile;
   login?: (email: string, password: string) => Promise<UserCredential>;
   register?: (
     email: string,

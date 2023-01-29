@@ -1,11 +1,15 @@
 import { useContext } from "react";
 import { Bar } from "react-chartjs-2";
 import { colors } from "../../../services/util.service";
+import { SettingsContext } from "../../Settings/settings.context";
 import { Card } from "../../Shared";
 import { DashboardContext } from "../dashboard.context";
 
 const DayCard = () => {
   const { dashboardStore } = useContext(DashboardContext);
+  const { settingsStore } = useContext(SettingsContext);
+
+  const tasks = settingsStore.assignedTasks;
 
   const options = {
     responsive: true,

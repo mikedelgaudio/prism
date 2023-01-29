@@ -1,4 +1,10 @@
-import { makeAutoObservable } from "mobx";
+import { getAuth } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { makeAutoObservable, runInAction } from "mobx";
+import { UserProfile } from "../../firebase/firebase.models";
+import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
+import { db, FIREBASE_USERS_COLLECTION } from "../../services/firebase.service";
+import { TOAST_SERVICE } from "../../services/toast.service";
 
 export interface IRawUploadedSide {
   trackingStartTime: number;
@@ -34,7 +40,7 @@ export class DashboardStore {
     dateStyle: "short",
   });
 
-  public dayView = true;
+  public profile: UserProfile | undefined;
 
   public raw_data: IRawUploadedDay[] = [
     {
@@ -82,8 +88,35 @@ export class DashboardStore {
     return this.raw_data;
   }
 
-  changeView() {
-    this.dayView = !this.dayView;
+  async getProfile() {
+    try {
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
+      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
+      if (!docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists())
+        return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+      const snap = docSnap.data() as UserProfile;
+      runInAction(() => {
+        this.profile = snap;
+      });
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_LOAD_ACCOUNT_SETTINGS";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+    }
+  }
+
+  get tasks() {
+    return this.profile?.sides;
+  }
+
+  get assignedTasks() {
+    return this.tasks?.filter(task => task.side !== null);
   }
 
   distributeTimeLoad(sideSlot: number[]) {
