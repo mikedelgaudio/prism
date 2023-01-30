@@ -12,7 +12,7 @@ import {
   User,
   UserCredential,
 } from "firebase/auth";
-import { deleteDoc, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, setDoc } from "firebase/firestore";
 import {
   createContext,
   ReactNode,
@@ -29,10 +29,11 @@ import {
 import {
   auth,
   db,
+  FIREBASE_TASKS_COLLECTION,
   FIREBASE_USERS_COLLECTION,
 } from "../services/firebase.service";
 import { validString } from "../services/util.service";
-import { DEFAULT_PROFILE } from "./firebase.models";
+import { DEFAULT_PROFILE, DEFAULT_PROFILE_TASKS } from "./firebase.models";
 import { validPrismId } from "./firebase.util";
 
 interface FirebaseContext {
@@ -164,9 +165,10 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     if (!validString(prismId))
       return Promise.reject({ message: ERROR_INVALID_INPUT });
 
-    if (!auth.currentUser?.uid)
-      return Promise.reject({ message: ERROR_USER_IS_NULL });
-    const docRef = doc(db, FIREBASE_USERS_COLLECTION, auth.currentUser?.uid);
+    const userId = auth.currentUser?.uid;
+
+    if (!userId) return Promise.reject({ message: ERROR_USER_IS_NULL });
+    const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
     if (!docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
 
     // TODO
@@ -174,7 +176,26 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     const newUserProfile = DEFAULT_PROFILE;
     newUserProfile.prismId = prismId;
 
-    return setDoc(docRef, newUserProfile);
+    try {
+      await setDoc(docRef, newUserProfile);
+
+      const x = collection(
+        db,
+        `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_TASKS_COLLECTION}`,
+      );
+
+      DEFAULT_PROFILE_TASKS.forEach(async task => {
+        try {
+          await addDoc(x, task);
+        } catch (e) {
+          // console.error(JSON.stringify(e));
+        }
+      });
+    } catch (e) {
+      return Promise.reject({ message: "Error" });
+    }
+
+    return Promise.resolve();
   };
 
   useEffect(() => {

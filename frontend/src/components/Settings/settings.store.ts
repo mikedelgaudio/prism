@@ -1,5 +1,12 @@
 import { getAuth } from "firebase/auth";
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
 import { v4 as uuidv4 } from "uuid";
 import { Task, UserProfile } from "../../firebase/firebase.models";
@@ -36,6 +43,16 @@ export class SettingsStore {
 
       if (!docSnap.exists())
         return Promise.reject({ message: ERROR_USER_IS_NULL });
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
+      const tasksInCollection = collection(db, `users/${userId}/tasks`);
+      // const q = query(tasksInCollection, orderBy("createdAt"));
+      const tasks = await getDocs(tasksInCollection);
+      // console.log(tasksInCollection, q, tasks, tasks.docs);
+      tasks.docs.forEach(task => {
+        // console.log(task.data());
+      });
 
       const snap = docSnap.data() as UserProfile;
       runInAction(() => {
