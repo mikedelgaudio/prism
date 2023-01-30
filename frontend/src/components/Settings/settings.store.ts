@@ -14,15 +14,25 @@ export class SettingsStore {
     makeAutoObservable(this);
   }
 
+  get tasks() {
+    return this.profile?.sides;
+  }
+
+  get docRef() {
+    const auth = getAuth();
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+    return doc(db, FIREBASE_USERS_COLLECTION, userId);
+  }
+
+  get assignedTasks() {
+    return this.tasks?.filter(task => task.side !== null);
+  }
+
   async getProfile() {
     try {
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-      if (!docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
-
-      const docSnap = await getDoc(docRef);
+      if (!this.docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
+      const docSnap = await getDoc(this.docRef);
 
       if (!docSnap.exists())
         return Promise.reject({ message: ERROR_USER_IS_NULL });
@@ -35,14 +45,6 @@ export class SettingsStore {
       const TOAST_ID = "FAILED_TO_LOAD_ACCOUNT_SETTINGS";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
     }
-  }
-
-  get tasks() {
-    return this.profile?.sides;
-  }
-
-  get assignedTasks() {
-    return this.tasks?.filter(task => task.side !== null);
   }
 
   getTaskById(id: string): Task | undefined {
@@ -62,11 +64,8 @@ export class SettingsStore {
     };
 
     try {
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-      await updateDoc(docRef, {
+      if (!this.docRef) throw new Error();
+      await updateDoc(this.docRef, {
         sides: arrayUnion(task),
       });
 
@@ -83,10 +82,7 @@ export class SettingsStore {
     if (!id || !newName || !this.profile?.sides || !this.tasks) return;
 
     try {
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
+      if (!this.docRef) throw new Error();
       let index = 0;
       const updatedTasks = this.tasks.map((task, i) => {
         if (task.id === id) {
@@ -96,7 +92,7 @@ export class SettingsStore {
         return task;
       });
 
-      await updateDoc(docRef, {
+      await updateDoc(this.docRef, {
         sides: updatedTasks,
       });
 
@@ -115,11 +111,8 @@ export class SettingsStore {
     if (this.getTaskById(id)?.side !== null) return;
 
     try {
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-      await updateDoc(docRef, {
+      if (!this.docRef) throw new Error();
+      await updateDoc(this.docRef, {
         sides: this.tasks.filter(task => task.id !== id),
       });
       runInAction(() => {
@@ -153,11 +146,8 @@ export class SettingsStore {
         toTask.color = next.color;
       });
 
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-      await updateDoc(docRef, {
+      if (!this.docRef) throw new Error();
+      await updateDoc(this.docRef, {
         sides: this.tasks,
       });
     } catch (e) {
@@ -168,11 +158,8 @@ export class SettingsStore {
 
   async disconnectPrism() {
     try {
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-      await updateDoc(docRef, {
+      if (!this.docRef) throw new Error();
+      await updateDoc(this.docRef, {
         prismId: "",
       });
 
@@ -182,6 +169,23 @@ export class SettingsStore {
       });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_ASSIGN_TASK";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+    }
+  }
+
+  async addPrismId(prismId: string) {
+    try {
+      if (!this.docRef) throw new Error();
+      await updateDoc(this.docRef, {
+        prismId: prismId,
+      });
+
+      runInAction(() => {
+        if (this.profile?.prismId !== "" && !this.profile?.prismId) return;
+        this.profile.prismId = prismId;
+      });
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_ADD_PRISM_ID";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
     }
   }
