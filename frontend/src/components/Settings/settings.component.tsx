@@ -2,6 +2,7 @@ import { observer } from "mobx-react";
 import { useContext } from "react";
 import { useQuery } from "react-query";
 import { useTitle } from "../../hooks/use-title";
+import { Loading } from "../Shared";
 import { Account } from "./Account/account.settings.component";
 import { Cube } from "./Cube/cube.settings.component";
 import { OnboardingCube } from "./OnboardingCube";
@@ -13,7 +14,7 @@ const Settings = observer(() => {
   const { settingsStore } = useContext(SettingsContext);
 
   const { data, status, refetch } = useQuery(
-    "loadProfile",
+    "loadProfileSettings",
     async () => {
       await settingsStore.getProfile();
     },
@@ -23,6 +24,13 @@ const Settings = observer(() => {
       // Start with a delay of 1 second, and double the delay after each retry
       retryDelay: attemptIndex => Math.pow(2, attemptIndex) * 1000,
     },
+  );
+
+  const renderCards = (
+    <>
+      {settingsStore?.profile?.prismId ? <Cube /> : <OnboardingCube />}
+      <Account />
+    </>
   );
 
   return (
@@ -38,8 +46,7 @@ const Settings = observer(() => {
         </div>
 
         <div className="flex flex-col pt-6 gap-6">
-          {settingsStore?.profile?.prismId ? <Cube /> : <OnboardingCube />}
-          <Account />
+          {status === "success" ? renderCards : <Loading />}
         </div>
       </div>
     </div>

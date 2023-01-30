@@ -75,31 +75,31 @@ const DayCard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 py-4">
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
-            Study for Chemical Engineering
+            {dashboardStore.assignedTasks[0].name}
           </h3>
           <p className="text-xl">1h 4m</p>
         </div>
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
-            Study for Chemical Engineering
+            {dashboardStore.assignedTasks[1].name}
           </h3>
           <p className="text-xl">1h 4m</p>
         </div>
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
-            Study for Chemical Engineering
+            {dashboardStore.assignedTasks[2].name}
           </h3>
           <p className="text-xl">1h 4m</p>
         </div>
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
-            Study for Chemical Engineering
+            {dashboardStore.assignedTasks[3].name}
           </h3>
           <p className="text-xl">1h 4m</p>
         </div>
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
-            Study for Chemical Engineering
+            {dashboardStore.assignedTasks[4].name}
           </h3>
           <p className="text-xl">1h 4m</p>
         </div>
