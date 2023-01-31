@@ -16,6 +16,7 @@
 - [] Add password strength for registration
 - [] Email verification notification should be an observable?
 - [x] Delete functionality of Firebase Auth & Firestore
+- [] Determine how to handle loading before transition to dashboard
 
 # Settings
 

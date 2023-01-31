@@ -59,6 +59,7 @@ const Register = observer(() => {
           })
           .catch(e => null);
 
+      // TODO Use React Mutation to ensure finished
       navigate("/dashboard/day");
     } catch (e) {
       try {
