@@ -1,10 +1,10 @@
 import { getAuth } from "firebase/auth";
 import {
-  addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
@@ -79,9 +79,11 @@ export class SettingsStore {
 
   clearProfile() {
     this.profile = undefined;
+    this.tasks = [];
   }
 
   async addTask() {
+    // TODO Add datetime to query/sort
     const task: Task = {
       side: null,
       id: uuidv4(),
@@ -91,8 +93,8 @@ export class SettingsStore {
 
     try {
       if (!this.tasksRef) throw new Error();
-      // TODO fix must use set model
-      await addDoc(this.tasksRef, task);
+      const tasksCollectionRef = doc(this.tasksRef, task.id);
+      await setDoc(tasksCollectionRef, task);
       runInAction(() => {
         this.tasks.push(task);
       });

@@ -193,6 +193,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
         } catch (e) {
           // console.log(task);
           // console.error(JSON.stringify(e));
+          throw new Error();
         }
       });
     } catch (e) {
