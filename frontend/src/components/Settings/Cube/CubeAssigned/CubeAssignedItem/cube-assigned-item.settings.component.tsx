@@ -82,10 +82,7 @@ const CubeAssignedItem = observer(({ id }: { id: string }) => {
         onSubmit={handleSubmit}
       >
         <div className="flex gap-6 items-center w-full">
-          <div
-            className="flex flex-col items-center justify-center px-5 py-1 rounded-xl text-white"
-            style={{ backgroundColor: task?.color }}
-          >
+          <div className="flex flex-col items-center justify-center px-5 py-1 rounded-xl text-white bg-indigo-600">
             <small className="text-sm">Side</small>
             <span className="text-2xl font-bold">{task?.side}</span>
           </div>
@@ -96,7 +93,6 @@ const CubeAssignedItem = observer(({ id }: { id: string }) => {
             <h4 className="font-bold text-xl">{task?.name}</h4>
           )}
         </div>
-
         <div className="flex items-center justify-center gap-6">
           {editing ? editBtn : saveBtn}
         </div>

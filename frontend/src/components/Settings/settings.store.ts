@@ -5,6 +5,9 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -59,7 +62,8 @@ export class SettingsStore {
       const userId = auth.currentUser?.uid;
       if (!userId) return;
       if (!this.tasksRef) return;
-      const usersTasks = await getDocs(this.tasksRef);
+      const q = query(this.tasksRef, orderBy("side", "asc"));
+      const usersTasks = await getDocs(q);
       const snap = docSnap.data() as UserProfile;
       runInAction(() => {
         this.tasks = [];
@@ -89,7 +93,7 @@ export class SettingsStore {
       side: null,
       id: uuidv4(),
       name: "New Task",
-      color: "#eee",
+      timestamp: serverTimestamp(),
     };
 
     try {
@@ -165,16 +169,15 @@ export class SettingsStore {
 
         fromTask.id = next.id;
         fromTask.name = next.name;
-        fromTask.color = prev.color;
+        fromTask.side = prev.side;
         toTask.id = prev.id;
         toTask.name = prev.name;
-        toTask.color = next.color;
+        toTask.side = next.side;
       });
 
-      if (!this.docRef) throw new Error();
-      // await updateDoc(this.docRef, {
-      //   `tasks.${}`
-      // });
+      if (!this.tasksRef) throw new Error();
+      await setDoc(doc(this.tasksRef, fromTask.id), fromTask);
+      await setDoc(doc(this.tasksRef, toTask.id), toTask);
     } catch (e) {
       const TOAST_ID = "FAILED_TO_ASSIGN_TASK";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);

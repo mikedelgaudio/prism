@@ -1,10 +1,11 @@
+import { FieldValue, serverTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 
 export interface Task {
   side: string | null;
   id: string;
   name: string;
-  color: string;
+  timestamp: FieldValue;
 }
 
 export interface UserProfile {
@@ -24,30 +25,30 @@ export const DEFAULT_PROFILE_TASKS: Task[] = [
     id: uuidv4(),
     side: "1",
     name: "Task A",
-    color: "#ff0000",
+    timestamp: serverTimestamp(),
   },
   {
     id: uuidv4(),
     side: "2",
     name: "Task B",
-    color: "#0002fe",
+    timestamp: serverTimestamp(),
   },
   {
     id: uuidv4(),
     side: "3",
     name: "Task C",
-    color: "#03480e",
+    timestamp: serverTimestamp(),
   },
   {
     id: uuidv4(),
     side: "4",
     name: "Task D",
-    color: "#ca6e04",
+    timestamp: serverTimestamp(),
   },
   {
     id: uuidv4(),
     side: "5",
     name: "Task E",
-    color: "#9808fe",
+    timestamp: serverTimestamp(),
   },
 ];
