@@ -12,7 +12,7 @@ import {
   User,
   UserCredential,
 } from "firebase/auth";
-import { addDoc, collection, deleteDoc, doc, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, setDoc } from "firebase/firestore";
 import {
   createContext,
   ReactNode,
@@ -179,15 +179,19 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     try {
       await setDoc(docRef, newUserProfile);
 
-      const x = collection(
-        db,
-        `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_TASKS_COLLECTION}`,
-      );
-
       DEFAULT_PROFILE_TASKS.forEach(async task => {
         try {
-          await addDoc(x, task);
+          const tasksCollectionRef = doc(
+            collection(
+              db,
+              `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_TASKS_COLLECTION}`,
+            ),
+            task.id,
+          );
+
+          await setDoc(tasksCollectionRef, task);
         } catch (e) {
+          // console.log(task);
           // console.error(JSON.stringify(e));
         }
       });

@@ -16,6 +16,7 @@ const Register = observer(() => {
     updateDisplayName,
     sendVerificationEmail,
     addNewUser,
+    deleteAccount,
   } = useFirebaseAuth();
 
   const [firstName, setFirstName] = useState("");
@@ -46,7 +47,6 @@ const Register = observer(() => {
       if (register) await register(email, password, prismId);
       if (updateDisplayName) await updateDisplayName(firstName, lastName);
       if (addNewUser) await addNewUser(prismId);
-
       if (sendVerificationEmail)
         await sendVerificationEmail()
           .then(() => {
@@ -61,8 +61,11 @@ const Register = observer(() => {
 
       navigate("/dashboard/day");
     } catch (e) {
-      // TODO
-      // ! If failure, ensure to delete all progress made to ensure start over...
+      try {
+        if (deleteAccount) await deleteAccount();
+      } catch (e) {
+        console.warn("Failed to rollback");
+      }
 
       const TOAST_ID = "FAILED_TO_REGISTER";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);

@@ -12,7 +12,7 @@
 # Register / Login
 
 - [] Ensure that multiple Prism IDs do not register
-- [] Ensure that if registration fails roll back all changes
+- [x] Ensure that if registration fails roll back all changes
 - [] Add password strength for registration
 - [] Email verification notification should be an observable?
 - [x] Delete functionality of Firebase Auth & Firestore

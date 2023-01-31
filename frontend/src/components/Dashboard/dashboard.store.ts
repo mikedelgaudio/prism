@@ -1,9 +1,13 @@
 import { getAuth } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
-import { UserProfile } from "../../firebase/firebase.models";
+import { Task, UserProfile } from "../../firebase/firebase.models";
 import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
-import { db, FIREBASE_USERS_COLLECTION } from "../../services/firebase.service";
+import {
+  db,
+  FIREBASE_TASKS_COLLECTION,
+  FIREBASE_USERS_COLLECTION,
+} from "../../services/firebase.service";
 import { TOAST_SERVICE } from "../../services/toast.service";
 
 export interface IRawUploadedSide {
@@ -41,6 +45,8 @@ export class DashboardStore {
   });
 
   public profile: UserProfile | undefined;
+  public tasks: Task[] = [];
+
   private dayLabels: string[] = [];
 
   public raw_data: IRawUploadedDay[] = [
@@ -97,6 +103,23 @@ export class DashboardStore {
     return this.dayLabels;
   }
 
+  get docRef() {
+    const auth = getAuth();
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+    return doc(db, FIREBASE_USERS_COLLECTION, userId);
+  }
+
+  get tasksRef() {
+    const auth = getAuth();
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+    return collection(
+      db,
+      `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_TASKS_COLLECTION}`,
+    );
+  }
+
   get rawData(): IRawUploadedDay[] {
     return this.raw_data;
   }
@@ -114,8 +137,14 @@ export class DashboardStore {
       if (!docSnap.exists())
         return Promise.reject({ message: ERROR_USER_IS_NULL });
 
+      if (!this.tasksRef) return;
+      const usersTasks = await getDocs(this.tasksRef);
       const snap = docSnap.data() as UserProfile;
       runInAction(() => {
+        this.tasks = [];
+        usersTasks.docs.forEach(task => {
+          this.tasks.push(task.data() as Task);
+        });
         this.profile = snap;
       });
     } catch (e) {
@@ -124,12 +153,7 @@ export class DashboardStore {
     }
   }
 
-  get tasks() {
-    return this.profile?.sides;
-  }
-
   get assignedTasks() {
-    if (!this.tasks) return [];
     return this.tasks.filter(task => task.side !== null);
   }
 

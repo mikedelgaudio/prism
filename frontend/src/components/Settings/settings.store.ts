@@ -1,6 +1,6 @@
 import { getAuth } from "firebase/auth";
 import {
-  arrayUnion,
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -11,18 +11,19 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { v4 as uuidv4 } from "uuid";
 import { Task, UserProfile } from "../../firebase/firebase.models";
 import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
-import { db, FIREBASE_USERS_COLLECTION } from "../../services/firebase.service";
+import {
+  db,
+  FIREBASE_TASKS_COLLECTION,
+  FIREBASE_USERS_COLLECTION,
+} from "../../services/firebase.service";
 import { TOAST_SERVICE } from "../../services/toast.service";
 
 export class SettingsStore {
   public profile: UserProfile | undefined;
+  public tasks: Task[] = [];
 
   constructor() {
     makeAutoObservable(this);
-  }
-
-  get tasks() {
-    return this.profile?.sides;
   }
 
   get docRef() {
@@ -30,6 +31,16 @@ export class SettingsStore {
     const userId = auth.currentUser?.uid;
     if (!userId) return;
     return doc(db, FIREBASE_USERS_COLLECTION, userId);
+  }
+
+  get tasksRef() {
+    const auth = getAuth();
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+    return collection(
+      db,
+      `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_TASKS_COLLECTION}`,
+    );
   }
 
   get assignedTasks() {
@@ -46,16 +57,14 @@ export class SettingsStore {
       const auth = getAuth();
       const userId = auth.currentUser?.uid;
       if (!userId) return;
-      const tasksInCollection = collection(db, `users/${userId}/tasks`);
-      // const q = query(tasksInCollection, orderBy("createdAt"));
-      const tasks = await getDocs(tasksInCollection);
-      // console.log(tasksInCollection, q, tasks, tasks.docs);
-      tasks.docs.forEach(task => {
-        // console.log(task.data());
-      });
-
+      if (!this.tasksRef) return;
+      const usersTasks = await getDocs(this.tasksRef);
       const snap = docSnap.data() as UserProfile;
       runInAction(() => {
+        this.tasks = [];
+        usersTasks.docs.forEach(task => {
+          this.tasks.push(task.data() as Task);
+        });
         this.profile = snap;
       });
     } catch (e) {
@@ -81,13 +90,11 @@ export class SettingsStore {
     };
 
     try {
-      if (!this.docRef) throw new Error();
-      await updateDoc(this.docRef, {
-        sides: arrayUnion(task),
-      });
-
+      if (!this.tasksRef) throw new Error();
+      // TODO fix must use set model
+      await addDoc(this.tasksRef, task);
       runInAction(() => {
-        this.profile?.sides?.unshift(task);
+        this.tasks.push(task);
       });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_ADD_TASK";
@@ -96,7 +103,7 @@ export class SettingsStore {
   }
 
   async editTaskName(id: string | undefined, newName: string | undefined) {
-    if (!id || !newName || !this.profile?.sides || !this.tasks) return;
+    if (!id || !newName || !this.tasks) return;
 
     try {
       if (!this.docRef) throw new Error();
@@ -109,13 +116,13 @@ export class SettingsStore {
         return task;
       });
 
+      // TODO FIX
       await updateDoc(this.docRef, {
         sides: updatedTasks,
       });
 
       runInAction(() => {
-        if (!this.profile?.sides) return;
-        this.profile.sides[index].name = newName;
+        this.tasks[index].name = newName;
       });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_EDIT_TASK";
@@ -129,12 +136,13 @@ export class SettingsStore {
 
     try {
       if (!this.docRef) throw new Error();
+
+      // TODO FIX
       await updateDoc(this.docRef, {
         sides: this.tasks.filter(task => task.id !== id),
       });
       runInAction(() => {
-        if (!this.profile?.sides || !this.tasks) return;
-        this.profile.sides = this.tasks.filter(task => task.id !== id);
+        this.tasks = this.tasks.filter(task => task.id !== id);
       });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_DELETE_TASK";
@@ -164,9 +172,9 @@ export class SettingsStore {
       });
 
       if (!this.docRef) throw new Error();
-      await updateDoc(this.docRef, {
-        sides: this.tasks,
-      });
+      // await updateDoc(this.docRef, {
+      //   `tasks.${}`
+      // });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_ASSIGN_TASK";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
