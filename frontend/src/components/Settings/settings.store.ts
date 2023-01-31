@@ -1,6 +1,7 @@
 import { getAuth } from "firebase/auth";
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -133,16 +134,13 @@ export class SettingsStore {
   }
 
   async deleteTask(id: string | undefined) {
-    if (!id || !this.tasks || !this.profile) return;
+    if (!id || !this.tasks) return;
     if (this.getTaskById(id)?.side !== null) return;
 
     try {
-      if (!this.docRef) throw new Error();
+      if (!this.tasksRef) throw new Error();
+      await deleteDoc(doc(this.tasksRef, id));
 
-      // TODO FIX
-      await updateDoc(this.docRef, {
-        sides: this.tasks.filter(task => task.id !== id),
-      });
       runInAction(() => {
         this.tasks = this.tasks.filter(task => task.id !== id);
       });
