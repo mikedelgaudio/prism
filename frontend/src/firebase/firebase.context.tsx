@@ -1,11 +1,8 @@
 import {
-  createUserWithEmailAndPassword,
   deleteUser,
   EmailAuthProvider,
   reauthenticateWithCredential,
   sendEmailVerification,
-  signInWithEmailAndPassword,
-  signOut,
   updateEmail,
   updatePassword,
   updateProfile,
@@ -20,7 +17,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Navigate, useLocation } from "react-router-dom";
 import {
   ERROR_INVALID_CURRENT_EMAIL,
   ERROR_INVALID_INPUT,
@@ -34,17 +30,10 @@ import {
 } from "../services/firebase.service";
 import { validString } from "../services/util.service";
 import { DEFAULT_PROFILE, DEFAULT_PROFILE_TASKS } from "./firebase.models";
-import { validPrismId } from "./firebase.util";
 
 interface FirebaseContext {
   currentUser: User | null;
-  login?: (email: string, password: string) => Promise<UserCredential>;
-  register?: (
-    email: string,
-    password: string,
-    prismId: string,
-  ) => Promise<UserCredential>;
-  logout?: () => Promise<void>;
+
   updateDisplayName?: (firstName: string, lastName: string) => Promise<void>;
   sendVerificationEmail?: () => Promise<void>;
   reauthUser?: (email: string, password: string) => Promise<UserCredential>;
@@ -67,26 +56,6 @@ export function useFirebaseAuth() {
 export function FirebaseProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
-  const register = async (email: string, password: string, prismId: string) => {
-    if (!validString(email) || !validString(password))
-      return Promise.reject({ message: ERROR_INVALID_INPUT });
-
-    // TODO
-    // ! Ensure PrismID is only used once
-
-    if (!validPrismId(db, prismId))
-      return Promise.reject({ message: ERROR_INVALID_INPUT });
-
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
-
-  const login = async (email: string, password: string) => {
-    if (!validString(email) || !validString(password))
-      return Promise.reject({ message: ERROR_INVALID_INPUT });
-
-    return signInWithEmailAndPassword(auth, email, password);
-  };
 
   const updateDisplayName = async (firstName: string, lastName: string) => {
     if (!auth.currentUser)
@@ -157,10 +126,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     return deleteUser(auth.currentUser);
   };
 
-  const logout = async () => {
-    return signOut(auth);
-  };
-
   const addNewUser = async (prismId: string) => {
     if (!validString(prismId))
       return Promise.reject({ message: ERROR_INVALID_INPUT });
@@ -214,9 +179,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
 
   const value = {
     currentUser,
-    login,
-    register,
-    logout,
     updateDisplayName,
     sendVerificationEmail,
     reauthUser,
@@ -232,35 +194,3 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     </FirebaseContext.Provider>
   );
 }
-
-function RequireAuth({ children }: { children: any }) {
-  const { currentUser } = useFirebaseAuth();
-  const location = useLocation();
-
-  if (!currentUser) {
-    // Redirect them to the /login page, but save the current location they were
-    // trying to go to when they were redirected. This allows us to send them
-    // along to that page after they login, which is a nicer user experience
-    // than dropping them off on the home page.
-    return <Navigate to="/login" state={{ from: location }} />;
-  }
-
-  return children;
-}
-
-function RequireUnAuth({ children }: { children: any }) {
-  const { currentUser } = useFirebaseAuth();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
-
-  if (currentUser) {
-    return <Navigate to={from} state={{ from: location }} />;
-  }
-
-  return children;
-}
-
-export const FirebaseGuards = {
-  RequireAuth,
-  RequireUnAuth,
-};

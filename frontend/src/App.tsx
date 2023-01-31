@@ -14,7 +14,8 @@ import { E404 } from "./components/Errors";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
 import { Settings } from "./components/Settings";
-import { FirebaseGuards, FirebaseProvider } from "./firebase/firebase.context";
+import { FirebaseProvider } from "./firebase/firebase.context";
+import { FirebaseGuards } from "./firebase/firebase.guards";
 const queryClient = new QueryClient();
 function App() {
   return (

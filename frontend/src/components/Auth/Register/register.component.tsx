@@ -1,7 +1,8 @@
 import { observer } from "mobx-react";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFirebaseAuth } from "../../../firebase/firebase.context";
+import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { useTitle } from "../../../hooks/use-title";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
@@ -11,13 +12,12 @@ const Register = observer(() => {
   useTitle("Register - Prism");
   const navigate = useNavigate();
   const {
-    currentUser,
-    register,
     updateDisplayName,
     sendVerificationEmail,
     addNewUser,
     deleteAccount,
   } = useFirebaseAuth();
+  const { firebaseStore } = useContext(FirebaseContextNew);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -28,10 +28,10 @@ const Register = observer(() => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (currentUser) {
+    if (firebaseStore.authUser) {
       navigate("/");
     }
-  }, [currentUser, navigate]);
+  }, [firebaseStore.authUser, navigate]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,7 +44,8 @@ const Register = observer(() => {
 
     try {
       setLoading(true);
-      if (register) await register(email, password, prismId);
+      // if (register) await register(email, password, prismId);
+      await firebaseStore.register(email, password, prismId);
       if (updateDisplayName) await updateDisplayName(firstName, lastName);
       if (addNewUser) await addNewUser(prismId);
       if (sendVerificationEmail)

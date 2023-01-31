@@ -1,6 +1,4 @@
-import { Firestore } from "firebase/firestore";
-
-export const validPrismId = (db: Firestore, prismId: string): boolean => {
+export const validPrismId = (prismId: string): boolean => {
   // Validate it is a string
   // Validate the regex format of the string?
   // Run a DB search for the ID
