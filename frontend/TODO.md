@@ -4,7 +4,6 @@
 - [] Ensure all user input goes thru validString()
 - [] Add loading spinner for all async components
 - [] Add timeout for all async components
-- [] Modify navigation bar to support account dropdown rather than logout button
 - [] Add error boundaries to additional components
 - [] Some components are missing index.ts for Cube, Account, and WeekCard
 - [x] Research React Query instead of useEffect
@@ -17,6 +16,7 @@
 - [] Email verification notification should be an observable?
 - [x] Delete functionality of Firebase Auth & Firestore
 - [] Determine how to handle loading before transition to dashboard
+- [] Consider refactoring how auth store loads using Mobx instead
 
 # Settings
 
@@ -32,6 +32,6 @@
 
 # Dashboard
 
-- [] Logic to consume API response from Google Sheet / Zapio from cube
-- [] Determine logic in case user changes Task name it should not affect older days. For example, Day A side 1 was: "Read" and Day B side 1 was: "Math". The cube should remember that Day A's side was "Read" rather than "Math.
+- [] Logic to consume API response from Google Sheet / Zapier from cube
+- [x] Determine logic in case user changes Task name it should not affect older days. For example, Day A side 1 was: "Read" and Day B side 1 was: "Math". The cube should remember that Day A's side was "Read" rather than "Math.
 - [] Creative ways to do skeleton loading for Cards

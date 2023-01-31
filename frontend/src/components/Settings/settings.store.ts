@@ -88,7 +88,6 @@ export class SettingsStore {
   }
 
   async addTask() {
-    // TODO Add datetime to query/sort
     const task: Task = {
       side: null,
       id: uuidv4(),
@@ -113,20 +112,13 @@ export class SettingsStore {
     if (!id || !newName || !this.tasks) return;
 
     try {
-      if (!this.docRef) throw new Error();
-      let index = 0;
-      const updatedTasks = this.tasks.map((task, i) => {
-        if (task.id === id) {
-          index = i;
-          task.name = newName;
-        }
-        return task;
+      if (!this.tasksRef) throw new Error();
+      const tasksCollectionRef = doc(this.tasksRef, id);
+      await updateDoc(tasksCollectionRef, {
+        name: newName,
       });
 
-      // TODO FIX
-      await updateDoc(this.docRef, {
-        sides: updatedTasks,
-      });
+      const index = this.tasks.findIndex(task => task.id === id);
 
       runInAction(() => {
         this.tasks[index].name = newName;
