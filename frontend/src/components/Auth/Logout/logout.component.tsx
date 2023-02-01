@@ -18,7 +18,7 @@ const Logout = observer(() => {
     async function handleLogout() {
       try {
         await firebaseStore.logout();
-        settingsStore.clearProfile();
+        // settingsStore.clearProfile();
         const TOAST_ID = "SUCCESS_LOGOUT";
         TOAST_SERVICE.success(TOAST_ID, "Successfully logged out.", true);
       } catch {

@@ -1,26 +1,26 @@
 import { observer } from "mobx-react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { useFirebaseAuth } from "../../../firebase/firebase.context";
+import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { Card } from "../../Shared";
 import { SettingsContext } from "../settings.context";
 
 const Account = observer(() => {
-  const { currentUser, sendVerificationEmail } = useFirebaseAuth();
+  const { firebaseStore } = useContext(FirebaseContextNew);
+
   const { settingsStore } = useContext(SettingsContext);
 
   const verifyEmail = async () => {
     try {
-      if (sendVerificationEmail)
-        await sendVerificationEmail().then(() => {
-          const TOAST_ID = "VERIFY_YOUR_EMAIL";
-          TOAST_SERVICE.success(
-            TOAST_ID,
-            `Verify your email ${currentUser?.email}`,
-            false,
-          );
-        });
+      await firebaseStore.sendVerificationEmail().then(() => {
+        const TOAST_ID = "VERIFY_YOUR_EMAIL";
+        TOAST_SERVICE.success(
+          TOAST_ID,
+          `Verify your email ${firebaseStore.authUser?.email}`,
+          false,
+        );
+      });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_SEND_EMAIL";
       TOAST_SERVICE.error(TOAST_ID, "Failed to send email", true);
@@ -38,14 +38,14 @@ const Account = observer(() => {
           <div className="flex flex-col pb-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Name</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              {currentUser?.displayName ?? "N/A"}
+              {firebaseStore.authUser?.displayName ?? "N/A"}
             </dd>
           </div>
           <div className="flex flex-col py-3">
             <dt className="mb-1 text-slate-500 md:text-lg">Email address</dt>
             <dd className="text-lg font-semibold text-slate-800">
-              {currentUser?.email ?? "N/A"}{" "}
-              {currentUser?.emailVerified ? (
+              {firebaseStore.authUser?.email ?? "N/A"}{" "}
+              {firebaseStore.authUser?.emailVerified ? (
                 <span className="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">
                   Verified
                 </span>

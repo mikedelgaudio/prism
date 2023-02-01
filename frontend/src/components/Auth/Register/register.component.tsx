@@ -1,7 +1,6 @@
 import { observer } from "mobx-react";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useFirebaseAuth } from "../../../firebase/firebase.context";
 import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { useTitle } from "../../../hooks/use-title";
 import { errorToMsg } from "../../../services/errors.service";
@@ -11,12 +10,6 @@ import { AuthLayout } from "../../Shared";
 const Register = observer(() => {
   useTitle("Register - Prism");
   const navigate = useNavigate();
-  const {
-    updateDisplayName,
-    sendVerificationEmail,
-    addNewUser,
-    deleteAccount,
-  } = useFirebaseAuth();
   const { firebaseStore } = useContext(FirebaseContextNew);
 
   const [firstName, setFirstName] = useState("");
@@ -44,27 +37,19 @@ const Register = observer(() => {
 
     try {
       setLoading(true);
-      // if (register) await register(email, password, prismId);
-      await firebaseStore.register(email, password, prismId);
-      if (updateDisplayName) await updateDisplayName(firstName, lastName);
-      if (addNewUser) await addNewUser(prismId);
-      if (sendVerificationEmail)
-        await sendVerificationEmail()
-          .then(() => {
-            const TOAST_ID = "VERIFY_YOUR_EMAIL";
-            TOAST_SERVICE.success(
-              TOAST_ID,
-              `Verify your email ${email}`,
-              false,
-            );
-          })
-          .catch(e => null);
+      await firebaseStore.register(
+        email,
+        password,
+        prismId,
+        firstName,
+        lastName,
+      );
 
       // TODO Use React Mutation to ensure finished
       navigate("/dashboard/day");
     } catch (e) {
       try {
-        if (deleteAccount) await deleteAccount();
+        await firebaseStore.deleteAccount();
       } catch (e) {
         console.warn("Failed to rollback");
       }
