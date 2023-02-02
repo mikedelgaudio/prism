@@ -1,7 +1,13 @@
 import { observer } from "mobx-react";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useFirebaseAuth } from "../../../firebase/firebase.context";
+import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
@@ -15,7 +21,8 @@ const ReAuth = observer(
     setReauth: Dispatch<SetStateAction<boolean>>;
   }) => {
     const navigate = useNavigate();
-    const { reauthUser } = useFirebaseAuth();
+
+    const { firebaseStore } = useContext(FirebaseContextNew);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -26,7 +33,7 @@ const ReAuth = observer(
 
       try {
         setLoading(true);
-        if (reauthUser) await reauthUser(email, password);
+        await firebaseStore.reauthUser(email, password);
         setReauth(prev => (prev = false));
         navigate(toRoute);
       } catch (e: any) {

@@ -1,15 +1,20 @@
 import {
   createUserWithEmailAndPassword,
   deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
   sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
+  updateEmail,
+  updatePassword,
   updateProfile,
   User,
 } from "firebase/auth";
 import { collection, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
 import {
+  ERROR_INVALID_CURRENT_EMAIL,
   ERROR_INVALID_INPUT,
   ERROR_USER_IS_NULL,
 } from "../services/errors.service";
@@ -27,6 +32,7 @@ import { validPrismId } from "./firebase.util";
 export class FirebaseStore {
   // public profile: UserProfile | null = null;
   public authUser: User | null = null;
+  public authLoading = true;
   // public tasks: Task[] = [];
 
   constructor() {
@@ -35,6 +41,7 @@ export class FirebaseStore {
     auth.onAuthStateChanged((user: User | null) => {
       runInAction(() => {
         this.authUser = user;
+        this.authLoading = false;
       });
     });
   }
@@ -141,5 +148,42 @@ export class FirebaseStore {
     if (!this.authUser) return Promise.reject({ message: ERROR_USER_IS_NULL });
     await deleteDoc(doc(db, FIREBASE_USERS_COLLECTION, this.authUser.uid));
     return deleteUser(this.authUser);
+  }
+
+  // TODO
+  // ! If user stays on a page for too long you may need
+  // ! prompt them for re-auth again...
+  async reauthUser(email: string, password: string) {
+    if (!this.authUser) return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+    if (!validString(email) || !validString(password))
+      return Promise.reject({ message: ERROR_INVALID_INPUT });
+
+    const credential = EmailAuthProvider.credential(email, password);
+    return reauthenticateWithCredential(this.authUser, credential);
+  }
+
+  async updateUserPassword(newPassword: string) {
+    if (!this.authUser) return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+    if (!validString(newPassword))
+      return Promise.reject({ message: ERROR_INVALID_INPUT });
+
+    return updatePassword(this.authUser, newPassword);
+  }
+
+  async updateUserEmail(currentEmail: string, newEmail: string) {
+    if (!this.authUser) return Promise.reject({ message: ERROR_USER_IS_NULL });
+
+    if (!validString(currentEmail) || !validString(newEmail))
+      return Promise.reject({ message: ERROR_INVALID_INPUT });
+
+    // Check if current email input matches current
+    if (currentEmail !== this.authUser.email)
+      return Promise.reject({ message: ERROR_INVALID_CURRENT_EMAIL });
+
+    await this.sendVerificationEmail();
+
+    return updateEmail(this.authUser, newEmail);
   }
 }

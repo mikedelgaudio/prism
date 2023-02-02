@@ -1,9 +1,10 @@
 import { observer } from "mobx-react";
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { useFirebaseAuth } from "../../firebase/firebase.context";
+import { FirebaseContextNew } from "../../firebase/firebase.context.new";
 
 const Footer = observer(() => {
-  const { currentUser } = useFirebaseAuth();
+  const { firebaseStore } = useContext(FirebaseContextNew);
 
   const authLinks = (
     <>
@@ -42,7 +43,7 @@ const Footer = observer(() => {
   const links = () => {
     return (
       <>
-        {currentUser ? authLinks : unAuthLinks}
+        {firebaseStore.authUser ? authLinks : unAuthLinks}
 
         <li>
           <a

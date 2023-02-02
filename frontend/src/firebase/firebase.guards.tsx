@@ -1,8 +1,9 @@
+import { observer } from "mobx-react-lite";
 import { useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { FirebaseContextNew } from "./firebase.context.new";
 
-function RequireAuth({ children }: { children: any }) {
+const RequireAuth = observer(({ children }: { children: any }) => {
   const { firebaseStore } = useContext(FirebaseContextNew);
   const location = useLocation();
 
@@ -15,9 +16,9 @@ function RequireAuth({ children }: { children: any }) {
   }
 
   return children;
-}
+});
 
-function RequireUnAuth({ children }: { children: any }) {
+const RequireUnAuth = observer(({ children }: { children: any }) => {
   const { firebaseStore } = useContext(FirebaseContextNew);
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
@@ -27,7 +28,7 @@ function RequireUnAuth({ children }: { children: any }) {
   }
 
   return children;
-}
+});
 
 export const FirebaseGuards = {
   RequireAuth,

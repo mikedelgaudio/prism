@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useFirebaseAuth } from "../../../firebase/firebase.context";
+import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { useTitle } from "../../../hooks/use-title";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
@@ -12,7 +12,7 @@ const ChangeEmail = observer(() => {
   useTitle("Change Email - Prism");
 
   const navigate = useNavigate();
-  const { updateUserEmail } = useFirebaseAuth();
+  const { firebaseStore } = useContext(FirebaseContextNew);
 
   const [reauth, setReauth] = useState(true);
   const [currentEmail, setCurrentEmail] = useState("");
@@ -24,7 +24,7 @@ const ChangeEmail = observer(() => {
 
     try {
       setLoading(true);
-      if (updateUserEmail) await updateUserEmail(currentEmail, newEmail);
+      await firebaseStore.updateUserEmail(currentEmail, newEmail);
       const TOAST_ID = "SUCCESS_UPDATE_EMAIL";
       TOAST_SERVICE.success(TOAST_ID, "Successfully updated email.", true);
       navigate("/settings");
