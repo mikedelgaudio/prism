@@ -76,12 +76,24 @@ const Account = observer(() => {
           <ul className="flex flex-col gap-4 text-lg ">
             <li className="flex justify-between items-center">
               <div className="flex flex-col leading-5">
-                <span>Change email</span>
-                <small>Need to update your email?</small>
+                <span>Change name</span>
+                <small>Update your display name</small>
               </div>
               <Link
                 className="underline hover:no-underline"
-                to={"/change-email"}
+                to={"/change-name"}
+              >
+                Change
+              </Link>
+            </li>
+            <li className="flex justify-between items-center">
+              <div className="flex flex-col leading-5">
+                <span>Change email</span>
+                <small>Update your email</small>
+              </div>
+              <Link
+                className="underline hover:no-underline"
+                to={"/change-name"}
               >
                 Change
               </Link>

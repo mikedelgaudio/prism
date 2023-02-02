@@ -12,8 +12,7 @@ const Register = observer(() => {
   const navigate = useNavigate();
   const { firebaseStore } = useContext(FirebaseContextNew);
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -37,13 +36,7 @@ const Register = observer(() => {
 
     try {
       setLoading(true);
-      await firebaseStore.register(
-        email,
-        password,
-        prismId,
-        firstName,
-        lastName,
-      );
+      await firebaseStore.register(email, password, prismId, name);
 
       // TODO Use React Mutation to ensure finished
       navigate("/dashboard/day");
@@ -59,8 +52,7 @@ const Register = observer(() => {
     }
 
     (e.target as HTMLFormElement).reset();
-    setFirstName("");
-    setLastName("");
+    setName("");
     setEmail("");
     setPassword("");
     setPrismId("");
@@ -75,27 +67,17 @@ const Register = observer(() => {
       <form className="flex flex-col gap-8 pt-3" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2 leading-3">
           <h2 className="font-semibold text-2xl">How we'll greet you</h2>
-          <label className="required" htmlFor="firstName">
-            First Name
-          </label>
-          <input
-            className="border border-slate-400 p-2 rounded-md"
-            id="firstName"
-            type={"text"}
-            required={true}
-            placeholder="Joe"
-            onChange={e => setFirstName(e.target.value)}
-          />
-          <label className="required" htmlFor="lastName">
-            Last Name
+
+          <label className="required" htmlFor="name">
+            Name
           </label>
           <input
             className="border border-slate-400 p-2 rounded-md"
             id="lastName"
             type={"text"}
             required={true}
-            placeholder="Blow"
-            onChange={e => setLastName(e.target.value)}
+            placeholder="Joe Smith"
+            onChange={e => setName(e.target.value)}
           />
         </div>
 

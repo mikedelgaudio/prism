@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { ChangeEmail } from "./components/Auth/ChangeEmail";
+import { ChangeName } from "./components/Auth/ChangeName";
 import { DeleteAccount } from "./components/Auth/DeleteAccount";
 import { Login } from "./components/Auth/Login";
 import { Logout } from "./components/Auth/Logout";
@@ -106,6 +107,14 @@ const App = observer(() => {
             element={
               <FirebaseGuards.RequireAuth>
                 <ChangeEmail />
+              </FirebaseGuards.RequireAuth>
+            }
+          />
+          <Route
+            path="/change-name"
+            element={
+              <FirebaseGuards.RequireAuth>
+                <ChangeName />
               </FirebaseGuards.RequireAuth>
             }
           />

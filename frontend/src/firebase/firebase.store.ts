@@ -30,10 +30,8 @@ import { DEFAULT_PROFILE, DEFAULT_PROFILE_TASKS } from "./firebase.models";
 import { validPrismId } from "./firebase.util";
 
 export class FirebaseStore {
-  // public profile: UserProfile | null = null;
   public authUser: User | null = null;
   public authLoading = true;
-  // public tasks: Task[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -74,8 +72,7 @@ export class FirebaseStore {
     email: string,
     password: string,
     prismId: string,
-    firstName: string,
-    lastName: string,
+    name: string,
   ) {
     if (!validString(email) || !validString(password))
       return Promise.reject({ message: ERROR_INVALID_INPUT });
@@ -90,7 +87,7 @@ export class FirebaseStore {
       // Promise.all since dependent
       await createUserWithEmailAndPassword(auth, email, password);
       await this.addNewUser(prismId);
-      await this.updateDisplayName(firstName, lastName);
+      await this.updateDisplayName(name);
       await this.sendVerificationEmail().then(() => {
         const TOAST_ID = "VERIFY_YOUR_EMAIL";
         TOAST_SERVICE.success(TOAST_ID, `Verify your email ${email}`, false);
@@ -128,14 +125,14 @@ export class FirebaseStore {
     return Promise.resolve();
   }
 
-  async updateDisplayName(firstName: string, lastName: string) {
+  async updateDisplayName(name: string) {
     if (!this.authUser) return Promise.reject({ message: ERROR_USER_IS_NULL });
 
-    if (!validString(firstName) || !validString(lastName))
+    if (!validString(name))
       return Promise.reject({ message: ERROR_INVALID_INPUT });
 
     return updateProfile(this.authUser, {
-      displayName: `${firstName} ${lastName}`,
+      displayName: name,
     });
   }
 
