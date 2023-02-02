@@ -18,8 +18,7 @@
 - [x] Delete functionality of Firebase Auth & Firestore
 - [] Determine how to handle loading before transition to dashboard
 - [x] Consider refactoring how auth store loads using Mobx instead
-- [] Finish refactor to use a root store to share a single profile/tasks list between stores
-- [] Investigate issue when logging out there is insufficent perms errors
+- [x] Investigate issue when logging out there is insufficent perms errors
 
 # Settings
 
