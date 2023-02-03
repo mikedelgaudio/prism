@@ -1,15 +1,15 @@
 import dotenv from "dotenv";
-import admin from "firebase-admin";
+import admin, { type ServiceAccount } from "firebase-admin";
 
 dotenv.config();
 
-const serviceAccount = JSON.parse(
-  process.env?.FIREBASE_ADMIN_CREDENTIALS || "{}",
+const serviceAccount: ServiceAccount = JSON.parse(
+  process.env?.FIREBASE_ADMIN_CREDENTIALS ?? "{}",
 );
 
 try {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+    credential: admin.credential.cert(serviceAccount),
   });
   // eslint-disable-next-line no-console
   console.log("[FIREBASE] Successful connection.");
