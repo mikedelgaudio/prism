@@ -7,6 +7,7 @@
 - [] Add error boundaries to additional components
 - [] Some components are missing index.ts for Cube, Account, and WeekCard
 - [x] Research React Query instead of useEffect
+- [] Use React Query site-wide
 - [] Creative ways to do skeleton loading for Cards
 
 # Register / Login
