@@ -1,20 +1,30 @@
 import cors from "cors";
 import dotenv from "dotenv";
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import helmet from "helmet";
+import { configRoutes } from "./routes";
 
 dotenv.config();
 
 const app: Express = express();
-app.use(cors()); // Must allow-list only the FE / domain
+const allowList = ["http://localhost:5173", process.env?.ALLOWURL ?? ""];
+const corsOptions = {
+  origin: function (origin: any, callback: any) {
+    if (allowList.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(helmet());
-const port = process.env?.PORT ?? 3001;
+const PORT = process.env?.PORT ?? 3001;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
+configRoutes(app);
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is runnings at https://localhost:${port}`);
+app.listen(PORT, async () => {
+  // eslint-disable-next-line no-console
+  console.log(`[EXPRESS] Successful running on port: ${PORT}`);
 });
