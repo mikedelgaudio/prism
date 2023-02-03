@@ -20,7 +20,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(helmet());
-const PORT = process.env?.PORT ?? 3001;
+const PORT = process.env?.PORT ?? 3002;
 
 configRoutes(app);
 
