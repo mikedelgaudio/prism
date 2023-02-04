@@ -1,5 +1,7 @@
 import axios from "axios";
-import { getAuth, User } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import { errorToMsg } from "./errors.service";
+import { TOAST_SERVICE } from "./toast.service";
 
 export const getRequest = async (url: string) => {
   try {
@@ -18,27 +20,30 @@ export const getRequest = async (url: string) => {
 
     return data;
   } catch (e) {
-    console.error(e);
+    const TOAST_ID = "ERROR_FAILED_TO_GET";
+    TOAST_SERVICE.error(TOAST_ID, errorToMsg(e));
   }
 };
 
-export const postRequest = async (url: string, body: any, user?: User) => {
-  let userToken;
-  if (!url) throw "No URL was provided";
+export const postRequest = async (url: string, body: any) => {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) throw new Error("Unauthorized");
 
-  if (user) {
-    userToken = await user.getIdToken();
-    if (!userToken) {
-      throw "Failed to retrieve user token.";
-    }
+    const userToken = await user.getIdToken();
+    if (!userToken) throw new Error("Failed to retrieve user token.");
+
+    const { data } = await axios.post(url, body, {
+      headers: {
+        token: userToken,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return data;
+  } catch (e) {
+    const TOAST_ID = "ERROR_FAILED_TO_POST";
+    TOAST_SERVICE.error(TOAST_ID, errorToMsg(e));
   }
-
-  const { data } = await axios.post(url, body, {
-    headers: {
-      ...(userToken && { token: userToken }),
-      "Content-Type": "application/json",
-    },
-  });
-
-  return data;
 };
