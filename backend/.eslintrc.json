@@ -13,7 +13,7 @@
   "rules": {
     "semi": ["error", "always"],
     "quotes": ["error", "double"],
-    "no-console": ["error", { "allow": ["warn"] }],
+    "no-console": ["error", { "allow": ["warn", "info"] }],
     "@typescript-eslint/no-misused-promises": [
       "error",
       {

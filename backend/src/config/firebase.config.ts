@@ -11,11 +11,9 @@ try {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   });
-  // eslint-disable-next-line no-console
-  console.log("[FIREBASE] Successful connection.");
+  console.info("[FIREBASE] Successful connection.");
 } catch (e) {
-  // eslint-disable-next-line no-console
-  console.error(
+  console.info(
     "[FIREBASE] Error - Failed to connect to Firebase. Check env keys.",
   );
 }
