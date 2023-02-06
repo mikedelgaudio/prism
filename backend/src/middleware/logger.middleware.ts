@@ -8,7 +8,7 @@ export const logger = async (
   const authStatus =
     req.headers.token === undefined
       ? "Non-Authenticated User"
-      : "Token Provided User";
+      : "Token-Attempted User";
   const log = `[${new Date().toUTCString()}]: ${req.method} ${
     req.originalUrl
   } (${authStatus})`;
