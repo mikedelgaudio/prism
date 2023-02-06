@@ -16,7 +16,7 @@ try {
   console.info("[FIREBASE] Successful connection.");
 } catch (e) {
   console.info(
-    "[FIREBASE] Error - Failed to connect to Firebase. Check env keys.",
+    "[FIREBASE] Error - Failed to connect to Firebase. Check the env keys.",
   );
 }
 
