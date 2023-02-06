@@ -3,8 +3,12 @@ name: BE Express Build
 on:
   push:
     branches: ["main", "develop"]
+    paths:
+      - "backend/**"
   pull_request:
     branches: ["main", "develop"]
+    paths:
+      - "backend/**"
 
 env:
   node-version: "18.x"

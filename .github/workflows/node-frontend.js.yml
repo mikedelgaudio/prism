@@ -3,8 +3,12 @@ name: FE Vite Build
 on:
   push:
     branches: ["main", "develop"]
+    paths:
+      - "frontend/**"
   pull_request:
     branches: ["main", "develop"]
+    paths:
+      - "frontend/**"
 
 env:
   node-version: "18.x"
