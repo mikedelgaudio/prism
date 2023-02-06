@@ -10,9 +10,12 @@ const googleConfig = async (): Promise<any> => {
     dotenv.config();
 
     // Create auth object for Google
-    const serviceAccount = process.env?.GOOGLE_APP_CREDENTIALS_PATH ?? "";
+    const serviceAccount = JSON.parse(
+      process.env?.GOOGLE_APP_CREDENTIALS ?? "",
+    );
+
     googleAuthClient = new google.auth.GoogleAuth({
-      keyFile: serviceAccount,
+      credentials: serviceAccount,
       scopes: "https://www.googleapis.com/auth/spreadsheets",
     });
 
