@@ -2,7 +2,7 @@ name: FE Docker Image Push
 
 on:
   push:
-    branches: ["develop"]
+    branches: ["main"]
     paths:
       - "frontend/**"
 
@@ -31,6 +31,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          file: "Dockerfile.backend"
+          file: "Dockerfile.frontend"
           tags: |
             mikedelgaudio/prism:latest
