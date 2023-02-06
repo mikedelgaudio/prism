@@ -1,10 +1,13 @@
 import { observer } from "mobx-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { Card } from "../../Shared";
+import { SettingsContext } from "../settings.context";
 
 const OnboardingCube = observer(() => {
+  const { settingsStore } = useContext(SettingsContext);
+
   const [prismId, setPrismId] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +18,8 @@ const OnboardingCube = observer(() => {
 
     try {
       setLoading(true);
-      console.warn("Submit");
+      // TODO Must validate user's string and use Mutation
+      await settingsStore.addPrismId(prismId);
     } catch (e: any) {
       const TOAST_ID = "FAILED_TO_REGISTER_NEW_PRISM";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);

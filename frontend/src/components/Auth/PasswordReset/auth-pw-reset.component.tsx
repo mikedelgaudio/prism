@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useFirebaseAuth } from "../../../firebase/firebase.context";
+import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
@@ -9,7 +9,7 @@ import { ReAuth } from "../Login";
 
 const AuthPwReset = observer(() => {
   const navigate = useNavigate();
-  const { updateUserPassword } = useFirebaseAuth();
+  const { firebaseStore } = useContext(FirebaseContextNew);
 
   const [reauth, setReauth] = useState(true);
   const [newPassword, setNewPassword] = useState("");
@@ -27,7 +27,7 @@ const AuthPwReset = observer(() => {
 
     try {
       setLoading(true);
-      if (updateUserPassword) await updateUserPassword(newPassword);
+      await firebaseStore.updateUserPassword(newPassword);
       const TOAST_ID = "SUCCESS_UPDATE_PASSWORD";
       TOAST_SERVICE.success(TOAST_ID, "Successfully updated password.", true);
       navigate("/settings");

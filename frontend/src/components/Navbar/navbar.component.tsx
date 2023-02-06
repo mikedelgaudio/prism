@@ -1,12 +1,12 @@
 import { observer } from "mobx-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useFirebaseAuth } from "../../firebase/firebase.context";
+import { FirebaseContextNew } from "../../firebase/firebase.context.new";
 import "./navbar.component.css";
 
 const Navbar = observer(() => {
   const [toggled, setToggle] = useState(false);
-  const { currentUser } = useFirebaseAuth();
+  const { firebaseStore } = useContext(FirebaseContextNew);
 
   const navigated = () => {
     if (toggled) setToggle(toggled => (toggled = !toggled));
@@ -51,9 +51,9 @@ const Navbar = observer(() => {
   const links = () => {
     return (
       <>
-        {currentUser ? authLinks : unAuthLinks}
+        {firebaseStore.authUser ? authLinks : unAuthLinks}
 
-        {currentUser ? (
+        {firebaseStore.authUser ? (
           <li>
             <NavLink
               className="flex items-center justify-center rounded-xl border border-slate-900 bg-transparent px-5 py-2 text-base font-semibold leading-7 text-slate-900 transition-all duration-200 hover:bg-slate-900 hover:text-white focus:bg-slate-900 focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2 w-full sm:w-auto"
@@ -92,11 +92,11 @@ const Navbar = observer(() => {
   };
 
   return (
-    <div className="relative py-4 md:py-6 bg-slate-50">
+    <div className="relative py-4 bg-slate-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-nowrap items-center justify-between gap-4 w-auto">
           <NavLink
-            className="flex items-center gap-3 text-xl md:text-2xl font-semibold rounded focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+            className="flex items-center gap-2 text-xl  font-semibold rounded focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
             to="/"
           >
             <div aria-hidden={true}>
@@ -114,7 +114,7 @@ const Navbar = observer(() => {
                 />
               </svg>
             </div>
-            <div className="flex flex-col leading-4 md:leading-5">
+            <div className="flex flex-col leading-4 ">
               <span className="font-extrabold text-[#4d82c3] uppercase ">
                 Prism
               </span>

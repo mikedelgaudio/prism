@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useFirebaseAuth } from "../../../firebase/firebase.context";
+import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { useTitle } from "../../../hooks/use-title";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
@@ -10,16 +10,9 @@ import { AuthLayout } from "../../Shared";
 const Register = observer(() => {
   useTitle("Register - Prism");
   const navigate = useNavigate();
-  const {
-    currentUser,
-    register,
-    updateDisplayName,
-    sendVerificationEmail,
-    addNewUser,
-  } = useFirebaseAuth();
+  const { firebaseStore } = useContext(FirebaseContextNew);
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -27,10 +20,10 @@ const Register = observer(() => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (currentUser) {
+    if (firebaseStore.authUser) {
       navigate("/");
     }
-  }, [currentUser, navigate]);
+  }, [firebaseStore.authUser, navigate]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,34 +36,23 @@ const Register = observer(() => {
 
     try {
       setLoading(true);
-      if (register) await register(email, password, prismId);
-      if (updateDisplayName) await updateDisplayName(firstName, lastName);
-      if (addNewUser) await addNewUser(prismId);
+      await firebaseStore.register(email, password, prismId, name);
 
-      if (sendVerificationEmail)
-        await sendVerificationEmail()
-          .then(() => {
-            const TOAST_ID = "VERIFY_YOUR_EMAIL";
-            TOAST_SERVICE.success(
-              TOAST_ID,
-              `Verify your email ${email}`,
-              false,
-            );
-          })
-          .catch(e => null);
-
+      // TODO Use React Mutation to ensure finished
       navigate("/dashboard/day");
     } catch (e) {
-      // TODO
-      // ! If failure, ensure to delete all progress made to ensure start over...
+      try {
+        await firebaseStore.deleteAccount();
+      } catch (e) {
+        console.warn("Failed to rollback");
+      }
 
       const TOAST_ID = "FAILED_TO_REGISTER";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
     }
 
     (e.target as HTMLFormElement).reset();
-    setFirstName("");
-    setLastName("");
+    setName("");
     setEmail("");
     setPassword("");
     setPrismId("");
@@ -85,27 +67,17 @@ const Register = observer(() => {
       <form className="flex flex-col gap-8 pt-3" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2 leading-3">
           <h2 className="font-semibold text-2xl">How we'll greet you</h2>
-          <label className="required" htmlFor="firstName">
-            First Name
-          </label>
-          <input
-            className="border border-slate-400 p-2 rounded-md"
-            id="firstName"
-            type={"text"}
-            required={true}
-            placeholder="Joe"
-            onChange={e => setFirstName(e.target.value)}
-          />
-          <label className="required" htmlFor="lastName">
-            Last Name
+
+          <label className="required" htmlFor="name">
+            Name
           </label>
           <input
             className="border border-slate-400 p-2 rounded-md"
             id="lastName"
             type={"text"}
             required={true}
-            placeholder="Blow"
-            onChange={e => setLastName(e.target.value)}
+            placeholder="Joe Smith"
+            onChange={e => setName(e.target.value)}
           />
         </div>
 

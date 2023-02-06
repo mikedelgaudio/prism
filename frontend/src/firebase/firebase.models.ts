@@ -1,51 +1,54 @@
+import { FieldValue, serverTimestamp } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
+
 export interface Task {
   side: string | null;
   id: string;
   name: string;
-  color: string;
+  timestamp: FieldValue;
 }
 
 export interface UserProfile {
   prismId: string;
   progressEmail: boolean;
   timeToStand: boolean;
-  sides: Task[];
 }
 
 export const DEFAULT_PROFILE: UserProfile = {
   prismId: "N/A",
   progressEmail: false,
   timeToStand: false,
-  sides: [
-    {
-      side: "1",
-      id: "1-t",
-      name: "Task A",
-      color: "#ff0000",
-    },
-    {
-      side: "2",
-      id: "2-t",
-      name: "Task B",
-      color: "#0002fe",
-    },
-    {
-      side: "3",
-      id: "3-t",
-      name: "Task C",
-      color: "#03480e",
-    },
-    {
-      side: "4",
-      id: "4-t",
-      name: "Task D",
-      color: "#ca6e04",
-    },
-    {
-      side: "5",
-      id: "5-t",
-      name: "Task E",
-      color: "#9808fe",
-    },
-  ],
 };
+
+export const DEFAULT_PROFILE_TASKS: Task[] = [
+  {
+    id: uuidv4(),
+    side: "1",
+    name: "Task A",
+    timestamp: serverTimestamp(),
+  },
+  {
+    id: uuidv4(),
+    side: "2",
+    name: "Task B",
+    timestamp: serverTimestamp(),
+  },
+  {
+    id: uuidv4(),
+    side: "3",
+    name: "Task C",
+    timestamp: serverTimestamp(),
+  },
+  {
+    id: uuidv4(),
+    side: "4",
+    name: "Task D",
+    timestamp: serverTimestamp(),
+  },
+  {
+    id: uuidv4(),
+    side: "5",
+    name: "Task E",
+    timestamp: serverTimestamp(),
+  },
+];

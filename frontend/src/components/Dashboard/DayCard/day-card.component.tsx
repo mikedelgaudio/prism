@@ -34,27 +34,27 @@ const DayCard = () => {
     labels,
     datasets: [
       {
-        label: dashboardStore.assignedTasks[0].name,
+        label: dashboardStore.assignedTasks[0]?.name,
         data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
         backgroundColor: `${colors.indigo[400]}`,
       },
       {
-        label: dashboardStore.assignedTasks[1].name,
+        label: dashboardStore.assignedTasks[1]?.name,
         data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
         backgroundColor: `${colors.indigo[300]}`,
       },
       {
-        label: dashboardStore.assignedTasks[2].name,
+        label: dashboardStore.assignedTasks[2]?.name,
         data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
         backgroundColor: `${colors.indigo[600]}`,
       },
       {
-        label: dashboardStore.assignedTasks[3].name,
+        label: dashboardStore.assignedTasks[3]?.name,
         data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
         backgroundColor: `${colors.indigo[800]}`,
       },
       {
-        label: dashboardStore.assignedTasks[4].name,
+        label: dashboardStore.assignedTasks[4]?.name,
         data: labels.map(() => faker.datatype.number({ min: 0, max: 288 })),
         backgroundColor: `${colors.indigo[900]}`,
       },
@@ -75,31 +75,31 @@ const DayCard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 py-4">
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
-            {dashboardStore.assignedTasks[0].name}
+            {dashboardStore.assignedTasks[0]?.name}
           </h3>
           <p className="text-xl">1h 4m</p>
         </div>
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
-            {dashboardStore.assignedTasks[1].name}
+            {dashboardStore.assignedTasks[1]?.name}
           </h3>
           <p className="text-xl">1h 4m</p>
         </div>
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
-            {dashboardStore.assignedTasks[2].name}
+            {dashboardStore.assignedTasks[2]?.name}
           </h3>
           <p className="text-xl">1h 4m</p>
         </div>
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
-            {dashboardStore.assignedTasks[3].name}
+            {dashboardStore.assignedTasks[3]?.name}
           </h3>
           <p className="text-xl">1h 4m</p>
         </div>
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
-            {dashboardStore.assignedTasks[4].name}
+            {dashboardStore.assignedTasks[4]?.name}
           </h3>
           <p className="text-xl">1h 4m</p>
         </div>

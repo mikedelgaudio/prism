@@ -4,18 +4,22 @@
 - [] Ensure all user input goes thru validString()
 - [] Add loading spinner for all async components
 - [] Add timeout for all async components
-- [] Modify navigation bar to support account dropdown rather than logout button
 - [] Add error boundaries to additional components
 - [] Some components are missing index.ts for Cube, Account, and WeekCard
 - [x] Research React Query instead of useEffect
+- [] Use React Query site-wide
+- [] Creative ways to do skeleton loading for Cards
 
 # Register / Login
 
 - [] Ensure that multiple Prism IDs do not register
-- [] Ensure that if registration fails roll back all changes
+- [x] Ensure that if registration fails roll back all changes
 - [] Add password strength for registration
 - [] Email verification notification should be an observable?
 - [x] Delete functionality of Firebase Auth & Firestore
+- [] Determine how to handle loading before transition to dashboard
+- [x] Consider refactoring how auth store loads using Mobx instead
+- [x] Investigate issue when logging out there is insufficent perms errors
 
 # Settings
 
@@ -25,12 +29,10 @@
 - [x] Ability to modify task name change to Firebase
 - [x] Ability to add task to Firebase
 - [x] Ability to disconnect Prism from account
-- [] Ability to connect a new Prism to the account after disconnect
-- [] Ability to change account display name
-- [] Creative ways to do skeleton loading for Cards
+- [x] Ability to connect a new Prism to the account after disconnect
+- [x] Ability to change account display name
 
 # Dashboard
 
-- [] Logic to consume API response from Google Sheet / Zapio from cube
-- [] Determine logic in case user changes Task name it should not affect older days. For example, Day A side 1 was: "Read" and Day B side 1 was: "Math". The cube should remember that Day A's side was "Read" rather than "Math.
-- [] Creative ways to do skeleton loading for Cards
+- [] Logic to consume API response from Google Sheet / Zapier from cube
+- [x] Determine logic in case user changes Task name it should not affect older days. For example, Day A side 1 was: "Read" and Day B side 1 was: "Math". The cube should remember that Day A's side was "Read" rather than "Math.

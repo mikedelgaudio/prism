@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { useContext, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useFirebaseAuth } from "../../../firebase/firebase.context";
+import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { useTitle } from "../../../hooks/use-title";
 import { TOAST_SERVICE } from "../../../services/toast.service";
 import { SettingsContext } from "../../Settings/settings.context";
@@ -11,14 +11,14 @@ const Logout = observer(() => {
   useTitle("Logged out - Prism");
 
   const navigate = useNavigate();
-  const { currentUser, logout } = useFirebaseAuth();
   const { settingsStore } = useContext(SettingsContext);
+  const { firebaseStore } = useContext(FirebaseContextNew);
 
   useEffect(() => {
     async function handleLogout() {
       try {
-        if (logout) await logout();
-        settingsStore.clearProfile();
+        await firebaseStore.logout();
+        // settingsStore.clearProfile();
         const TOAST_ID = "SUCCESS_LOGOUT";
         TOAST_SERVICE.success(TOAST_ID, "Successfully logged out.", true);
       } catch {
@@ -31,12 +31,12 @@ const Logout = observer(() => {
       }
     }
 
-    if (!currentUser) {
+    if (!firebaseStore.authUser) {
       navigate("/login");
     } else {
       handleLogout();
     }
-  }, [logout, navigate, currentUser]);
+  }, [navigate, firebaseStore.authUser]);
 
   return (
     <AuthLayout>

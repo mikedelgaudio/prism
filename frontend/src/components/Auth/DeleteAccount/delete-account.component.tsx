@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useFirebaseAuth } from "../../../firebase/firebase.context";
+import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { useTitle } from "../../../hooks/use-title";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
@@ -12,7 +12,7 @@ const DeleteAccount = observer(() => {
   useTitle("Delete Account - Prism");
 
   const navigate = useNavigate();
-  const { deleteAccount } = useFirebaseAuth();
+  const { firebaseStore } = useContext(FirebaseContextNew);
 
   const [reauth, setReauth] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -22,8 +22,7 @@ const DeleteAccount = observer(() => {
 
     try {
       setLoading(true);
-      if (deleteAccount) await deleteAccount();
-      else throw new Error();
+      await firebaseStore.deleteAccount();
       const TOAST_ID = "SUCCESS_DELETE_ACCOUNT";
       TOAST_SERVICE.success(TOAST_ID, "Successfully deleted account.", true);
       navigate("/login");

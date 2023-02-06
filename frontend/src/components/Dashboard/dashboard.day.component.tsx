@@ -2,6 +2,7 @@ import { observer } from "mobx-react";
 import { useContext } from "react";
 import { useQuery } from "react-query";
 import { useTitle } from "../../hooks/use-title";
+import { getRequest } from "../../services/api.service";
 import { Loading } from "../Shared";
 import { Dashboard } from "./dashboard.component";
 import { DashboardContext } from "./dashboard.context";
@@ -17,6 +18,10 @@ const DashboardDay = observer(() => {
     "loadProfile",
     async () => {
       await dashboardStore.getProfile();
+      const x = await getRequest(
+        `${import.meta.env?.VITE_API_URL}/dashboards/day`,
+      );
+      console.log(x);
     },
     {
       // Enable retries on error
@@ -28,8 +33,6 @@ const DashboardDay = observer(() => {
 
   // If last entry !== today (meaning no data) then display empty card to prompt upload
   // Otherwise for loop over google sheet data
-
-  // Fetch
 
   // Infinite lazy load cards in?
 

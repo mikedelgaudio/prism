@@ -1,34 +1,75 @@
 import { getAuth } from "firebase/auth";
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
 import { v4 as uuidv4 } from "uuid";
 import { Task, UserProfile } from "../../firebase/firebase.models";
 import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
-import { db, FIREBASE_USERS_COLLECTION } from "../../services/firebase.service";
+import {
+  db,
+  FIREBASE_TASKS_COLLECTION,
+  FIREBASE_USERS_COLLECTION,
+} from "../../services/firebase.service";
 import { TOAST_SERVICE } from "../../services/toast.service";
 
 export class SettingsStore {
   public profile: UserProfile | undefined;
+  public tasks: Task[] = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
+  get docRef() {
+    const auth = getAuth();
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+    return doc(db, FIREBASE_USERS_COLLECTION, userId);
+  }
+
+  get tasksRef() {
+    const auth = getAuth();
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+    return collection(
+      db,
+      `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_TASKS_COLLECTION}`,
+    );
+  }
+
+  get assignedTasks() {
+    return this.tasks?.filter(task => task.side !== null);
+  }
+
   async getProfile() {
     try {
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-      if (!docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
-
-      const docSnap = await getDoc(docRef);
+      if (!this.docRef) return Promise.reject({ message: ERROR_USER_IS_NULL });
+      const docSnap = await getDoc(this.docRef);
 
       if (!docSnap.exists())
         return Promise.reject({ message: ERROR_USER_IS_NULL });
-
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
+      if (!this.tasksRef) return;
+      const q = query(this.tasksRef, orderBy("side", "asc"));
+      const usersTasks = await getDocs(q);
       const snap = docSnap.data() as UserProfile;
       runInAction(() => {
+        this.tasks = [];
+        usersTasks.docs.forEach(task => {
+          this.tasks.push(task.data() as Task);
+        });
         this.profile = snap;
       });
     } catch (e) {
@@ -37,20 +78,13 @@ export class SettingsStore {
     }
   }
 
-  get tasks() {
-    return this.profile?.sides;
-  }
-
-  get assignedTasks() {
-    return this.tasks?.filter(task => task.side !== null);
-  }
-
   getTaskById(id: string): Task | undefined {
     return this.tasks?.find(task => task.id === id);
   }
 
   clearProfile() {
     this.profile = undefined;
+    this.tasks = [];
   }
 
   async addTask() {
@@ -58,20 +92,15 @@ export class SettingsStore {
       side: null,
       id: uuidv4(),
       name: "New Task",
-      color: "#eee",
+      timestamp: serverTimestamp(),
     };
 
     try {
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-      await updateDoc(docRef, {
-        sides: arrayUnion(task),
-      });
-
+      if (!this.tasksRef) throw new Error();
+      const tasksCollectionRef = doc(this.tasksRef, task.id);
+      await setDoc(tasksCollectionRef, task);
       runInAction(() => {
-        this.profile?.sides?.unshift(task);
+        this.tasks.push(task);
       });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_ADD_TASK";
@@ -80,29 +109,19 @@ export class SettingsStore {
   }
 
   async editTaskName(id: string | undefined, newName: string | undefined) {
-    if (!id || !newName || !this.profile?.sides || !this.tasks) return;
+    if (!id || !newName || !this.tasks) return;
 
     try {
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-      let index = 0;
-      const updatedTasks = this.tasks.map((task, i) => {
-        if (task.id === id) {
-          index = i;
-          task.name = newName;
-        }
-        return task;
+      if (!this.tasksRef) throw new Error();
+      const tasksCollectionRef = doc(this.tasksRef, id);
+      await updateDoc(tasksCollectionRef, {
+        name: newName,
       });
 
-      await updateDoc(docRef, {
-        sides: updatedTasks,
-      });
+      const index = this.tasks.findIndex(task => task.id === id);
 
       runInAction(() => {
-        if (!this.profile?.sides) return;
-        this.profile.sides[index].name = newName;
+        this.tasks[index].name = newName;
       });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_EDIT_TASK";
@@ -111,20 +130,15 @@ export class SettingsStore {
   }
 
   async deleteTask(id: string | undefined) {
-    if (!id || !this.tasks || !this.profile) return;
+    if (!id || !this.tasks) return;
     if (this.getTaskById(id)?.side !== null) return;
 
     try {
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-      await updateDoc(docRef, {
-        sides: this.tasks.filter(task => task.id !== id),
-      });
+      if (!this.tasksRef) throw new Error();
+      await deleteDoc(doc(this.tasksRef, id));
+
       runInAction(() => {
-        if (!this.profile?.sides || !this.tasks) return;
-        this.profile.sides = this.tasks.filter(task => task.id !== id);
+        this.tasks = this.tasks.filter(task => task.id !== id);
       });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_DELETE_TASK";
@@ -147,19 +161,15 @@ export class SettingsStore {
 
         fromTask.id = next.id;
         fromTask.name = next.name;
-        fromTask.color = prev.color;
+        fromTask.side = prev.side;
         toTask.id = prev.id;
         toTask.name = prev.name;
-        toTask.color = next.color;
+        toTask.side = next.side;
       });
 
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-      await updateDoc(docRef, {
-        sides: this.tasks,
-      });
+      if (!this.tasksRef) throw new Error();
+      await setDoc(doc(this.tasksRef, fromTask.id), fromTask);
+      await setDoc(doc(this.tasksRef, toTask.id), toTask);
     } catch (e) {
       const TOAST_ID = "FAILED_TO_ASSIGN_TASK";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
@@ -168,11 +178,8 @@ export class SettingsStore {
 
   async disconnectPrism() {
     try {
-      const auth = getAuth();
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
-      const docRef = doc(db, FIREBASE_USERS_COLLECTION, userId);
-      await updateDoc(docRef, {
+      if (!this.docRef) throw new Error();
+      await updateDoc(this.docRef, {
         prismId: "",
       });
 
@@ -182,6 +189,23 @@ export class SettingsStore {
       });
     } catch (e) {
       const TOAST_ID = "FAILED_TO_ASSIGN_TASK";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+    }
+  }
+
+  async addPrismId(prismId: string) {
+    try {
+      if (!this.docRef) throw new Error();
+      await updateDoc(this.docRef, {
+        prismId: prismId,
+      });
+
+      runInAction(() => {
+        if (this.profile?.prismId !== "" && !this.profile?.prismId) return;
+        this.profile.prismId = prismId;
+      });
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_ADD_PRISM_ID";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
     }
   }

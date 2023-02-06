@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useFirebaseAuth } from "../../../firebase/firebase.context";
+import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { useTitle } from "../../../hooks/use-title";
 import { errorToMsg } from "../../../services/errors.service";
 import { TOAST_SERVICE } from "../../../services/toast.service";
@@ -11,8 +11,7 @@ const Login = observer(() => {
   useTitle("Login - Prism");
 
   const navigate = useNavigate();
-  const { login } = useFirebaseAuth();
-
+  const { firebaseStore } = useContext(FirebaseContextNew);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +21,7 @@ const Login = observer(() => {
 
     try {
       setLoading(true);
-      if (login) await login(email, password);
+      await firebaseStore.login(email, password);
       navigate("/dashboard/day");
     } catch (e: any) {
       const TOAST_ID = "FAILED_TO_LOGIN";
