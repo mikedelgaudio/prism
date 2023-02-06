@@ -34,4 +34,3 @@ jobs:
           file: "Dockerfile.backend"
           tags: |
             mikedelgaudio/prism-api:latest
-            mikedelgaudio/prism-api:$(date +%s)
