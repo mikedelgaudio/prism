@@ -3,6 +3,10 @@ import { getAuth } from "firebase/auth";
 import { errorToMsg } from "./errors.service";
 import { TOAST_SERVICE } from "./toast.service";
 
+export const API_URL = import.meta.env.PROD
+  ? "http://192.168.0.4:9001"
+  : "http://localhost:3001";
+
 export const getRequest = async (url: string) => {
   try {
     const auth = getAuth();

@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore/lite";
 import { makeAutoObservable, runInAction } from "mobx";
 import { Task, UserProfile } from "../../firebase/firebase.models";
 import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";

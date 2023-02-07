@@ -1,4 +1,4 @@
-import { FieldValue, serverTimestamp } from "firebase/firestore";
+import { FieldValue, serverTimestamp } from "firebase/firestore/lite";
 import { v4 as uuidv4 } from "uuid";
 
 export interface Task {
