@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import { useContext } from "react";
 import { useQuery } from "react-query";
 import { useTitle } from "../../hooks/use-title";
-import { getRequest } from "../../services/api.service";
+import { API_URL, getRequest } from "../../services/api.service";
 import { Loading } from "../Shared";
 import { Dashboard } from "./dashboard.component";
 import { DashboardContext } from "./dashboard.context";
@@ -18,10 +18,7 @@ const DashboardDay = observer(() => {
     "loadProfile",
     async () => {
       await dashboardStore.getProfile();
-      const x = await getRequest(
-        `${import.meta.env?.VITE_API_URL}/dashboards/day`,
-      );
-      console.log(x);
+      await getRequest(`${API_URL}/dashboards/day`);
     },
     {
       // Enable retries on error

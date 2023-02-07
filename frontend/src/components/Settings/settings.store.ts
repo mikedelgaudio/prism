@@ -10,7 +10,7 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
-} from "firebase/firestore";
+} from "firebase/firestore/lite";
 import { makeAutoObservable, runInAction } from "mobx";
 import { v4 as uuidv4 } from "uuid";
 import { Task, UserProfile } from "../../firebase/firebase.models";

@@ -1,16 +1,15 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore/lite";
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env
-    .VITE_REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_REACT_APP_FIREBASE_APP_ID,
-  // measurementId: import.meta.env.VITE_REACT_APP_FIREBASE_MEASUREMENT_ID,
+  apiKey: "AIzaSyA_MjUdhHJXGD39XJi7n9Zfj3Fr01qe7UI",
+  authDomain: "prism-productivity.firebaseapp.com",
+  projectId: "prism-productivity",
+  storageBucket: "prism-productivity.appspot.com",
+  messagingSenderId: "1051077289664",
+  appId: "1:1051077289664:web:a83532271959afb2ce2f25",
+  measurementId: "G-HB2KN7LCBR",
 };
 
 export const app = initializeApp(firebaseConfig);
