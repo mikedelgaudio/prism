@@ -4,6 +4,7 @@ import { google, type sheets_v4 } from "googleapis";
 
 let googleAuthClient: GoogleAuth | null = null;
 let googleSheetClient: sheets_v4.Sheets | null = null;
+const GOOGLE_SHEET_NAME = "Sheet1";
 
 const googleConfig = async (): Promise<any> => {
   try {
@@ -33,4 +34,4 @@ const googleConfig = async (): Promise<any> => {
   }
 };
 
-export { googleConfig, googleSheetClient, googleAuthClient };
+export { googleConfig, googleSheetClient, googleAuthClient, GOOGLE_SHEET_NAME };

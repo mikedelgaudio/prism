@@ -26,5 +26,12 @@ const db = getFirestore();
 // Collection Names
 const FIREBASE_USERS_COLLECTION = "users";
 const FIREBASE_TASKS_COLLECTION = "tasks";
+const FIREBASE_UPLOADS_COLLECTION = "uploads";
 
-export { admin, db, FIREBASE_USERS_COLLECTION, FIREBASE_TASKS_COLLECTION };
+export {
+  admin,
+  db,
+  FIREBASE_USERS_COLLECTION,
+  FIREBASE_TASKS_COLLECTION,
+  FIREBASE_UPLOADS_COLLECTION,
+};

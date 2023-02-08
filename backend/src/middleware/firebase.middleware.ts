@@ -7,7 +7,7 @@ export const checkAuth = async (
   next: NextFunction,
 ): Promise<any> => {
   try {
-    if (req.headers.token === undefined) throw new Error("Unauthorized");
+    if (!req.headers.token) throw new Error("Unauthorized");
     const token = req.headers.token as string;
     await admin.auth().verifyIdToken(token);
     next();
