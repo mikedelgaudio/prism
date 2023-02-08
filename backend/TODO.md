@@ -20,13 +20,16 @@ The `/dashboards` route
 
 The `/settings` route
 
-### Migrate the following functionality from frontend:
+### Tasks
 - [] GET /settings/tasks (infer id from token)
 - [] POST /settings/tasks/add
 - [] PATCH /settings/tasks/edit
 - [] DELETE /settings/tasks/{id}
 - [] PUT /settings/tasks/assign
-- [] GET /settings/profile (infer id from token)
-- [] DELETE /settings/profile/disconnect/{id}
-- [] PATCH /settings/profile/connect
-- [] DELETE /settings/profile (infer id from token)
+
+### Profile
+- [] GET /profile (infer id from token)
+- [] POST /profile/unauth-reset
+- [] PATCH /profile/disconnect
+- [] PATCH /profile/connect
+- [] DELETE /profile (infer id from token)

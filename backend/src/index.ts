@@ -44,5 +44,9 @@ app.listen(PORT, async () => {
   } catch (e) {
     console.info(e);
   }
-  console.info(`[EXPRESS] Successful running on port: ${PORT}`);
+  console.info(
+    `[EXPRESS] Successful app version ${
+      process.env?.VERSION ?? "N/A"
+    } running on port: ${PORT}`,
+  );
 });

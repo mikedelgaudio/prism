@@ -15,7 +15,7 @@ dashboardsRouter.get(
       const { status } = await computeSheetMVP(token);
       res.status(200).json(status);
     } catch (e) {
-      res.status(500).json({ status: "FAIL", error: e });
+      res.status(500).json({ status: "FAIL", errors: [e] });
     }
   },
 );

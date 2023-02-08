@@ -10,6 +10,7 @@
 - [x] Research React Query instead of useEffect
 - [] Use React Query site-wide
 - [] Creative ways to do skeleton loading for Cards
+- [] Migrate all navigation links to share in nav/footer
 
 # Register / Login
 
