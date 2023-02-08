@@ -74,6 +74,8 @@ const computeSheetMVP = async (token: string): Promise<any> => {
 
       batch.set(uploadsCollectionRef.doc(queryTimestamp), upload);
 
+      console.info(`Writing... ${queryTimestamp} doc to DB...`);
+
       // Create collections for side1 through side 5
       for (let i = 1; i <= 5; i++) {
         const uploadsSidesRef = db.collection(
@@ -87,11 +89,17 @@ const computeSheetMVP = async (token: string): Promise<any> => {
             minutes = minutesTracked;
           }
 
+          if (minutes !== 0)
+            console.info(
+              `At ${queryTimestamp} at hour ${hour.toString()} on side${i}, user now has ${minutes} minutes.`,
+            );
+
           batch.set(uploadsSidesRef.doc(hour.toString()), {
             minutes,
           });
         }
       }
+      await batch.commit();
     } else {
       // Calculate the new values and update and replace the object currently in firestore...
       if (sideName === "N/A")
@@ -105,23 +113,22 @@ const computeSheetMVP = async (token: string): Promise<any> => {
         batch.update(uploadsSidesRef.doc(hourTrackingStarted.toString()), {
           minutes: FieldValue.increment(minutesTracked),
         });
-      }
 
-      const isEndOfList = timestampIndex === timestampRange.length - 1;
-      if (isEndOfList) {
-        const uploadsRef = db.collection(
-          `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}`,
-        );
-        batch.update(uploadsRef.doc(queryTimestamp), {
-          lastUpload: timestamp,
-        });
+        const isEndOfList = timestampIndex === timestampRange.length - 1;
+        if (isEndOfList) {
+          const uploadsRef = db.collection(
+            `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}`,
+          );
+          batch.update(uploadsRef.doc(queryTimestamp), {
+            lastUpload: timestamp,
+          });
+        }
+        await batch.commit();
       }
     }
-
-    await batch.commit();
   });
 
-  return { fetchLatestTimestamps };
+  return { status: "OK" };
 };
 
 export { computeSheetMVP };

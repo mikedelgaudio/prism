@@ -17,14 +17,13 @@ const DashboardDay = observer(() => {
   const { data, status, refetch } = useQuery(
     "loadProfile",
     async () => {
-      await dashboardStore.getProfile();
-      await getRequest(`${API_URL}/dashboards/day`);
+      await Promise.allSettled([
+        dashboardStore.getProfile(),
+        getRequest(`${API_URL}/calculate`),
+      ]);
     },
     {
-      // Enable retries on error
-      retry: true,
-      // Start with a delay of 1 second, and double the delay after each retry
-      retryDelay: attemptIndex => Math.pow(2, attemptIndex) * 1000,
+      refetchOnWindowFocus: false,
     },
   );
 

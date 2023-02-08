@@ -19,11 +19,7 @@ const Settings = observer(() => {
       await settingsStore.getProfile();
     },
     {
-      // Enable retries on error
       refetchOnWindowFocus: false,
-      retry: true,
-      // Start with a delay of 1 second, and double the delay after each retry
-      retryDelay: attemptIndex => Math.pow(2, attemptIndex) * 1000,
     },
   );
 
