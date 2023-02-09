@@ -37,4 +37,4 @@
 
 - [] Logic to consume API response from Google Sheet / Zapier from cube
 - [x] Determine logic in case user changes Task name it should not affect older days. For example, Day A side 1 was: "Read" and Day B side 1 was: "Math". The cube should remember that Day A's side was "Read" rather than "Math.
-- [] Add refresh data button
+- [x] Add refresh data button
