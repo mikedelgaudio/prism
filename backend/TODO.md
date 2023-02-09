@@ -2,19 +2,19 @@
 
 ## General
 
-- [x] Configure ESLint
-- [x] Updated configuration for Firebase auth middleware
-- [x] Create an MVP route to pull entire sheet data with no logic but calculations and throwing to UI (will be slow but functional)
-- [] Create an optimized route to pull last entry since last calculated by timestamp in Firestore
-- [x] Ensure all POST routes validate / sanitize input
-- [] Ensure every response to FE has proper status code and status message in JSON as 'OK' or 'FAIL'
+[x] Configure ESLint
+[x] Updated configuration for Firebase auth middleware
+[x] Create an MVP route to pull entire sheet data with no logic but calculations and throwing to UI (will be slow but functional)
+[x] Ensure all POST routes validate / sanitize input
+[] Ensure every response to FE has proper status code and status message in JSON as 'OK' or 'FAIL'
+[] Allow Sheets API to wipe after successful upload to Firestore
 
 ## Dashboards
 
 The `/dashboards` route
 
 ### Migrate the following functionality from frontend:
-- [] 
+- [] GET /dashboards/days
 
 ## Settings
 

@@ -1,31 +1,46 @@
 import { FieldValue } from "firebase-admin/firestore";
+import type { GaxiosResponse } from "gaxios";
+import type { sheets_v4 } from "googleapis";
 import {
   admin,
   db,
   FIREBASE_UPLOADS_COLLECTION,
   FIREBASE_USERS_COLLECTION,
 } from "../config/firebase.config";
-import { googleAuthClient, googleSheetClient } from "../config/google.config";
+import {
+  googleAuthClient,
+  googleSheetClient,
+  GOOGLE_SHEET_NAME,
+} from "../config/google.config";
 import type { DailyUpload } from "../models/upload";
 import { convertToDate, convertToHour } from "../util/util.date";
-import { convertSideNameTemp } from "../util/util.sides";
+import { convertSideName } from "../util/util.sides";
 
 const computeSheetMVP = async (token: string): Promise<any> => {
   if (!googleSheetClient || !googleAuthClient) return;
 
-  const ranges = ["A2:A", "B2:B", "C2:C"];
-  const fetchLatestTimestamps =
-    await googleSheetClient.spreadsheets.values.batchGet({
-      auth: googleAuthClient,
-      spreadsheetId: process.env?.GOOGLE_SHEET_ID,
-      dateTimeRenderOption: "FORMATTED_STRING",
-      majorDimension: "COLUMNS",
-      ranges,
-      valueRenderOption: "UNFORMATTED_VALUE",
-    });
+  const ranges = [
+    `${GOOGLE_SHEET_NAME}!A:A`,
+    `${GOOGLE_SHEET_NAME}!B:B`,
+    `${GOOGLE_SHEET_NAME}!C:C`,
+  ];
 
-  if (fetchLatestTimestamps.status !== 200)
-    throw new Error("Failed to fetch google api");
+  let fetchLatestTimestamps: null | GaxiosResponse<sheets_v4.Schema$BatchGetValuesResponse> =
+    null;
+
+  try {
+    fetchLatestTimestamps =
+      await googleSheetClient.spreadsheets.values.batchGet({
+        auth: googleAuthClient,
+        spreadsheetId: process.env?.GOOGLE_SHEET_ID,
+        dateTimeRenderOption: "FORMATTED_STRING",
+        majorDimension: "COLUMNS",
+        ranges,
+        valueRenderOption: "UNFORMATTED_VALUE",
+      });
+  } catch (e) {
+    throw new Error("Failed to fetch data from sheet");
+  }
 
   // After fetching, check if was a valid range
   if (
@@ -42,7 +57,7 @@ const computeSheetMVP = async (token: string): Promise<any> => {
     fetchLatestTimestamps.data.valueRanges[2]?.values?.[0] ?? [];
 
   if (!sideIdRange.length || !timestampRange.length || !minutesRange.length)
-    throw new Error("One or more ranges empty");
+    return { status: "NO_UPDATE" };
 
   const { uid } = await admin.auth().verifyIdToken(token);
   const uploadsCollectionRef = db.collection(
@@ -62,7 +77,7 @@ const computeSheetMVP = async (token: string): Promise<any> => {
     const docRef = await uploadsCollectionRef.doc(queryTimestamp).get();
 
     const batch = db.batch();
-    const sideName = convertSideNameTemp(sideIdRange[timestampIndex]);
+    const sideName = convertSideName(sideIdRange[timestampIndex]);
     const minutesTracked = minutesRange[timestampIndex];
     const hourTrackingStarted = convertToHour(timestamp);
 
@@ -84,7 +99,7 @@ const computeSheetMVP = async (token: string): Promise<any> => {
           `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/side${i}`,
         );
         // For each collection create docs from 0 through 24 to represent hours
-        for (let hour = 0; hour < 25; hour++) {
+        for (let hour = 0; hour < 24; hour++) {
           let minutes = 0;
 
           if (sideName === `side${i}` && hourTrackingStarted === hour) {
@@ -127,6 +142,17 @@ const computeSheetMVP = async (token: string): Promise<any> => {
         await batch.commit();
       }
     }
+  }
+
+  try {
+    // After processing data to Firestore, clear the sheet
+    await googleSheetClient.spreadsheets.values.clear({
+      auth: googleAuthClient,
+      spreadsheetId: process.env?.GOOGLE_SHEET_ID,
+      range: `${GOOGLE_SHEET_NAME}!A:C`,
+    });
+  } catch (e) {
+    throw new Error("Failed to clear sheet");
   }
 
   return { status: "OK" };

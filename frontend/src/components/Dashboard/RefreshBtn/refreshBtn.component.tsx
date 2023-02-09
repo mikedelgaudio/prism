@@ -7,7 +7,8 @@ const RefreshBtn = observer(({ iconMode = false }: { iconMode: boolean }) => {
   const query = useQuery(
     "calculateProfileOnClick",
     async () => {
-      await getRequest(`${API_URL}/dashboards/calculate`).then(() => {
+      await getRequest(`${API_URL}/dashboards/calculate`).then(d => {
+        if (!d) return;
         const TOAST_ID = "SUCCESSFUL_CALCULATION_PULL";
         TOAST_SERVICE.success(
           TOAST_ID,
