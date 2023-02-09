@@ -74,7 +74,7 @@ const Account = observer(() => {
 
         <div className="flex flex-col gap-6">
           <ul className="flex flex-col gap-4 text-lg ">
-            <li className="flex justify-between items-center">
+            <li className="flex justify-between items-center gap-3">
               <div className="flex flex-col leading-5">
                 <span>Change name</span>
                 <small>Update your display name</small>
@@ -86,19 +86,19 @@ const Account = observer(() => {
                 Change
               </Link>
             </li>
-            <li className="flex justify-between items-center">
+            <li className="flex justify-between items-center gap-3">
               <div className="flex flex-col leading-5">
                 <span>Change email</span>
                 <small>Update your email</small>
               </div>
               <Link
                 className="underline hover:no-underline"
-                to={"/change-name"}
+                to={"/change-email"}
               >
                 Change
               </Link>
             </li>
-            <li className="flex justify-between items-center">
+            <li className="flex justify-between items-center gap-3">
               <div className="flex flex-col leading-5">
                 <span>Reset password</span>
                 <small>Forgot your password?</small>
@@ -116,7 +116,7 @@ const Account = observer(() => {
       <div className="flex flex-col gap-4 border-2 border-red-400 p-6 rounded-xl">
         <h3 className="font-bold">Danger zone</h3>
         <ul className="flex flex-col gap-4 text-lg">
-          <li className="flex justify-between items-center">
+          <li className="flex justify-between items-center gap-3">
             <div className="flex flex-col leading-5">
               <span>Disconnect Prism</span>
               <small>Removes connection between your Prism and account</small>
@@ -130,7 +130,7 @@ const Account = observer(() => {
               Disconnect
             </button>
           </li>
-          <li className="flex justify-between items-center">
+          <li className="flex justify-between items-center gap-3">
             <div className="flex flex-col leading-5">
               <span>Delete account</span>
               <small>

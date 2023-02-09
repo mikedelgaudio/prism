@@ -26,7 +26,7 @@ const Header = observer(() => {
           <p className="pl-1">Here's how you're doing daily</p>
         )}
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-4 justify-center md:justify-start">
         <NavLink
           className={({ isActive }) =>
             isActive

@@ -8,8 +8,8 @@ const CubeTasks = observer(() => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex justify-between items-center">
-        <div className="flex flex-col leading-3">
+      <div className="flex justify-between items-center flex-col sm:flex-row">
+        <div className="flex flex-col leading-4">
           <h3 className="font-bold text-xl">Tasks Pool</h3>
           <p>Update, add, or delete items in your task pool</p>{" "}
         </div>

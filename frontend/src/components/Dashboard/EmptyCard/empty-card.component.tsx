@@ -16,7 +16,7 @@ const EmptyCard = () => {
 
       <div className="py-4 flex items-center justify-center flex-col gap-5">
         <h3>To upload your results, place Prism on its rest side</h3>
-        <RefreshBtn />
+        <RefreshBtn iconMode={false} />
       </div>
     </Card>
   );

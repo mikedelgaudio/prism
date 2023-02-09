@@ -72,7 +72,7 @@ const DayCard = () => {
       <div className="py-4">
         <Bar options={options} data={data} />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 py-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6 py-4">
         <div className="flex flex-col">
           <h3 className="font-semibold text-xl">
             {dashboardStore.assignedTasks[0]?.name}

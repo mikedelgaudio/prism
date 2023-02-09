@@ -16,7 +16,7 @@ const Navbar = observer(() => {
     <>
       <li>
         <NavLink
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
+          className="rounded lg:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
           to="/dashboard/day"
           onClick={navigated}
         >
@@ -25,7 +25,7 @@ const Navbar = observer(() => {
       </li>
       <li>
         <NavLink
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded lg:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           to="/settings"
           onClick={navigated}
         >
@@ -39,7 +39,7 @@ const Navbar = observer(() => {
     <>
       <li>
         <a
-          className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded lg:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           href="https://prismproductivity.com"
         >
           What's Prism?
@@ -92,7 +92,7 @@ const Navbar = observer(() => {
   };
 
   return (
-    <div className="relative py-4 bg-slate-50">
+    <div className="relative py-4 bg-slate-50 border-b-8 border-solid border-black">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-nowrap items-center justify-between gap-4 w-auto">
           <NavLink
