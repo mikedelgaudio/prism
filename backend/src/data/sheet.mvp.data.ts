@@ -10,8 +10,6 @@ import type { DailyUpload } from "../models/upload";
 import { convertToDate, convertToHour } from "../util/util.date";
 import { convertSideNameTemp } from "../util/util.sides";
 
-// TODO
-// Errors are not being caught, must protect
 const computeSheetMVP = async (token: string): Promise<any> => {
   if (!googleSheetClient || !googleAuthClient) return;
 
@@ -51,9 +49,13 @@ const computeSheetMVP = async (token: string): Promise<any> => {
     `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}`,
   );
 
-  // For each timestamp
-  timestampRange.forEach(async (timestamp: string, timestampIndex: number) => {
+  for (
+    let timestampIndex = 0;
+    timestampIndex < timestampRange.length;
+    timestampIndex++
+  ) {
     // Convert to date string key
+    const timestamp = timestampRange[timestampIndex];
     const queryTimestamp = convertToDate(timestamp);
 
     // Search by date string key in firebase/firestore
@@ -102,8 +104,7 @@ const computeSheetMVP = async (token: string): Promise<any> => {
       await batch.commit();
     } else {
       // Calculate the new values and update and replace the object currently in firestore...
-      if (sideName === "N/A")
-        throw new Error("Sheet has new names unrecognized");
+      if (sideName === "N/A") continue;
 
       const d = docRef.data() as DailyUpload;
       if (new Date(d.lastUpload) < new Date(timestamp)) {
@@ -126,7 +127,7 @@ const computeSheetMVP = async (token: string): Promise<any> => {
         await batch.commit();
       }
     }
-  });
+  }
 
   return { status: "OK" };
 };

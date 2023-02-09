@@ -17,10 +17,7 @@ const DashboardDay = observer(() => {
   const { data, status, refetch } = useQuery(
     "loadProfile",
     async () => {
-      await Promise.allSettled([
-        dashboardStore.getProfile(),
-        getRequest(`${API_URL}/calculate`),
-      ]);
+      await Promise.allSettled([dashboardStore.getProfile()]);
     },
     {
       refetchOnWindowFocus: false,

@@ -1,6 +1,5 @@
 # General
 
-- [] Create banner if API offline
 - [] Ensure all user input goes thru validString()
 - [] Migrate all Firestore code to BE
 - [] Add loading spinner for all async components
@@ -19,9 +18,9 @@
 - [] Add password strength for registration
 - [] Email verification notification should be an observable?
 - [x] Delete functionality of Firebase Auth & Firestore
-- [] Determine how to handle loading before transition to dashboard
 - [x] Consider refactoring how auth store loads using Mobx instead
 - [x] Investigate issue when logging out there is insufficent perms errors
+- [] Create password reset for unauth
 
 # Settings
 

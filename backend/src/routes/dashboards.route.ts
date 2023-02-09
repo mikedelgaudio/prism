@@ -12,8 +12,8 @@ dashboardsRouter.get(
     try {
       const token = req.headers.token as string;
       if (!token) throw new Error();
-      const { status } = await computeSheetMVP(token);
-      res.status(200).json(status);
+      await computeSheetMVP(token);
+      res.status(200).json({ status: "OK" });
     } catch (e) {
       res.status(500).json({ status: "FAIL", errors: [e] });
     }

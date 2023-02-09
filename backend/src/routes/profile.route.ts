@@ -30,7 +30,10 @@ profileRouter.post(
       if (!errors.isEmpty())
         return res.status(400).json({ status: "FAIL", errors: errors.array() });
 
-      res.status(200).json({ status: "OK" });
+      const { email } = req.body;
+      const { unauthResetPassword } = await import("../data/profile/auth.data");
+      const response = await unauthResetPassword(email);
+      return res.status(200).json({ status: "OK", response });
     } catch (e) {
       res.status(500).json({ status: "FAIL", errors: [e] });
     }
