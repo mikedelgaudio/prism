@@ -2,7 +2,7 @@
 
 - [] Ensure all user input goes thru validString()
 - [] Migrate all Firestore code to BE
-- [] Add loading spinner for all async components
+- [x] Add loading spinner for all async components
 - [] Add timeout for all async components
 - [] Add error boundaries to additional components
 - [] Some components are missing index.ts for Cube, Account, and WeekCard
