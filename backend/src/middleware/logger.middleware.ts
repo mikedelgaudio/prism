@@ -5,10 +5,9 @@ export const logger = async (
   res: Response,
   next: NextFunction,
 ): Promise<any> => {
-  const authStatus =
-    req.headers.token === undefined
-      ? "Non-Authenticated User"
-      : "Token-Attempted User";
+  const authStatus = !req.headers.token
+    ? "Non-Authenticated User"
+    : "Token-Attempted User";
   const log = `[${new Date().toUTCString()}]: ${req.method} ${
     req.originalUrl
   } (${authStatus})`;

@@ -25,7 +25,7 @@ export const getRequest = async (url: string) => {
     return data;
   } catch (e) {
     const TOAST_ID = "ERROR_FAILED_TO_GET";
-    TOAST_SERVICE.error(TOAST_ID, errorToMsg(e));
+    TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
   }
 };
 
@@ -48,6 +48,6 @@ export const postRequest = async (url: string, body: any) => {
     return data;
   } catch (e) {
     const TOAST_ID = "ERROR_FAILED_TO_POST";
-    TOAST_SERVICE.error(TOAST_ID, errorToMsg(e));
+    TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
   }
 };

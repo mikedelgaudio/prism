@@ -78,13 +78,15 @@ const CubeAssignedItem = observer(({ id }: { id: string }) => {
   return (
     <li className="gap-4 p-6 bg-slate-100 rounded-xl">
       <form
-        className="flex justify-between items-center"
+        className={`flex justify-between items-center gap-4 sm:flex-row ${
+          editing ? "flex-col" : ""
+        }`}
         onSubmit={handleSubmit}
       >
-        <div className="flex gap-6 items-center w-full">
+        <div className="flex gap-4 md:gap-6 items-center w-full ">
           <div className="flex flex-col items-center justify-center px-5 py-1 rounded-xl text-white bg-indigo-600">
             <small className="text-sm">Side</small>
-            <span className="text-2xl font-bold">{task?.side}</span>
+            <span className="text-lg md:text-2xl font-bold">{task?.side}</span>
           </div>
 
           {editing ? (

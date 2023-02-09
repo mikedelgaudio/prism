@@ -80,7 +80,7 @@ const CubeTaskItem = observer(({ id }: { id: string }) => {
     <div className="flex flex-col gap-2 leading-3 w-full">
       <label htmlFor={`task-name-field-${task?.id}`}>Task Name</label>
       <input
-        className="border border-slate-400 p-2 rounded-md"
+        className="border border-slate-400 p-2 rounded-md w-full"
         id={`task-name-field-${task?.id}`}
         type={"text"}
         placeholder={task?.name}
@@ -97,9 +97,11 @@ const CubeTaskItem = observer(({ id }: { id: string }) => {
   );
 
   return (
-    <li className={"bg-slate-100 rounded-xl"} aria-expanded={false}>
+    <li className={"p-6 bg-slate-100 rounded-xl"} aria-expanded={false}>
       <form
-        className="flex gap-4 p-6 justify-between items-center"
+        className={`flex gap-4 justify-between items-center sm:flex-row ${
+          editing ? "flex-col" : ""
+        }`}
         onSubmit={handleSubmit}
       >
         {editing ? taskEditField : taskLabel}

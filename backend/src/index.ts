@@ -1,6 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { type Express } from "express";
+import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import { googleConfig } from "./config/google.config";
 import { logger } from "./middleware/logger.middleware";
@@ -19,7 +20,17 @@ const corsOptions = {
     }
   },
 };
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: "Too many requests, blocked...",
+});
+
 app.use(cors(corsOptions));
+app.use(limiter);
 app.use(express.json());
 app.use(helmet());
 app.use(logger);
@@ -33,5 +44,9 @@ app.listen(PORT, async () => {
   } catch (e) {
     console.info(e);
   }
-  console.info(`[EXPRESS] Successful running on port: ${PORT}`);
+  console.info(
+    `[EXPRESS] Successful app version ${
+      process.env?.VERSION ?? "N/A"
+    } running on port: ${PORT}`,
+  );
 });

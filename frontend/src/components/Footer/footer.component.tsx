@@ -5,6 +5,7 @@ import { FirebaseContextNew } from "../../firebase/firebase.context.new";
 
 const Footer = observer(() => {
   const { firebaseStore } = useContext(FirebaseContextNew);
+  const VERSION_NUMBER = "v0.1.1";
 
   const authLinks = (
     <>
@@ -71,6 +72,7 @@ const Footer = observer(() => {
             <ul className="flex list-none items-center gap-9">{links()}</ul>
           </nav>
           <p className="text-slate-500 pt-6  text-sm">Made in Hoboken, NJ</p>
+          <p className="text-slate-500 text-xs">{VERSION_NUMBER}</p>
         </div>
       </div>
     </section>
