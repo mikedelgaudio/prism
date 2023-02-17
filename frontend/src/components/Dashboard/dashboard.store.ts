@@ -123,7 +123,7 @@ export class DashboardStore {
           // Can this be more efficient?
           this.uploads = [];
           querySnapshot.forEach(doc => {
-            this.uploads.push(doc.data());
+            this.uploads.push(doc.data() as UploadSnapshot);
           });
         });
       });
