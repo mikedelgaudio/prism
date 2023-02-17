@@ -11,7 +11,7 @@ import {
   updateProfile,
   User,
 } from "firebase/auth";
-import { collection, deleteDoc, doc, setDoc } from "firebase/firestore/lite";
+import { collection, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
 import {
   ERROR_INVALID_CURRENT_EMAIL,

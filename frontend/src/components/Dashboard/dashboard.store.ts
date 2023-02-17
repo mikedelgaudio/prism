@@ -1,53 +1,41 @@
 import { getAuth } from "firebase/auth";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore/lite";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  Unsubscribe,
+} from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
-import { Task, UserProfile } from "../../firebase/firebase.models";
+import {
+  Task,
+  UploadSnapshot,
+  UserProfile,
+} from "../../firebase/firebase.models";
 import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
 import {
   db,
   FIREBASE_TASKS_COLLECTION,
+  FIREBASE_UPLOADS_COLLECTION,
   FIREBASE_USERS_COLLECTION,
 } from "../../services/firebase.service";
 import { TOAST_SERVICE } from "../../services/toast.service";
 
-export interface IRawUploadedSide {
-  trackingStartTime: number;
-  trackingEndTime: number;
-}
-
-export interface IRawUploadedDay {
-  uploadDate: number;
-  side1: IRawUploadedSide[];
-  side2: IRawUploadedSide[];
-  side3: IRawUploadedSide[];
-  side4: IRawUploadedSide[];
-  side5: IRawUploadedSide[];
-  lastUploadDate: number;
-}
-
-export interface IDayChartBreakdown {
-  title: string;
-  date: string;
-  side1: number[];
-  side2: number[];
-  side3: number[];
-  side4: number[];
-  side5: number[];
-  lastUploadTime: string;
-}
-
-// Ideal data format
-
 export class DashboardStore {
-  // Such as translate date to "1/4/23"
-  private readonly DATE_FORMAT = new Intl.DateTimeFormat("en-us", {
-    dateStyle: "short",
-  });
-
   public profile: UserProfile | undefined;
   public tasks: Task[] = [];
+  public assignedTasksData: Task[] = [];
+
+  public calcState = "idle";
+  public profileState = "idle";
+
+  public unsubscribe: Unsubscribe | undefined = undefined;
 
   private dayLabels: string[] = [];
+
+  public uploads: UploadSnapshot[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -82,6 +70,16 @@ export class DashboardStore {
     );
   }
 
+  get uploadsRef() {
+    const auth = getAuth();
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+    return collection(
+      db,
+      `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_UPLOADS_COLLECTION}`,
+    );
+  }
+
   async getProfile() {
     try {
       const auth = getAuth();
@@ -103,6 +101,7 @@ export class DashboardStore {
         usersTasks.docs.forEach(task => {
           this.tasks.push(task.data() as Task);
         });
+        this.assignedTasksData = this.tasks.filter(task => task.side !== null);
         this.profile = snap;
       });
     } catch (e) {
@@ -111,7 +110,30 @@ export class DashboardStore {
     }
   }
 
+  async getUploads() {
+    try {
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid;
+      if (!userId) return;
+      if (!this.uploadsRef) return;
+      const q = query(this.uploadsRef);
+      this.unsubscribe = onSnapshot(q, querySnapshot => {
+        runInAction(() => {
+          // TODO
+          // Can this be more efficient?
+          this.uploads = [];
+          querySnapshot.forEach(doc => {
+            this.uploads.push(doc.data());
+          });
+        });
+      });
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_LOAD_ACCOUNT_SETTINGS";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+    }
+  }
+
   get assignedTasks() {
-    return this.tasks.filter(task => task.side !== null);
+    return this.assignedTasksData;
   }
 }

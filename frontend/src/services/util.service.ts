@@ -5,6 +5,30 @@ export const validString = (string: string | undefined): boolean => {
   return true;
 };
 
+export const convertToDateTitle = (date: string): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "long",
+  };
+
+  return new Date(date).toLocaleDateString("en-US", options);
+};
+
+export const convertToDate = (date: string): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    timeZone: "America/New_York",
+  };
+
+  return new Date(date)
+    .toLocaleDateString("en-US", options)
+    .replace(/\//gi, "_");
+};
+
 export const colors = {
   indigo: {
     "50": "#f3f6fc",

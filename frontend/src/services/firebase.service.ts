@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore/lite";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA_MjUdhHJXGD39XJi7n9Zfj3Fr01qe7UI",
@@ -21,3 +21,4 @@ export const db = getFirestore(app);
 
 export const FIREBASE_USERS_COLLECTION = "users";
 export const FIREBASE_TASKS_COLLECTION = "tasks";
+export const FIREBASE_UPLOADS_COLLECTION = "uploads";

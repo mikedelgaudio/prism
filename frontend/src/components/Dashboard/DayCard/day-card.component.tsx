@@ -1,11 +1,12 @@
 import { faker } from "@faker-js/faker";
+import { observer } from "mobx-react";
 import { useContext } from "react";
 import { Bar } from "react-chartjs-2";
-import { colors } from "../../../services/util.service";
+import { colors, convertToDateTitle } from "../../../services/util.service";
 import { Card } from "../../Shared";
 import { DashboardContext } from "../dashboard.context";
 
-const DayCard = () => {
+const DayCard = observer(({ title }: { title: string }) => {
   const { dashboardStore } = useContext(DashboardContext);
   const labels = dashboardStore.dayLabelList;
 
@@ -17,7 +18,7 @@ const DayCard = () => {
       },
       title: {
         display: true,
-        text: "November 2, 2022 Tracked",
+        text: `${title} Tracked`,
       },
     },
     scales: {
@@ -65,7 +66,7 @@ const DayCard = () => {
     <Card>
       <div>
         <small>Day in Review</small>
-        <h2 className="font-bold text-2xl">Wednesday, November 2, 2022</h2>
+        <h2 className="font-bold text-2xl">{convertToDateTitle(title)}</h2>
         <p className="text-gray-700 font-semibold text-xl">6h 35m tracked</p>
       </div>
 
@@ -111,6 +112,6 @@ const DayCard = () => {
       <small className="text-gray-500">Updated today at 10:16 PM</small>
     </Card>
   );
-};
+});
 
 export { DayCard };
