@@ -87,6 +87,12 @@ const computeSheetMVP = async (token: string): Promise<any> => {
         title: timestamp,
         createdOn: new Date().toUTCString(),
         lastUpload: new Date().toUTCString(),
+        totalTrackedMinutes: 0,
+        side1Minutes: 0,
+        side2Minutes: 0,
+        side3Minutes: 0,
+        side4Minutes: 0,
+        side5Minutes: 0,
       };
 
       batch.set(uploadsCollectionRef.doc(queryTimestamp), upload);
@@ -98,13 +104,25 @@ const computeSheetMVP = async (token: string): Promise<any> => {
         const uploadsSidesRef = db.collection(
           `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/side${i}`,
         );
+
+        let totalTrackedMinutes = 0;
+        const sideMinutes = {
+          side1: 0,
+          side2: 0,
+          side3: 0,
+          side4: 0,
+          side5: 0,
+        };
         // For each collection create docs from 0 through 24 to represent hours
         for (let hour = 0; hour < 24; hour++) {
           let minutes = 0;
 
           if (sideName === `side${i}` && hourTrackingStarted === hour) {
             minutes = minutesTracked;
+            sideMinutes[sideName as keyof typeof sideMinutes] += minutesTracked;
           }
+
+          totalTrackedMinutes += minutesTracked;
 
           if (minutes !== 0)
             console.info(
@@ -112,36 +130,68 @@ const computeSheetMVP = async (token: string): Promise<any> => {
             );
 
           batch.set(uploadsSidesRef.doc(hour.toString()), {
+            hour,
             minutes,
           });
         }
+        batch.update(uploadsCollectionRef.doc(queryTimestamp), {
+          totalTrackedMinutes: FieldValue.increment(totalTrackedMinutes),
+          side1Minutes: FieldValue.increment(sideMinutes.side1),
+          side2Minutes: FieldValue.increment(sideMinutes.side2),
+          side3Minutes: FieldValue.increment(sideMinutes.side3),
+          side4Minutes: FieldValue.increment(sideMinutes.side4),
+          side5Minutes: FieldValue.increment(sideMinutes.side5),
+        });
       }
       await batch.commit();
     } else {
       // Calculate the new values and update and replace the object currently in firestore...
       if (sideName === "N/A") continue;
 
-      const d = docRef.data() as DailyUpload;
-      if (new Date(d.lastUpload) < new Date(timestamp)) {
-        const uploadsSidesRef = db.collection(
-          `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/${sideName}`,
-        );
-        batch.update(uploadsSidesRef.doc(hourTrackingStarted.toString()), {
-          minutes: FieldValue.increment(minutesTracked),
-        });
+      // const d = docRef.data() as DailyUpload;
+      // if (new Date(d.lastUpload) < new Date(timestamp)) {
+      //   console.info("New data adding")
+      const uploadsSidesRef = db.collection(
+        `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/${sideName}`,
+      );
 
-        const isEndOfList = timestampIndex === timestampRange.length - 1;
-        if (isEndOfList) {
-          const uploadsRef = db.collection(
-            `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}`,
-          );
-          batch.update(uploadsRef.doc(queryTimestamp), {
-            lastUpload: timestamp,
-          });
-        }
-        await batch.commit();
+      batch.update(uploadsSidesRef.doc(hourTrackingStarted.toString()), {
+        minutes: FieldValue.increment(minutesTracked),
+      });
+
+      const sideMinutes = {
+        side1: 0,
+        side2: 0,
+        side3: 0,
+        side4: 0,
+        side5: 0,
+      };
+
+      // TODO
+      // ! NOT BEHAVING AS EXPECTED
+      sideMinutes[sideName as keyof typeof sideMinutes] += minutesTracked;
+
+      batch.update(uploadsCollectionRef.doc(queryTimestamp), {
+        totalTrackedMinutes: FieldValue.increment(minutesTracked),
+        side1Minutes: FieldValue.increment(sideMinutes.side1),
+        side2Minutes: FieldValue.increment(sideMinutes.side2),
+        side3Minutes: FieldValue.increment(sideMinutes.side3),
+        side4Minutes: FieldValue.increment(sideMinutes.side4),
+        side5Minutes: FieldValue.increment(sideMinutes.side5),
+      });
+
+      const isEndOfList = timestampIndex === timestampRange.length - 1;
+      if (isEndOfList) {
+        const uploadsRef = db.collection(
+          `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}`,
+        );
+        batch.update(uploadsRef.doc(queryTimestamp), {
+          lastUpload: timestamp,
+        });
       }
+      await batch.commit();
     }
+    // }
   }
 
   try {

@@ -5,18 +5,35 @@ export const validString = (string: string | undefined): boolean => {
   return true;
 };
 
-export const convertToDateTitle = (date: string): string => {
+export const toHoursAndMinutes = (totalMinutes: number) => {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return { hours, minutes };
+};
+
+export const toDateTitle = (date: string): string => {
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
     day: "numeric",
     weekday: "long",
   };
-
   return new Date(date).toLocaleDateString("en-US", options);
 };
 
-export const convertToDate = (date: string): string => {
+export const toLocalDateTime = (date: string): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour12: true,
+    hour: "numeric",
+    minute: "2-digit",
+  };
+  return new Date(date).toLocaleDateString("en-US", options);
+};
+
+export const convertToQueryTimestamp = (date: string): string => {
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "numeric",

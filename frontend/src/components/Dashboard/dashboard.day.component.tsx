@@ -1,7 +1,8 @@
+import { toJS } from "mobx";
 import { observer } from "mobx-react";
 import { useContext } from "react";
 import { useTitle } from "../../hooks/use-title";
-import { convertToDate } from "../../services/util.service";
+import { toDateTitle } from "../../services/util.service";
 import { Loading } from "../Shared";
 import { Dashboard } from "./dashboard.component";
 import { DashboardContext } from "./dashboard.context";
@@ -15,11 +16,12 @@ const DashboardDay = observer(() => {
 
   const renderEmptyCard = (
     <>
-      {dashboardStore.uploads.find(
-        upload =>
-          convertToDate(upload.title) !==
-          convertToDate(new Date().toISOString()),
-      ) ? (
+      {dashboardStore.uploads.find(upload => {
+        console.log(upload);
+        return (
+          toDateTitle(upload.title) !== toDateTitle(new Date().toISOString())
+        );
+      }) ? (
         <EmptyCard />
       ) : (
         <></>
@@ -27,12 +29,11 @@ const DashboardDay = observer(() => {
     </>
   );
 
-  // Infinite lazy load cards in?
+  console.log(toJS(dashboardStore.uploads));
 
   return (
     <Dashboard>
-      {dashboardStore.profileState === "success" &&
-      dashboardStore.calcState === "success" ? (
+      {true ? (
         <>
           {renderEmptyCard}
           {dashboardStore.uploads.map(upload => {

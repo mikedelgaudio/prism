@@ -5,13 +5,15 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
+  orderBy,
   query,
   Unsubscribe,
 } from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
 import {
+  DailyUpload,
+  DailyUploadSide,
   Task,
-  UploadSnapshot,
   UserProfile,
 } from "../../firebase/firebase.models";
 import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
@@ -22,6 +24,7 @@ import {
   FIREBASE_USERS_COLLECTION,
 } from "../../services/firebase.service";
 import { TOAST_SERVICE } from "../../services/toast.service";
+import { convertToQueryTimestamp } from "../../services/util.service";
 
 export class DashboardStore {
   public profile: UserProfile | undefined;
@@ -34,8 +37,7 @@ export class DashboardStore {
   public unsubscribe: Unsubscribe | undefined = undefined;
 
   private dayLabels: string[] = [];
-
-  public uploads: UploadSnapshot[] = [];
+  public uploads: DailyUpload[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -80,6 +82,41 @@ export class DashboardStore {
     );
   }
 
+  private getSideRef(timestamp: string) {
+    const auth = getAuth();
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+    const queryTimestamp = convertToQueryTimestamp(timestamp);
+    const s1Ref = collection(
+      db,
+      `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/side1`,
+    );
+    const s2Ref = collection(
+      db,
+      `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/side2`,
+    );
+    const s3Ref = collection(
+      db,
+      `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/side3`,
+    );
+    const s4Ref = collection(
+      db,
+      `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/side4`,
+    );
+    const s5Ref = collection(
+      db,
+      `${FIREBASE_USERS_COLLECTION}/${userId}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/side5`,
+    );
+
+    return {
+      side1Ref: s1Ref,
+      side2Ref: s2Ref,
+      side3Ref: s3Ref,
+      side4Ref: s4Ref,
+      side5Ref: s5Ref,
+    };
+  }
+
   async getProfile() {
     try {
       const auth = getAuth();
@@ -110,30 +147,64 @@ export class DashboardStore {
     }
   }
 
+  async getSidesData(timestamp: string) {
+    try {
+      const refs = this.getSideRef(timestamp) ?? null;
+      if (!refs) return;
+
+      const results = await Promise.all([
+        getDocs(query(refs.side1Ref, orderBy("hour", "asc"))),
+        getDocs(query(refs.side2Ref, orderBy("hour", "asc"))),
+        getDocs(query(refs.side3Ref, orderBy("hour", "asc"))),
+        getDocs(query(refs.side4Ref, orderBy("hour", "asc"))),
+        getDocs(query(refs.side5Ref, orderBy("hour", "asc"))),
+      ]);
+
+      const sideData = {
+        side1: results[0].docs.map(doc => doc.data() as DailyUploadSide),
+        side2: results[1].docs.map(doc => doc.data() as DailyUploadSide),
+        side3: results[2].docs.map(doc => doc.data() as DailyUploadSide),
+        side4: results[3].docs.map(doc => doc.data() as DailyUploadSide),
+        side5: results[4].docs.map(doc => doc.data() as DailyUploadSide),
+      };
+
+      return sideData;
+    } catch (e) {
+      const TOAST_ID = "FAILED_TO_LOAD_SIDE_DATA";
+      TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+    }
+  }
+
   async getUploads() {
     try {
       const auth = getAuth();
       const userId = auth.currentUser?.uid;
       if (!userId) return;
       if (!this.uploadsRef) return;
-      const q = query(this.uploadsRef);
+      const q = query(this.uploadsRef, orderBy("title", "desc"));
       this.unsubscribe = onSnapshot(q, querySnapshot => {
         runInAction(() => {
           // TODO
           // Can this be more efficient?
           this.uploads = [];
           querySnapshot.forEach(doc => {
-            this.uploads.push(doc.data() as UploadSnapshot);
+            this.uploads.push(doc.data() as DailyUpload);
           });
         });
       });
     } catch (e) {
-      const TOAST_ID = "FAILED_TO_LOAD_ACCOUNT_SETTINGS";
+      const TOAST_ID = "FAILED_TO_LOAD_UPLOADS";
       TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
     }
   }
 
   get assignedTasks() {
     return this.assignedTasksData;
+  }
+
+  getUploadByDate(dateTitle: string) {
+    return this.uploads.find(upload => {
+      return upload.title === dateTitle;
+    });
   }
 }

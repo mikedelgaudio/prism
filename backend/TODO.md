@@ -6,15 +6,14 @@
 [x] Updated configuration for Firebase auth middleware
 [x] Create an MVP route to pull entire sheet data with no logic but calculations and throwing to UI (will be slow but functional)
 [x] Ensure all POST routes validate / sanitize input
-[] Ensure every response to FE has proper status code and status message in JSON as 'OK' or 'FAIL'
-[] Allow Sheets API to wipe after successful upload to Firestore
+[x] Ensure every response to FE has proper status code and status message in JSON as 'OK' or 'FAIL'
+[x] Allow Sheets API to wipe after successful upload to Firestore
 
 ## Dashboards
 
 The `/dashboards` route
 
-### Migrate the following functionality from frontend:
-- [] GET /dashboards/days
+- [] GET /dashboards/day/${timestamp}
 
 ## Settings
 
