@@ -131,7 +131,8 @@ export class DashboardStore {
         return Promise.reject({ message: ERROR_USER_IS_NULL });
 
       if (!this.tasksRef) return;
-      const usersTasks = await getDocs(this.tasksRef);
+      const q = query(this.tasksRef, orderBy("side", "asc"));
+      const usersTasks = await getDocs(q);
       const snap = docSnap.data() as UserProfile;
       runInAction(() => {
         this.tasks = [];

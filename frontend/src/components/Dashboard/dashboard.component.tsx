@@ -45,7 +45,7 @@ const Dashboard = observer(({ children }: { children: ReactNode }) => {
   const profileQuery = useQuery(
     "loadProfile",
     async () => {
-      await Promise.allSettled([
+      await Promise.all([
         dashboardStore.getProfile(),
         dashboardStore.getUploads(),
       ]);
