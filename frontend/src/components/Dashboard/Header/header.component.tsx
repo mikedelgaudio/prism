@@ -29,7 +29,7 @@ const Header = observer(() => {
       <div className="flex gap-4 justify-center md:justify-start">
         <NavLink
           className={({ isActive }) =>
-            isActive
+            isActive || pathname === "/"
               ? `${btnStyle} bg-slate-900 text-white`
               : `${btnStyle} bg-transparent text-slate-900`
           }

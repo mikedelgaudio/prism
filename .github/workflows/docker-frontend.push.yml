@@ -19,6 +19,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: name/app
+          tags: |
+            type=raw,value={{date 'YYYYMMDD'}}
+
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -33,4 +41,4 @@ jobs:
           push: true
           file: "Dockerfile.frontend"
           tags: |
-            mikedelgaudio/prism:latest
+            mikedelgaudio/prism:${{ steps.meta.outputs.tags }}

@@ -1,15 +1,14 @@
-// ! For demo purposes only
-const convertSideNameTemp = (sideName: string): string => {
+const convertSideName = (sideName: string): string => {
   switch (sideName) {
-    case "Write Code":
-      return "side1";
-    case "Meetings":
-      return "side2";
-    case "Write Learn Guide":
-      return "side3";
+    case "side1":
+    case "side2":
+    case "side3":
+    case "side4":
+    case "side5":
+      return sideName;
     default:
       return "N/A";
   }
 };
 
-export { convertSideNameTemp };
+export { convertSideName };

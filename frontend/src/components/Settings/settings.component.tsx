@@ -1,7 +1,8 @@
 import { observer } from "mobx-react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useQuery } from "react-query";
 import { useTitle } from "../../hooks/use-title";
+import { DashboardContext } from "../Dashboard/dashboard.context";
 import { Loading } from "../Shared";
 import { Account } from "./Account/account.settings.component";
 import { Cube } from "./Cube/cube.settings.component";
@@ -12,6 +13,16 @@ const Settings = observer(() => {
   useTitle("Settings - Prism");
 
   const { settingsStore } = useContext(SettingsContext);
+  const { dashboardStore } = useContext(DashboardContext);
+
+  useEffect(() => {
+    return () => {
+      if (dashboardStore.unsubscribe) {
+        console.warn("CLEANUP");
+        dashboardStore.unsubscribe();
+      }
+    };
+  }, []);
 
   const { data, status, refetch } = useQuery(
     "loadProfileSettings",

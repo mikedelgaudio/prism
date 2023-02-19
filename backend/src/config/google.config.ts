@@ -4,7 +4,7 @@ import { google, type sheets_v4 } from "googleapis";
 
 let googleAuthClient: GoogleAuth | null = null;
 let googleSheetClient: sheets_v4.Sheets | null = null;
-const GOOGLE_SHEET_NAME = "Sheet1";
+const GOOGLE_SHEET_NAME = process.env?.GOOGLE_SHEET_NAME ?? "";
 
 const googleConfig = async (): Promise<any> => {
   try {

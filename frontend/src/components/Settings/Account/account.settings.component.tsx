@@ -18,7 +18,7 @@ const Account = observer(() => {
         TOAST_SERVICE.success(
           TOAST_ID,
           `Verify your email ${firebaseStore.authUser?.email}`,
-          false,
+          true,
         );
       });
     } catch (e) {

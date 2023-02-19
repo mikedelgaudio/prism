@@ -1,4 +1,4 @@
-import { FieldValue, serverTimestamp } from "firebase/firestore/lite";
+import { FieldValue, serverTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 
 export interface Task {
@@ -8,16 +8,29 @@ export interface Task {
   timestamp: FieldValue;
 }
 
+export interface DailyUploadSide {
+  hour: number;
+  minutes: number;
+}
+
+export interface DailyUpload {
+  title: string;
+  createdOn: string;
+  lastUpload: string;
+  totalTrackedMinutes: number;
+  side1Minutes: number;
+  side2Minutes: number;
+  side3Minutes: number;
+  side4Minutes: number;
+  side5Minutes: number;
+}
+
 export interface UserProfile {
   prismId: string;
-  progressEmail: boolean;
-  timeToStand: boolean;
 }
 
 export const DEFAULT_PROFILE: UserProfile = {
   prismId: "N/A",
-  progressEmail: false,
-  timeToStand: false,
 };
 
 export const DEFAULT_PROFILE_TASKS: Task[] = [

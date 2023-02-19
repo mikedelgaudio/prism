@@ -11,7 +11,7 @@ import {
   updateProfile,
   User,
 } from "firebase/auth";
-import { collection, deleteDoc, doc, setDoc } from "firebase/firestore/lite";
+import { collection, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { makeAutoObservable, runInAction } from "mobx";
 import {
   ERROR_INVALID_CURRENT_EMAIL,
@@ -90,7 +90,7 @@ export class FirebaseStore {
       await this.updateDisplayName(name);
       await this.sendVerificationEmail().then(() => {
         const TOAST_ID = "VERIFY_YOUR_EMAIL";
-        TOAST_SERVICE.success(TOAST_ID, `Verify your email ${email}`, false);
+        TOAST_SERVICE.success(TOAST_ID, `Verify your email ${email}`, true);
       });
     } catch (e) {
       return Promise.reject();
