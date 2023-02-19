@@ -23,7 +23,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: name/app
+          images: mikedelgaudio/prism-api
           tags: |
             type=raw,value={{date 'YYYYMMDD'}}
 
@@ -41,4 +41,4 @@ jobs:
           push: true
           file: "Dockerfile.backend"
           tags: |
-            mikedelgaudio/prism-api:${{ steps.meta.outputs.tags }}
+            ${{ steps.meta.outputs.tags }}
