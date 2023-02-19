@@ -1,4 +1,3 @@
-import { toJS } from "mobx";
 import { observer } from "mobx-react";
 import { useContext } from "react";
 import { useTitle } from "../../hooks/use-title";
@@ -17,11 +16,10 @@ const DashboardDay = observer(() => {
   const renderEmptyCard = (
     <>
       {dashboardStore.uploads.find(upload => {
-        console.log(upload);
         return (
           toDateTitle(upload.title) !== toDateTitle(new Date().toISOString())
         );
-      }) ? (
+      }) || dashboardStore.uploads.length === 0 ? (
         <EmptyCard />
       ) : (
         <></>
@@ -29,11 +27,10 @@ const DashboardDay = observer(() => {
     </>
   );
 
-  console.log(toJS(dashboardStore.uploads));
-
   return (
     <Dashboard>
-      {true ? (
+      {dashboardStore.profileState === "success" &&
+      dashboardStore.calcState === "success" ? (
         <>
           {renderEmptyCard}
           {dashboardStore.uploads.map(upload => {

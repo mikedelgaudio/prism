@@ -147,11 +147,14 @@ export class DashboardStore {
     }
   }
 
+  // TODO
+  // Can this be in real time?
   async getSidesData(timestamp: string) {
     try {
       const refs = this.getSideRef(timestamp) ?? null;
       if (!refs) return;
 
+      // If one of these fails it all fails....
       const results = await Promise.all([
         getDocs(query(refs.side1Ref, orderBy("hour", "asc"))),
         getDocs(query(refs.side2Ref, orderBy("hour", "asc"))),
@@ -181,6 +184,7 @@ export class DashboardStore {
       const userId = auth.currentUser?.uid;
       if (!userId) return;
       if (!this.uploadsRef) return;
+
       const q = query(this.uploadsRef, orderBy("title", "desc"));
       this.unsubscribe = onSnapshot(q, querySnapshot => {
         runInAction(() => {

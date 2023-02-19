@@ -9,7 +9,7 @@ import {
   toHoursAndMinutes,
   toLocalDateTime,
 } from "../../../services/util.service";
-import { Card } from "../../Shared";
+import { Card, Loading } from "../../Shared";
 import { DashboardContext } from "../dashboard.context";
 
 const DayCard = observer(({ title }: { title: string }) => {
@@ -27,7 +27,7 @@ const DayCard = observer(({ title }: { title: string }) => {
   const sideQuery = useQuery(
     `dayQuery${title}`,
     async () => {
-      // return await dashboardStore.getSidesData(title);
+      return await dashboardStore.getSidesData(title);
     },
     {
       refetchOnWindowFocus: false,
@@ -119,7 +119,12 @@ const DayCard = observer(({ title }: { title: string }) => {
       </div>
 
       <div className="py-4">
-        <Bar options={options} data={data} />
+        {sideQuery.status === "success" ? (
+          // Does not auto refresh when user clicks for new data, we'd need to switch to the listener model but could be expensive?
+          <Bar options={options} data={data} />
+        ) : (
+          <Loading />
+        )}
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6 py-4">
         <div className="flex flex-col">

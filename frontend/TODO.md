@@ -35,6 +35,9 @@
 
 # Dashboard
 
-- [] Logic to consume API response from Google Sheet / Zapier from cube
+- [x] Logic to consume API response from Google Sheet / Zapier from cube
 - [x] Determine logic in case user changes Task name it should not affect older days. For example, Day A side 1 was: "Read" and Day B side 1 was: "Math". The cube should remember that Day A's side was "Read" rather than "Math.
 - [x] Add refresh data button
+- [] Refactor / research ways to get real time data of charts per day card
+- [] Create a UI design for week over week view with toggle per side
+- [] Research why useEffect cleanup code is returning at loadtime 

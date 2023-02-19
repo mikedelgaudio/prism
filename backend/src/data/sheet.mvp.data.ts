@@ -17,7 +17,8 @@ import { convertToDate, convertToHour } from "../util/util.date";
 import { convertSideName } from "../util/util.sides";
 
 const computeSheetMVP = async (token: string): Promise<any> => {
-  if (!googleSheetClient || !googleAuthClient) return;
+  if (!googleSheetClient || !googleAuthClient)
+    throw new Error("No sheet or auth client to make request");
 
   const ranges = [
     `${GOOGLE_SHEET_NAME}!A:A`,
@@ -105,7 +106,6 @@ const computeSheetMVP = async (token: string): Promise<any> => {
           `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/side${i}`,
         );
 
-        let totalTrackedMinutes = 0;
         const sideMinutes = {
           side1: 0,
           side2: 0,
@@ -113,6 +113,7 @@ const computeSheetMVP = async (token: string): Promise<any> => {
           side4: 0,
           side5: 0,
         };
+
         // For each collection create docs from 0 through 24 to represent hours
         for (let hour = 0; hour < 24; hour++) {
           let minutes = 0;
@@ -121,8 +122,6 @@ const computeSheetMVP = async (token: string): Promise<any> => {
             minutes = minutesTracked;
             sideMinutes[sideName as keyof typeof sideMinutes] += minutesTracked;
           }
-
-          totalTrackedMinutes += minutesTracked;
 
           if (minutes !== 0)
             console.info(
@@ -134,8 +133,9 @@ const computeSheetMVP = async (token: string): Promise<any> => {
             minutes,
           });
         }
+
+        // Update for each side
         batch.update(uploadsCollectionRef.doc(queryTimestamp), {
-          totalTrackedMinutes: FieldValue.increment(totalTrackedMinutes),
           side1Minutes: FieldValue.increment(sideMinutes.side1),
           side2Minutes: FieldValue.increment(sideMinutes.side2),
           side3Minutes: FieldValue.increment(sideMinutes.side3),
@@ -143,18 +143,24 @@ const computeSheetMVP = async (token: string): Promise<any> => {
           side5Minutes: FieldValue.increment(sideMinutes.side5),
         });
       }
+
+      // Update total time
+      batch.update(uploadsCollectionRef.doc(queryTimestamp), {
+        totalTrackedMinutes: FieldValue.increment(minutesTracked),
+      });
       await batch.commit();
     } else {
       // Calculate the new values and update and replace the object currently in firestore...
+
+      // Side name in sheet is an invalid title
       if (sideName === "N/A") continue;
 
-      // const d = docRef.data() as DailyUpload;
-      // if (new Date(d.lastUpload) < new Date(timestamp)) {
-      //   console.info("New data adding")
+      // Reference to the firestore object of the sideName
       const uploadsSidesRef = db.collection(
         `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/${sideName}`,
       );
 
+      // For the side X, increase the minutes of the object for hour X
       batch.update(uploadsSidesRef.doc(hourTrackingStarted.toString()), {
         minutes: FieldValue.increment(minutesTracked),
       });
@@ -167,8 +173,6 @@ const computeSheetMVP = async (token: string): Promise<any> => {
         side5: 0,
       };
 
-      // TODO
-      // ! NOT BEHAVING AS EXPECTED
       sideMinutes[sideName as keyof typeof sideMinutes] += minutesTracked;
 
       batch.update(uploadsCollectionRef.doc(queryTimestamp), {
@@ -191,7 +195,6 @@ const computeSheetMVP = async (token: string): Promise<any> => {
       }
       await batch.commit();
     }
-    // }
   }
 
   try {

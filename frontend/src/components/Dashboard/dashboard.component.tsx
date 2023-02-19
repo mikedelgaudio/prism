@@ -60,18 +60,7 @@ const Dashboard = observer(({ children }: { children: ReactNode }) => {
       dashboardStore.profileState = profileQuery.status;
       dashboardStore.calcState = calcQuery.status;
     });
-  }, [profileQuery.status, calcQuery.status, dashboardStore]);
-
-  useEffect(() => {
-    return () => {
-      // TODO
-      // ! MUST CLEANUP
-      // if (dashboardStore.unsubscribe) {
-      //   console.warn("CLEANUP");
-      //   dashboardStore.unsubscribe();
-      // }
-    };
-  }, [dashboardStore]);
+  }, [profileQuery.status, calcQuery.status]);
 
   return (
     <GenericErrorBoundary>
