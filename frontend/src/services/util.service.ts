@@ -38,7 +38,6 @@ export const convertToQueryTimestamp = (date: string): string => {
     year: "numeric",
     month: "numeric",
     day: "numeric",
-    timeZone: "America/New_York",
   };
 
   return new Date(date)

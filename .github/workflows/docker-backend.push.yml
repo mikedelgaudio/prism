@@ -43,3 +43,4 @@ jobs:
           file: "Dockerfile.backend"
           tags: |
             ${{ steps.meta.outputs.tags }}
+            latest
