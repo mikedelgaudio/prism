@@ -74,6 +74,9 @@ const computeSheetMVP = async (token: string): Promise<any> => {
     const timestamp = timestampRange[timestampIndex];
     const queryTimestamp = convertToDate(timestamp);
 
+    console.info(`Timestamp: ${timestamp}`);
+    console.info(`Query Timestamp: ${queryTimestamp}`);
+
     // Search by date string key in firebase/firestore
     const docRef = await uploadsCollectionRef.doc(queryTimestamp).get();
 
@@ -81,6 +84,10 @@ const computeSheetMVP = async (token: string): Promise<any> => {
     const sideName = convertSideName(sideIdRange[timestampIndex]);
     const minutesTracked = minutesRange[timestampIndex];
     const hourTrackingStarted = convertToHour(timestamp);
+
+    console.info(
+      `Side name ${sideName} / Minutes tracked ${minutesTracked} / HourTrackingStarted ${hourTrackingStarted}`,
+    );
 
     if (!docRef.exists) {
       // Create a new object in the collection
@@ -106,23 +113,12 @@ const computeSheetMVP = async (token: string): Promise<any> => {
           `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}/${queryTimestamp}/side${i}`,
         );
 
-        const sideMinutes = {
-          side1: 0,
-          side2: 0,
-          side3: 0,
-          side4: 0,
-          side5: 0,
-        };
-
         // For each collection create docs from 0 through 24 to represent hours
         for (let hour = 0; hour < 24; hour++) {
           let minutes = 0;
-
           if (sideName === `side${i}` && hourTrackingStarted === hour) {
             minutes = minutesTracked;
-            sideMinutes[sideName as keyof typeof sideMinutes] += minutesTracked;
           }
-
           if (minutes !== 0)
             console.info(
               `At ${queryTimestamp} at hour ${hour.toString()} on side${i}, user now has ${minutes} minutes.`,
@@ -133,20 +129,26 @@ const computeSheetMVP = async (token: string): Promise<any> => {
             minutes,
           });
         }
-
-        // Update for each side
-        batch.update(uploadsCollectionRef.doc(queryTimestamp), {
-          side1Minutes: FieldValue.increment(sideMinutes.side1),
-          side2Minutes: FieldValue.increment(sideMinutes.side2),
-          side3Minutes: FieldValue.increment(sideMinutes.side3),
-          side4Minutes: FieldValue.increment(sideMinutes.side4),
-          side5Minutes: FieldValue.increment(sideMinutes.side5),
-        });
       }
+
+      const sideMinutes = {
+        side1: 0,
+        side2: 0,
+        side3: 0,
+        side4: 0,
+        side5: 0,
+      };
+
+      sideMinutes[sideName as keyof typeof sideMinutes] += minutesTracked;
 
       // Update total time
       batch.update(uploadsCollectionRef.doc(queryTimestamp), {
         totalTrackedMinutes: FieldValue.increment(minutesTracked),
+        side1Minutes: FieldValue.increment(sideMinutes.side1),
+        side2Minutes: FieldValue.increment(sideMinutes.side2),
+        side3Minutes: FieldValue.increment(sideMinutes.side3),
+        side4Minutes: FieldValue.increment(sideMinutes.side4),
+        side5Minutes: FieldValue.increment(sideMinutes.side5),
       });
       await batch.commit();
     } else {
