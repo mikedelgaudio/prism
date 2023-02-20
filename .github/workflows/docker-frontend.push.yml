@@ -42,5 +42,5 @@ jobs:
           push: true
           file: "Dockerfile.frontend"
           tags: |
-            ${{ steps.meta.outputs.tags }}
+            ${{ steps.meta.outputs.tags }},
             latest
