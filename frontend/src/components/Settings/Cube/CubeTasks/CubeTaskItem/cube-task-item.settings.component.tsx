@@ -92,7 +92,7 @@ const CubeTaskItem = observer(({ id }: { id: string }) => {
 
   const taskLabel = (
     <div className="flex gap-2 justify-center items-center">
-      <h4 className="font-bold text-lg">{task?.name}</h4>
+      <h4 className="font-bold text-lg">{label || task?.name}</h4>
     </div>
   );
 

@@ -15,17 +15,19 @@ const DashboardDay = observer(() => {
 
   const renderEmptyCard = (
     <>
-      {dashboardStore.uploads.find(upload => {
+      {dashboardStore.uploads.some(upload => {
         return (
-          toDateTitle(upload.title) !== toDateTitle(new Date().toISOString())
+          toDateTitle(upload.title) === toDateTitle(new Date().toISOString())
         );
       }) || dashboardStore.uploads.length === 0 ? (
-        <EmptyCard />
-      ) : (
         <></>
+      ) : (
+        <EmptyCard />
       )}
     </>
   );
+
+  // daniel
 
   return (
     <Dashboard>
