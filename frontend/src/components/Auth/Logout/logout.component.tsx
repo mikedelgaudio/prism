@@ -4,30 +4,18 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { useTitle } from "../../../hooks/use-title";
 import { TOAST_SERVICE } from "../../../services/toast.service";
-import { DashboardContext } from "../../Dashboard/dashboard.context";
 import { AuthLayout } from "../../Shared";
 
 const Logout = observer(() => {
   useTitle("Logged out - Prism");
 
   const navigate = useNavigate();
-  const { dashboardStore } = useContext(DashboardContext);
   const { firebaseStore } = useContext(FirebaseContextNew);
-
-  useEffect(() => {
-    return () => {
-      if (dashboardStore.unsubscribe) {
-        console.warn("CLEANUP");
-        dashboardStore.unsubscribe();
-      }
-    };
-  }, []);
 
   useEffect(() => {
     async function handleLogout() {
       try {
         await firebaseStore.logout();
-        // settingsStore.clearProfile();
         const TOAST_ID = "SUCCESS_LOGOUT";
         TOAST_SERVICE.success(TOAST_ID, "Successfully logged out.", true);
       } catch {

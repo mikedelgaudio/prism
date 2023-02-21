@@ -62,6 +62,10 @@ const Dashboard = observer(({ children }: { children: ReactNode }) => {
     });
   }, [profileQuery.status, calcQuery.status]);
 
+  useEffect(() => {
+    return () => dashboardStore.unsubscribe && dashboardStore.unsubscribe();
+  }, []);
+
   return (
     <GenericErrorBoundary>
       <div className="relative py-6 bg-slate-100">

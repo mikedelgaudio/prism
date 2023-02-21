@@ -27,7 +27,7 @@ const App = observer(() => {
 
   const app = (
     <BrowserRouter basename="/">
-      <header>
+      <header className="shadow sticky top-0 z-50">
         <Navbar />
       </header>
       <main>

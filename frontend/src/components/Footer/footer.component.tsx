@@ -5,7 +5,7 @@ import { FirebaseContextNew } from "../../firebase/firebase.context.new";
 
 const Footer = observer(() => {
   const { firebaseStore } = useContext(FirebaseContextNew);
-  const VERSION_NUMBER = "v0.2.1";
+  const VERSION_NUMBER = "v0.2.2";
 
   const authLinks = (
     <>
@@ -49,7 +49,7 @@ const Footer = observer(() => {
         <li>
           <a
             className="rounded text-base font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
-            href="mailto:mdelgaud@stevens.edu"
+            href="mailto:prism@delgaudio.dev"
             target="_blank"
           >
             Contact

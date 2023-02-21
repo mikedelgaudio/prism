@@ -16,7 +16,7 @@ const Navbar = observer(() => {
     <>
       <li>
         <NavLink
-          className="rounded lg:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
+          className="rounded sm:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
           to="/dashboard/day"
           onClick={navigated}
         >
@@ -25,7 +25,7 @@ const Navbar = observer(() => {
       </li>
       <li>
         <NavLink
-          className="rounded lg:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded sm:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           to="/settings"
           onClick={navigated}
         >
@@ -39,7 +39,7 @@ const Navbar = observer(() => {
     <>
       <li>
         <a
-          className="rounded lg:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className="rounded sm:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
           href="https://prismproductivity.com"
         >
           What's Prism?
@@ -65,13 +65,13 @@ const Navbar = observer(() => {
           </li>
         ) : (
           <li>
-            <NavLink
+            <a
               className="flex items-center justify-center rounded-xl border border-slate-900 bg-transparent px-5 py-2 text-base font-semibold leading-7 text-slate-900 transition-all duration-200 hover:bg-slate-900 hover:text-white focus:bg-slate-900 focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2 w-full sm:w-auto"
-              to="/login"
+              href="mailto:prism@delgaudio.dev"
               onClick={navigated}
             >
-              Login
-            </NavLink>
+              Contact
+            </a>
           </li>
         )}
       </>
@@ -92,7 +92,7 @@ const Navbar = observer(() => {
   };
 
   return (
-    <div className="relative py-4 bg-slate-50 border-b-8 border-solid border-black">
+    <div className="py-4 bg-slate-50 ">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-nowrap items-center justify-between gap-4 w-auto">
           <NavLink
@@ -118,9 +118,11 @@ const Navbar = observer(() => {
               <span className="font-extrabold text-[#4d82c3] uppercase ">
                 Prism
               </span>
-              <span className="font-semibold uppercase text-slate-900">
-                productivity
-              </span>
+              <div>
+                <span className="font-semibold uppercase text-slate-900">
+                  productivity
+                </span>
+              </div>
             </div>
           </NavLink>
           <nav className="sm:block hidden">
