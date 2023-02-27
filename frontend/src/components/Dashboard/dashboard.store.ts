@@ -15,6 +15,7 @@ import {
   DailyUploadSide,
   Task,
   UserProfile,
+  WeeklyUpload,
 } from "../../firebase/firebase.models";
 import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
 import {
@@ -30,6 +31,8 @@ export class DashboardStore {
   public profile: UserProfile | undefined;
   public tasks: Task[] = [];
   public assignedTasksData: Task[] = [];
+
+  public weeks: WeeklyUpload[] = [];
 
   public calcState = "idle";
   public profileState = "idle";

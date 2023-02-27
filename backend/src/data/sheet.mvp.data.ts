@@ -13,7 +13,7 @@ import {
   GOOGLE_SHEET_NAME,
 } from "../config/google.config";
 import type { DailyUpload } from "../models/upload";
-import { convertToDate, convertToHour } from "../util/util.date";
+import { convertToHour } from "../util/util.date";
 import { convertSideName } from "../util/util.sides";
 
 const computeSheetMVP = async (token: string): Promise<any> => {
@@ -72,7 +72,7 @@ const computeSheetMVP = async (token: string): Promise<any> => {
   ) {
     // Convert to date string key
     const timestamp = timestampRange[timestampIndex];
-    const queryTimestamp = convertToDate(timestamp);
+    const queryTimestamp = timestamp;
 
     console.info(`Timestamp: ${timestamp}`);
     console.info(`Query Timestamp: ${queryTimestamp}`);

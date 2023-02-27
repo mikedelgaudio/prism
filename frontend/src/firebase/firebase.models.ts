@@ -25,6 +25,33 @@ export interface DailyUpload {
   side5Minutes: number;
 }
 
+export interface WeeklyUploadSide {
+  dayOfWeek: string;
+  minutes: number;
+}
+
+export interface WeeklyUpload {
+  weekNumber: number;
+  startDate: string;
+  endDate: string;
+  minutesCombined: number;
+  minutesSide1LastWeek: number;
+  minutesSide2LastWeek: number;
+  minutesSide3LastWeek: number;
+  minutesSide4LastWeek: number;
+  minutesSide5LastWeek: number;
+  minutesSide1ThisWeek: number;
+  minutesSide2ThisWeek: number;
+  minutesSide3ThisWeek: number;
+  minutesSide4ThisWeek: number;
+  minutesSide5ThisWeek: number;
+}
+
+export interface WeeklyUploadResponse {
+  status: string;
+  data: WeeklyUpload[];
+}
+
 export interface UserProfile {
   prismId: string;
 }

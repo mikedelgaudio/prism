@@ -1,8 +1,10 @@
 import { faker } from "@faker-js/faker";
+import { observer } from "mobx-react";
 import { Line } from "react-chartjs-2";
+import { WeeklyUpload } from "../../../firebase/firebase.models";
 import { Card } from "../../Shared";
 
-const WeekCard = () => {
+const WeekCard = observer(({ week }: { week: WeeklyUpload }) => {
   const options = {
     responsive: true,
     plugins: {
@@ -47,8 +49,10 @@ const WeekCard = () => {
     <Card>
       <div className="flex justify-between align-center">
         <div>
-          <small className="text-base">Week 44 Review</small>
-          <h2 className="font-bold text-2xl">October 30 - November 5</h2>
+          <small className="text-base">Week {week.weekNumber} Review</small>
+          <h2 className="font-bold text-2xl">
+            {week.startDate} - {week.endDate}
+          </h2>
           <p className="text-gray-700 font-semibold text-xl">6h 35m tracked</p>
         </div>
         <div>
@@ -94,6 +98,6 @@ const WeekCard = () => {
       <small className="text-gray-500">Updated today at 10:16 PM</small>
     </Card>
   );
-};
+});
 
 export { WeekCard };

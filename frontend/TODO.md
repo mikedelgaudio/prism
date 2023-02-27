@@ -40,4 +40,4 @@
 - [x] Add refresh data button
 - [] Refactor / research ways to get real time data of charts per day card
 - [] Create a UI design for week over week view with toggle per side
-- [] Research why useEffect cleanup code is returning at loadtime 
+- [x] Research why useEffect cleanup code is returning at loadtime 

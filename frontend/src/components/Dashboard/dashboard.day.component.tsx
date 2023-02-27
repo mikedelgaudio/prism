@@ -27,8 +27,6 @@ const DashboardDay = observer(() => {
     </>
   );
 
-  // daniel
-
   return (
     <Dashboard>
       {dashboardStore.profileState === "success" &&
