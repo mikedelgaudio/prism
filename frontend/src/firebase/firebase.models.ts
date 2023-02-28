@@ -23,6 +23,7 @@ export interface DailyUpload {
   side3Minutes: number;
   side4Minutes: number;
   side5Minutes: number;
+  modified: boolean;
 }
 
 export interface WeeklyUploadSide {
@@ -35,16 +36,12 @@ export interface WeeklyUpload {
   startDate: string;
   endDate: string;
   minutesCombined: number;
-  minutesSide1LastWeek: number;
-  minutesSide2LastWeek: number;
-  minutesSide3LastWeek: number;
-  minutesSide4LastWeek: number;
-  minutesSide5LastWeek: number;
-  minutesSide1ThisWeek: number;
-  minutesSide2ThisWeek: number;
-  minutesSide3ThisWeek: number;
-  minutesSide4ThisWeek: number;
-  minutesSide5ThisWeek: number;
+  side1Minutes: number;
+  side2Minutes: number;
+  side3Minutes: number;
+  side4Minutes: number;
+  side5Minutes: number;
+  uploaded: string;
 }
 
 export interface WeeklyUploadResponse {

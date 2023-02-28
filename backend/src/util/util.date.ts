@@ -52,6 +52,24 @@ const getDayOfWeekByNum = (dayNumber: number): string => {
   return daysOfWeekNames[dayNumber];
 };
 
+const getWeekNumber = (date?: string): number => {
+  let currentDate = new Date();
+  if (date) currentDate = new Date(date);
+  const startDate = new Date(currentDate.getFullYear(), 0, 1);
+  const days = Math.floor(
+    (currentDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000),
+  );
+  const weekNumber = Math.ceil(days / 7);
+  return weekNumber;
+};
+
+const getDayOfWeekByDate = (date?: string): number => {
+  let d;
+  if (date) d = new Date(date);
+  else d = new Date();
+  return d.getDay();
+};
+
 // TODO
 // Need to refactor
 // const distributeTimeLoad = (sideSlot: number[]): void => {
@@ -77,4 +95,6 @@ export {
   getDayOfWeekByNum,
   getStartDateOfWeek,
   getEndDateOfWeek,
+  getWeekNumber,
+  getDayOfWeekByDate,
 };

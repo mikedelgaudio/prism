@@ -1,5 +1,3 @@
-import type { FieldValue } from "firebase-admin/firestore";
-
 interface DailyUpload {
   title: string;
   createdOn: string;
@@ -10,18 +8,19 @@ interface DailyUpload {
   side3Minutes: number;
   side4Minutes: number;
   side5Minutes: number;
+  modified: boolean;
 }
 
 interface WeeklyUpload {
   weekNumber: number;
   startDate: string;
   endDate: string;
-  minutesCombined: FieldValue;
-  side1Minutes: FieldValue;
-  side2Minutes: FieldValue;
-  side3Minutes: FieldValue;
-  side4Minutes: FieldValue;
-  side5Minutes: FieldValue;
+  minutesCombined: number;
+  side1Minutes: number;
+  side2Minutes: number;
+  side3Minutes: number;
+  side4Minutes: number;
+  side5Minutes: number;
   uploaded: string;
 }
 
