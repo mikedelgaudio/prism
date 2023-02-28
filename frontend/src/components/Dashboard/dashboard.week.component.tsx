@@ -32,7 +32,9 @@ const DashboardWeek = observer(() => {
   const render = (
     <>
       {query.data?.map(week => {
-        return <WeekCard week={week} />;
+        return (
+          <WeekCard key={`${week.weekNumber}-${week.uploaded}`} week={week} />
+        );
       })}
     </>
   );

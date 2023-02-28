@@ -1,10 +1,48 @@
 import { faker } from "@faker-js/faker";
 import { observer } from "mobx-react";
+import { useContext, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { WeeklyUpload } from "../../../firebase/firebase.models";
+import { toHoursAndMinutes } from "../../../services/util.service";
 import { Card } from "../../Shared";
+import { DashboardContext } from "../dashboard.context";
 
 const WeekCard = observer(({ week }: { week: WeeklyUpload }) => {
+  const { dashboardStore } = useContext(DashboardContext);
+  const tasks = dashboardStore.assignedTasks;
+
+  const totalThisWeek = toHoursAndMinutes(week?.minutesCombined ?? 0);
+
+  const [selectedId, setSelectedId] = useState(tasks[0]?.id ?? "");
+  const handleSelection = (e: any) => {
+    setSelectedId(prev => (prev = e.target.value));
+  };
+
+  const selectField = (
+    <div className="flex flex-col gap-2 leading-3 w-full xl:w-96">
+      <label
+        className="required sr-only"
+        htmlFor={`${week.weekNumber}-${week.uploaded}-assigned`}
+      >
+        Selected Task
+      </label>
+      <select
+        className="block w-full px-3 py-1.5 min-w-[10rem] text-xl font-bold text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+        id={`${week.weekNumber}-${week.uploaded}-assigned`}
+        value={selectedId}
+        onChange={handleSelection}
+      >
+        {tasks?.map(task => {
+          return (
+            <option key={`${task.side}-${task.id}-option-key`} value={task.id}>
+              {task.name}
+            </option>
+          );
+        })}
+      </select>
+    </div>
+  );
+
   const options = {
     responsive: true,
     plugins: {
@@ -13,7 +51,7 @@ const WeekCard = observer(({ week }: { week: WeeklyUpload }) => {
       },
       title: {
         display: true,
-        text: "Week 44 Review",
+        text: `Week ${week.weekNumber} Review`,
       },
     },
   };
@@ -53,22 +91,13 @@ const WeekCard = observer(({ week }: { week: WeeklyUpload }) => {
           <h2 className="font-bold text-2xl">
             {week.startDate} - {week.endDate}
           </h2>
-          <p className="text-gray-700 font-semibold text-xl">6h 35m tracked</p>
+          <p className="text-gray-700 font-semibold text-xl">
+            {totalThisWeek.hours}h {totalThisWeek.minutes}m all sides
+          </p>
         </div>
-        <div>
-          <small className="text-base">Compare Tasks</small>
-
-          <label className="required sr-only" htmlFor={`assigned`}>
-            Assigned Task
-          </label>
-          <select
-            className="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-            value={"test"}
-          >
-            <option key={"test"} value={"test"}>
-              Task A
-            </option>
-          </select>
+        <div className="flex items-center flex-col">
+          <small className="text-base">Selected Task</small>
+          {selectField}
         </div>
       </div>
 
@@ -84,18 +113,13 @@ const WeekCard = observer(({ week }: { week: WeeklyUpload }) => {
           <h3 className="font-semibold text-xl">Total last week</h3>
           <p className="text-xl">9h 4m</p>
         </div>
-
         <div className="flex flex-col">
-          <h3 className="font-semibold text-xl">Total combined</h3>
-          <p className="text-xl">10h 8m</p>
+          <h3 className="font-semibold text-xl">All sides</h3>
+          <p className="text-xl">
+            {totalThisWeek.hours}h {totalThisWeek.minutes}m
+          </p>
         </div>
-        {/* 
-        <div className="flex flex-col">
-          <h3 className="font-semibold text-xl">Total this week</h3>
-          <p className="text-xl">1h 4m</p>
-        </div> */}
       </div>
-      <small className="text-gray-500">Updated today at 10:16 PM</small>
     </Card>
   );
 });
