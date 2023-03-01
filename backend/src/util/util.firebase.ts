@@ -21,8 +21,7 @@ const getWeeksColRef = (uid: string): CollectionReference<DocumentData> => {
   );
 };
 
-const toWeekKey = (weekNumber: number): string => {
-  const year = new Date().getFullYear();
+const toWeekKey = (weekNumber: string, year: string): string => {
   return `week_${weekNumber}_${year}`;
 };
 

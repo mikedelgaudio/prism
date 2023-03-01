@@ -3,8 +3,8 @@ import {
   FIREBASE_UPLOADS_COLLECTION,
   FIREBASE_USERS_COLLECTION,
   FIREBASE_WEEKS_COLLECTION,
-} from "../config/firebase.config";
-import type { DailyUpload, WeeklyUpload } from "../models/upload";
+} from "../../config/firebase.config";
+import type { DailyUpload, WeeklyUpload } from "../../models/upload";
 import {
   convertToDate,
   getDayOfWeekByDate,
@@ -12,9 +12,9 @@ import {
   getEndDateOfWeek,
   getStartDateOfWeek,
   getWeekNumber,
-} from "../util/util.date";
-import { getWeeksColRef, toWeekKey } from "../util/util.firebase";
-import { getUploadsColRef } from "./sheet.mvp.data";
+} from "../../util/util.date";
+import { getWeeksColRef, toWeekKey } from "../../util/util.firebase";
+import { getUploadsColRef } from "../sheet.mvp.data";
 
 const getDailyUploads = async (uid: string): Promise<DailyUpload[]> => {
   const uploadsColRef = db.collection(
@@ -41,7 +41,10 @@ const computeWeeks = async (uid: string): Promise<{ status: string }> => {
   for (const upload of uploads) {
     const weekRef = getWeeksColRef(uid);
     const weekNumberForUpload = getWeekNumber(upload.title);
-    const key = toWeekKey(weekNumberForUpload);
+    const key = toWeekKey(
+      weekNumberForUpload.toString(),
+      new Date().getFullYear().toString(),
+    );
     const doc = await weekRef.doc(key).get();
     const year = new Date(upload.title).getFullYear();
     const dayOfWeekIndex = getDayOfWeekByDate(upload.title);
@@ -52,6 +55,7 @@ const computeWeeks = async (uid: string): Promise<{ status: string }> => {
 
       const weekEntry: WeeklyUpload = {
         weekNumber: weekNumberForUpload,
+        year,
         startDate: getStartDateOfWeek(weekNumberForUpload, year),
         endDate: getEndDateOfWeek(weekNumberForUpload, year),
         minutesCombined: upload.totalTrackedMinutes,
@@ -83,7 +87,8 @@ const computeWeeks = async (uid: string): Promise<{ status: string }> => {
           const dayOfWeekName = getDayOfWeekByNum(dayOfWeek);
 
           batch.set(sideRef.doc(dayOfWeekName), {
-            day: dayOfWeekName,
+            dayOfWeekIndex: dayOfWeek,
+            dayOfWeekName,
             minutes,
           });
         }

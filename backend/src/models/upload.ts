@@ -11,8 +11,15 @@ interface DailyUpload {
   modified: boolean;
 }
 
+interface WeeklyUploadSide {
+  dayOfWeekIndex: number;
+  dayOfWeekName: string;
+  minutes: number;
+}
+
 interface WeeklyUpload {
   weekNumber: number;
+  year: number;
   startDate: string;
   endDate: string;
   minutesCombined: number;
@@ -24,4 +31,4 @@ interface WeeklyUpload {
   uploaded: string;
 }
 
-export type { DailyUpload, WeeklyUpload };
+export type { DailyUpload, WeeklyUpload, WeeklyUploadSide };

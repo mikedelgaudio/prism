@@ -215,4 +215,9 @@ export class DashboardStore {
       return upload.title === dateTitle;
     });
   }
+
+  getAssignedTaskById(id: string | undefined) {
+    if (!id) return this.assignedTasks[0];
+    return this.assignedTasks.find(task => task.id === id);
+  }
 }

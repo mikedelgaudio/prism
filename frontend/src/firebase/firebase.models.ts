@@ -27,12 +27,14 @@ export interface DailyUpload {
 }
 
 export interface WeeklyUploadSide {
-  dayOfWeek: string;
+  dayOfWeekIndex: number;
+  dayOfWeekName: string;
   minutes: number;
 }
 
 export interface WeeklyUpload {
   weekNumber: number;
+  year: number;
   startDate: string;
   endDate: string;
   minutesCombined: number;
