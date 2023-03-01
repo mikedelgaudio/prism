@@ -14,9 +14,10 @@ import {
 } from "../config/google.config";
 import type { DailyUpload } from "../models/upload";
 import { convertToDate, convertToHour } from "../util/util.date";
+import { getUploadsColRef } from "../util/util.firebase";
 import { convertSideName } from "../util/util.sides";
 
-const computeSheetMVP = async (token: string): Promise<any> => {
+const computeSheetMVP = async (token: string): Promise<{ status: string }> => {
   if (!googleSheetClient || !googleAuthClient)
     throw new Error("No sheet or auth client to make request");
 
@@ -61,9 +62,7 @@ const computeSheetMVP = async (token: string): Promise<any> => {
     return { status: "NO_UPDATE" };
 
   const { uid } = await admin.auth().verifyIdToken(token);
-  const uploadsCollectionRef = db.collection(
-    `${FIREBASE_USERS_COLLECTION}/${uid}/${FIREBASE_UPLOADS_COLLECTION}`,
-  );
+  const uploadsCollectionRef = getUploadsColRef(uid);
 
   for (
     let timestampIndex = 0;
@@ -101,6 +100,7 @@ const computeSheetMVP = async (token: string): Promise<any> => {
         side3Minutes: 0,
         side4Minutes: 0,
         side5Minutes: 0,
+        modified: true,
       };
 
       batch.set(uploadsCollectionRef.doc(queryTimestamp), upload);
@@ -184,6 +184,7 @@ const computeSheetMVP = async (token: string): Promise<any> => {
         side3Minutes: FieldValue.increment(sideMinutes.side3),
         side4Minutes: FieldValue.increment(sideMinutes.side4),
         side5Minutes: FieldValue.increment(sideMinutes.side5),
+        modified: true,
       });
 
       const isEndOfList = timestampIndex === timestampRange.length - 1;
@@ -213,4 +214,4 @@ const computeSheetMVP = async (token: string): Promise<any> => {
   return { status: "OK" };
 };
 
-export { computeSheetMVP };
+export { computeSheetMVP, getUploadsColRef };

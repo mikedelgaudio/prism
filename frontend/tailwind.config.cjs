@@ -3,6 +3,13 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      keyframes: {
+        shimmer: {
+          "100%": {
+            transform: "translateX(100%)",
+          },
+        },
+      },
       colors: {
         indigo: {
           50: "#f3f6fc",
@@ -19,5 +26,6 @@ module.exports = {
       },
     },
   },
+
   plugins: [],
 };
