@@ -28,7 +28,7 @@ The `/settings` route
 
 ### Profile
 - [] GET /profile (infer id from token)
-- [] POST /profile/unauth-reset
+- [x] POST /profile/unauth-reset
 - [] PATCH /profile/disconnect
 - [] PATCH /profile/connect
 - [] DELETE /profile (infer id from token)
