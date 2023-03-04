@@ -67,9 +67,9 @@ const Login = observer(() => {
               required={true}
               onChange={e => setPassword(e.target.value)}
             />
-            {/* <a className="underline hover:opacity-70" href="/reset-password">
+            <a className="underline hover:opacity-70" href="/reset-password">
               Forgot your password?
-            </a> */}
+            </a>
           </div>
         </div>
 
