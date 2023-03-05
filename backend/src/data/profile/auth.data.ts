@@ -5,8 +5,13 @@ const unauthResetPassword = async (email: string): Promise<void> => {
     const link = await admin.auth().generatePasswordResetLink(email);
     const nodemailer = await import("nodemailer");
 
+    const port = Number(process.env?.EMAIL_PORT ?? "0");
+    const secure = process.env?.EMAIL_SECURE === "true";
+
     const transporter = nodemailer.createTransport({
-      service: process.env?.EMAIL_SERVICE,
+      host: process.env?.EMAIL_SERVER,
+      port,
+      secure,
       auth: {
         user: process.env?.EMAIL_USER,
         pass: process.env?.EMAIL_PASS,
@@ -14,7 +19,7 @@ const unauthResetPassword = async (email: string): Promise<void> => {
     });
 
     await transporter.sendMail({
-      from: "Prism Productivity",
+      from: "noreply@sg.prismproductivity.com",
       to: email,
       subject: "Password Reset Request Link - Prism Productivity",
       text: `Hello! To reset your password use this link: ${link}. If you did not request this link, ensure your password is strong and ignore this email.`,

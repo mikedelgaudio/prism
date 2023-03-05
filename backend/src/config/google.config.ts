@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import type { GoogleAuth } from "google-auth-library";
-import { google, type sheets_v4 } from "googleapis";
+import type { sheets_v4 } from "googleapis";
 
 let googleAuthClient: GoogleAuth | null = null;
 let googleSheetClient: sheets_v4.Sheets | null = null;
@@ -14,6 +14,8 @@ const googleConfig = async (): Promise<any> => {
     const serviceAccount = JSON.parse(
       process.env?.GOOGLE_APP_CREDENTIALS ?? "",
     );
+
+    const { google } = await import("googleapis");
 
     googleAuthClient = new google.auth.GoogleAuth({
       credentials: serviceAccount,
