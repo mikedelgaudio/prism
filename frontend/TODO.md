@@ -20,7 +20,7 @@
 - [x] Delete functionality of Firebase Auth & Firestore
 - [x] Consider refactoring how auth store loads using Mobx instead
 - [x] Investigate issue when logging out there is insufficent perms errors
-- [] Create password reset for unauth
+- [x] Create password reset for unauth
 
 # Settings
 

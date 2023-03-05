@@ -51,3 +51,18 @@ export const postRequest = async (url: string, body: any) => {
     TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
   }
 };
+
+export async function unauthPostRequest(url: string, body: any) {
+  try {
+    const { data } = await axios.post(url, body, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return data;
+  } catch (e) {
+    const TOAST_ID = "ERROR_FAILED_TO_UNAUTH_POST";
+    TOAST_SERVICE.error(TOAST_ID, errorToMsg(e), true);
+  }
+}

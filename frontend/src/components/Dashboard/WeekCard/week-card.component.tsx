@@ -118,24 +118,26 @@ const WeekCard = observer(({ week }: { week: WeeklyUpload }) => {
         </div>
       </div>
 
-      <div className="py-4">
+      <div className="py-4 flex items-center justify-center">
         {!isLoading ? (
-          <Line
-            data={{
-              labels,
-              datasets: [
-                {
-                  label: "This week",
-                  data: labels.map((_, index) => {
-                    return data[index]?.minutes ?? 0;
-                  }),
-                  backgroundColor: `${colors.indigo[600]}`,
-                  borderColor: `${colors.indigo[600]}`,
-                },
-              ],
-            }}
-            options={options}
-          />
+          <div className="lg:max-w-4xl max-w-full w-full">
+            <Line
+              data={{
+                labels,
+                datasets: [
+                  {
+                    label: "This week",
+                    data: labels.map((_, index) => {
+                      return data[index]?.minutes ?? 0;
+                    }),
+                    backgroundColor: `${colors.indigo[600]}`,
+                    borderColor: `${colors.indigo[600]}`,
+                  },
+                ],
+              }}
+              options={options}
+            />
+          </div>
         ) : (
           <LoadingGraph />
         )}

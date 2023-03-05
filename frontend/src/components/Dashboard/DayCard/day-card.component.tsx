@@ -180,8 +180,10 @@ const DayCard = observer(({ title }: { title: string }) => {
             </p>
           </div>
 
-          <div className="py-4">
-            <Bar options={options} data={data} />
+          <div className="py-4 flex items-center justify-center">
+            <div className="lg:max-w-4xl max-w-full w-full">
+              <Bar options={options} data={data} />
+            </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 py-4">
             <div className="flex flex-col">

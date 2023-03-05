@@ -32,8 +32,9 @@ profileRouter.post(
 
       const { email } = req.body;
       const { unauthResetPassword } = await import("../data/profile/auth.data");
-      const response = await unauthResetPassword(email);
-      return res.status(200).json({ status: "OK", response });
+      await unauthResetPassword(email);
+
+      return res.status(200).json({ status: "OK" });
     } catch (e) {
       res.status(500).json({ status: "FAIL", errors: [e] });
     }
