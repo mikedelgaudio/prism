@@ -6,7 +6,7 @@ import { Loading } from "../Shared";
 import { Dashboard } from "./dashboard.component";
 import { DashboardContext } from "./dashboard.context";
 import { DayCard } from "./DayCard";
-import { EmptyCard } from "./EmptyCard";
+import { DayEmptyCard } from "./DayEmptyCard";
 
 const DashboardDay = observer(() => {
   useTitle("Day Dashboard - Prism");
@@ -19,10 +19,10 @@ const DashboardDay = observer(() => {
         return (
           toDateTitle(upload.title) === toDateTitle(new Date().toISOString())
         );
-      }) || dashboardStore.uploads.length === 0 ? (
+      }) && dashboardStore.uploads.length === 0 ? (
         <></>
       ) : (
-        <EmptyCard />
+        <DayEmptyCard />
       )}
     </>
   );

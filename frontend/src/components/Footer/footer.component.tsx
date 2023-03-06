@@ -59,7 +59,7 @@ const Footer = observer(() => {
     );
   };
   return (
-    <section className="relative py-12 bg-slate-50 text-slate-800">
+    <section className="relative py-12 bg-slate-100 text-slate-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center flex-col">
           <NavLink

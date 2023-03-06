@@ -8,6 +8,7 @@ import { Loading } from "../Shared";
 import { Dashboard } from "./dashboard.component";
 import { DashboardContext } from "./dashboard.context";
 import { WeekCard } from "./WeekCard/week-card.component";
+import { WeekEmptyCard } from "./WeekEmptyCard/week-empty-card";
 
 const DashboardWeek = observer(() => {
   useTitle("Week Dashboard - Prism");
@@ -31,6 +32,7 @@ const DashboardWeek = observer(() => {
 
   const render = (
     <>
+      {query.data?.length === 0 ? <WeekEmptyCard /> : <></>}
       {query.data?.map(week => {
         return (
           <WeekCard key={`${week.weekNumber}-${week.uploaded}`} week={week} />
