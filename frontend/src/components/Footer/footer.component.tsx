@@ -5,7 +5,7 @@ import { FirebaseContextNew } from "../../firebase/firebase.context.new";
 
 const Footer = observer(() => {
   const { firebaseStore } = useContext(FirebaseContextNew);
-  const VERSION_NUMBER = "v0.3.1";
+  const VERSION_NUMBER = "v0.4.0";
 
   const authLinks = (
     <>
@@ -59,7 +59,7 @@ const Footer = observer(() => {
     );
   };
   return (
-    <section className="relative py-12 bg-slate-50 text-slate-800">
+    <section className="relative py-12 bg-slate-100 text-slate-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center flex-col">
           <NavLink

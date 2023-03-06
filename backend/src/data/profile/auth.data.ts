@@ -19,7 +19,7 @@ const unauthResetPassword = async (email: string): Promise<void> => {
     });
 
     await transporter.sendMail({
-      from: "noreply@sg.prismproductivity.com",
+      from: "noreply@prismproductivity.com",
       to: email,
       subject: "Password Reset Request Link - Prism Productivity",
       text: `Hello! To reset your password use this link: ${link}. If you did not request this link, ensure your password is strong and ignore this email.`,

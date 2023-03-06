@@ -1,7 +1,7 @@
 import { Card } from "../../Shared";
 import { RefreshBtn } from "../RefreshBtn";
 
-const EmptyCard = () => {
+const DayEmptyCard = () => {
   const DATE_FORMAT = new Intl.DateTimeFormat("en-us", {
     dateStyle: "full",
   });
@@ -22,4 +22,4 @@ const EmptyCard = () => {
   );
 };
 
-export { EmptyCard };
+export { DayEmptyCard };
