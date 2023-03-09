@@ -15,6 +15,7 @@ import { ReactNode, useContext, useEffect } from "react";
 import { useQuery } from "react-query";
 import { GenericErrorBoundary } from "../../error-boundaries";
 import { API_URL, getRequest } from "../../services/api.service";
+import { TasksContext } from "../../stores/tasks/tasks.context";
 import { DashboardContext } from "./dashboard.context";
 import { Header } from "./Header";
 
@@ -32,6 +33,8 @@ ChartJS.register(
 const Dashboard = observer(({ children }: { children: ReactNode }) => {
   const { dashboardStore } = useContext(DashboardContext);
 
+  const { tasksStore } = useContext(TasksContext);
+
   const calcQuery = useQuery(
     "calculateProfileOnClick",
     async () => {
@@ -41,6 +44,10 @@ const Dashboard = observer(({ children }: { children: ReactNode }) => {
       refetchOnWindowFocus: false,
     },
   );
+
+  const q = useQuery("q", async () => {
+    await tasksStore.getTasks();
+  });
 
   const profileQuery = useQuery(
     "loadProfile",

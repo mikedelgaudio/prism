@@ -11,7 +11,7 @@ import { WeekCard } from "./WeekCard/week-card.component";
 import { WeekEmptyCard } from "./WeekEmptyCard/week-empty-card";
 
 const DashboardWeek = observer(() => {
-  useTitle("Week Dashboard - Prism");
+  useTitle("Week Dashboard");
   const { dashboardStore } = useContext(DashboardContext);
 
   const query = useQuery(

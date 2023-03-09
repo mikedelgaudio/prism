@@ -1,22 +1,20 @@
 import { Router, type Request, type Response } from "express";
 import { body, validationResult } from "express-validator";
 
-import { checkAuth } from "../middleware/firebase.middleware";
-
 export const profileRouter: Router = Router();
 
 /**
  * Return user firestore profile
  */
-profileRouter.get("/", checkAuth, async (req: Request, res: Response) => {
-  try {
-    const token = req.headers.token as string;
-    if (!token) throw new Error();
-    res.status(200).json({ status: "OK" });
-  } catch (e) {
-    res.status(500).json({ status: "FAIL", errors: [e] });
-  }
-});
+// profileRouter.get("/", checkAuth, async (req: Request, res: Response) => {
+//   try {
+//     const token = req.headers.token as string;
+//     if (!token) throw new Error();
+//     res.status(200).json({ status: "OK" });
+//   } catch (e) {
+//     res.status(500).json({ status: "FAIL", errors: [e] });
+//   }
+// });
 
 /**
  * Reset user's password from unauth screenset
@@ -41,40 +39,40 @@ profileRouter.post(
   },
 );
 
-profileRouter.patch(
-  "/disconnect",
-  checkAuth,
-  async (req: Request, res: Response) => {
-    try {
-      const token = req.headers.token as string;
-      if (!token) throw new Error();
-      res.status(200).json({ status: "OK" });
-    } catch (e) {
-      res.status(500).json({ status: "FAIL", errors: [e] });
-    }
-  },
-);
+// profileRouter.patch(
+//   "/disconnect",
+//   checkAuth,
+//   async (req: Request, res: Response) => {
+//     try {
+//       // const uid = req.uid as string;
 
-profileRouter.patch(
-  "/connect",
-  checkAuth,
-  async (req: Request, res: Response) => {
-    try {
-      const token = req.headers.token as string;
-      if (!token) throw new Error();
-      res.status(200).json({ status: "OK" });
-    } catch (e) {
-      res.status(500).json({ status: "FAIL", errors: [e] });
-    }
-  },
-);
+//       res.status(200).json({ status: "OK" });
+//     } catch (e) {
+//       res.status(500).json({ status: "FAIL", errors: [e] });
+//     }
+//   },
+// );
 
-profileRouter.delete("/", checkAuth, async (req: Request, res: Response) => {
-  try {
-    const token = req.headers.token as string;
-    if (!token) throw new Error();
-    res.status(200).json({ status: "OK" });
-  } catch (e) {
-    res.status(500).json({ status: "FAIL", errors: [e] });
-  }
-});
+// profileRouter.patch(
+//   "/connect",
+//   checkAuth,
+//   async (req: Request, res: Response) => {
+//     try {
+//       // const uid = req.uid as string;
+
+//       res.status(200).json({ status: "OK" });
+//     } catch (e) {
+//       res.status(500).json({ status: "FAIL", errors: [e] });
+//     }
+//   },
+// );
+
+// profileRouter.delete("/", checkAuth, async (req: Request, res: Response) => {
+//   try {
+//     // const uid = req.uid as string;
+
+//     res.status(200).json({ status: "OK" });
+//   } catch (e) {
+//     res.status(500).json({ status: "FAIL", errors: [e] });
+//   }
+// });

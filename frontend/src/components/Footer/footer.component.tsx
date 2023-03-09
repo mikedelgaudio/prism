@@ -5,7 +5,7 @@ import { FirebaseContextNew } from "../../firebase/firebase.context.new";
 
 const Footer = observer(() => {
   const { firebaseStore } = useContext(FirebaseContextNew);
-  const VERSION_NUMBER = "v0.4.0";
+  const VERSION_NUMBER = "v0.4.1";
 
   const authLinks = (
     <>

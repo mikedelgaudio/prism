@@ -8,7 +8,7 @@ import { TOAST_SERVICE } from "../../../services/toast.service";
 import { AuthLayout } from "../../Shared";
 
 const ChangeName = observer(() => {
-  useTitle("Change Name - Prism");
+  useTitle("Change Name");
 
   const navigate = useNavigate();
   const { firebaseStore } = useContext(FirebaseContextNew);
