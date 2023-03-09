@@ -9,7 +9,7 @@ import { OnboardingCube } from "./OnboardingCube";
 import { SettingsContext } from "./settings.context";
 
 const Settings = observer(() => {
-  useTitle("Settings - Prism");
+  useTitle("Settings");
 
   const { settingsStore } = useContext(SettingsContext);
 

@@ -32,6 +32,8 @@ ChartJS.register(
 const Dashboard = observer(({ children }: { children: ReactNode }) => {
   const { dashboardStore } = useContext(DashboardContext);
 
+  // const { tasksStore } = useContext(TasksContext);
+
   const calcQuery = useQuery(
     "calculateProfileOnClick",
     async () => {
@@ -41,6 +43,10 @@ const Dashboard = observer(({ children }: { children: ReactNode }) => {
       refetchOnWindowFocus: false,
     },
   );
+
+  // const q = useQuery("q", async () => {
+  //   await tasksStore.getTasks();
+  // });
 
   const profileQuery = useQuery(
     "loadProfile",

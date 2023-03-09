@@ -9,7 +9,7 @@ import { AuthLayout } from "../../Shared";
 import { ReAuth } from "../Login";
 
 const ChangeEmail = observer(() => {
-  useTitle("Change Email - Prism");
+  useTitle("Change Email");
 
   const navigate = useNavigate();
   const { firebaseStore } = useContext(FirebaseContextNew);

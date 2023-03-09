@@ -5,7 +5,7 @@ import { FirebaseContextNew } from "../../../firebase/firebase.context.new";
 import { useTitle } from "../../../hooks/use-title";
 
 const PasswordReset = observer(() => {
-  useTitle("Reset Password - Prism");
+  useTitle("Reset Password");
   const { firebaseStore } = useContext(FirebaseContextNew);
 
   return <>{firebaseStore.authUser ? <AuthPwReset /> : <UnauthPwReset />}</>;

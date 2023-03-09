@@ -9,7 +9,7 @@ import { DayCard } from "./DayCard";
 import { DayEmptyCard } from "./DayEmptyCard";
 
 const DashboardDay = observer(() => {
-  useTitle("Day Dashboard - Prism");
+  useTitle("Day Dashboard");
 
   const { dashboardStore } = useContext(DashboardContext);
 

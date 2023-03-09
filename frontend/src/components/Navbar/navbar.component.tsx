@@ -1,3 +1,4 @@
+import { Transition } from "@headlessui/react";
 import { observer } from "mobx-react";
 import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
@@ -35,16 +36,14 @@ const Navbar = observer(() => {
   );
 
   const unAuthLinks = (
-    <>
-      <li>
-        <a
-          className="rounded sm:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
-          href="https://prismproductivity.com"
-        >
-          What's Prism?
-        </a>
-      </li>
-    </>
+    <li>
+      <a
+        className="rounded sm:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+        href="https://prismproductivity.com"
+      >
+        What's Prism?
+      </a>
+    </li>
   );
 
   const links = () => {
@@ -79,47 +78,45 @@ const Navbar = observer(() => {
 
   const hamburgerMenu = (
     <button
-      className="relative group"
+      className="relative"
       aria-label="Main menu"
       aria-expanded={toggled}
       onClick={() => setToggle(toggled => (toggled = !toggled))}
     >
       <div
-        className={`relative flex overflow-hidden items-center justify-center rounded-full w-[50px] h-[50px] transform transition-all bg-transparent ring-0 ring-gray-300 hover:ring-8 ${
-          toggled
-            ? "group-focus:ring-4 group-focus:ring-opacity-30 group-focus:duration-200 group-focus:shadow-md"
-            : ""
-        }`}
+        className={
+          "relative flex overflow-hidden items-center justify-center rounded-full w-[50px] h-[50px] transform transition-all bg-transparent"
+        }
       >
         <div className="flex flex-col justify-between w-[20px] h-[20px] transform transition-all duration-300 origin-center overflow-hidden">
           <div
             className={`bg-slate-500 h-[2px] w-7 transform transition-all duration-300 origin-left ${
-              toggled ? "group-focus:translate-x-10" : ""
+              toggled ? "translate-x-10" : ""
             }`}
           ></div>
           <div
             className={`bg-slate-500 h-[2px] w-7 rounded transform transition-all duration-300 ${
-              toggled ? "group-focus:translate-x-10 group-focus:delay-75" : ""
+              toggled ? "translate-x-10 delay-75" : ""
             }`}
           ></div>
           <div
             className={`bg-slate-500 h-[2px] w-7 transform transition-all duration-300 origin-left ${
-              toggled ? "group-focus:translate-x-10 group-focus:delay-150" : ""
+              toggled ? "translate-x-10 delay-150" : ""
             }`}
           ></div>
           <div
             className={`absolute items-center justify-between transform transition-all duration-500 top-2.5 -translate-x-10  ${
-              toggled ? "group-focus:translate-x-0 group-focus:w-12 " : ""
+              toggled ? "translate-x-0 w-12 " : ""
             } flex w-0`}
           >
             <div
               className={`absolute bg-slate-500 h-[2px] w-5 transform transition-all duration-500 rotate-0 delay-300 ${
-                toggled ? "group-focus:rotate-45" : ""
+                toggled ? "rotate-45" : ""
               }`}
             ></div>
             <div
               className={`absolute bg-slate-500 h-[2px] w-5 transform transition-all duration-500 -rotate-0 delay-300 ${
-                toggled ? "group-focus:-rotate-45" : ""
+                toggled ? "-rotate-45" : ""
               }`}
             ></div>
           </div>
@@ -129,7 +126,7 @@ const Navbar = observer(() => {
   );
 
   return (
-    <div className="py-4 bg-slate-50 ">
+    <div className="py-4 bg-slate-50 shadow">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-nowrap items-center justify-between gap-4 w-auto">
           <NavLink
@@ -167,14 +164,22 @@ const Navbar = observer(() => {
           </nav>
           <span className="sm:hidden block">{hamburgerMenu}</span>
         </div>
-        {toggled ? (
-          <nav className="sm:hidden block">
-            <ul className="grid list-none flex-col items-start px-1 py-5 gap-4">
-              {links()}
-            </ul>
-          </nav>
-        ) : null}
       </div>
+      <Transition
+        show={toggled}
+        enter="duration-500 ease-out"
+        enterFrom="opacity-0 scale-95"
+        enterTo="opacity-100 scale-100"
+        leave="duration-100 ease-in"
+        leaveFrom="opacity-100 scale-100"
+        leaveTo="opacity-0 scale-95"
+      >
+        <nav className="fixed top-0 bg-slate-50 w-full shadow px-4 sm:px-6 lg:px-8">
+          <ul className="grid list-none flex-col items-start px-1 py-5 gap-4">
+            {links()}
+          </ul>
+        </nav>
+      </Transition>
     </div>
   );
 });

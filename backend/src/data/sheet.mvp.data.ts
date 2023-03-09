@@ -2,7 +2,6 @@ import { FieldValue } from "firebase-admin/firestore";
 import type { GaxiosResponse } from "gaxios";
 import type { sheets_v4 } from "googleapis";
 import {
-  admin,
   db,
   FIREBASE_UPLOADS_COLLECTION,
   FIREBASE_USERS_COLLECTION,
@@ -17,7 +16,7 @@ import { convertToDate, convertToHour } from "../util/util.date";
 import { getUploadsColRef } from "../util/util.firebase";
 import { convertSideName } from "../util/util.sides";
 
-const computeSheetMVP = async (token: string): Promise<{ status: string }> => {
+const computeSheetMVP = async (uid: string): Promise<{ status: string }> => {
   if (!googleSheetClient || !googleAuthClient)
     throw new Error("No sheet or auth client to make request");
 
@@ -61,7 +60,6 @@ const computeSheetMVP = async (token: string): Promise<{ status: string }> => {
   if (!sideIdRange.length || !timestampRange.length || !minutesRange.length)
     return { status: "NO_UPDATE" };
 
-  const { uid } = await admin.auth().verifyIdToken(token);
   const uploadsCollectionRef = getUploadsColRef(uid);
 
   for (
