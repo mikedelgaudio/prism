@@ -3,14 +3,16 @@ import dotenv from "dotenv";
 import express, { type Express } from "express";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
-import { googleConfig } from "./config/google.config";
+import { initFirebase } from "./config/firebase.config";
+import { initGSheet } from "./config/google.config";
+import { initRedis } from "./config/redis.config";
 import { logger } from "./middleware/logger.middleware";
 import { configRoutes } from "./routes";
 
 dotenv.config();
 
 const app: Express = express();
-const allowList = [process.env?.ALLOWURL ?? ""];
+const allowList = process.env?.CORS_URLS?.split(",") ?? [];
 const corsOptions = {
   origin: function (origin: any, callback: any) {
     if (allowList.includes(origin)) {
@@ -34,19 +36,16 @@ app.use(limiter);
 app.use(express.json());
 app.use(helmet());
 app.use(logger);
-const PORT = process.env?.PORT ?? 3001;
+
+const PORT = 3001;
+const VERSION = "0.4.2";
 
 configRoutes(app);
 
 app.listen(PORT, async () => {
-  try {
-    await googleConfig();
-  } catch (e) {
-    console.info(e);
-  }
+  await Promise.allSettled([initFirebase(), initGSheet(), initRedis()]);
+
   console.info(
-    `[EXPRESS] Successful app version ${
-      process.env?.VERSION ?? "N/A"
-    } running on port: ${PORT}`,
+    `[EXPRESS] Successful server v${VERSION} running on port: ${PORT}`,
   );
 });

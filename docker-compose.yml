@@ -1,34 +1,47 @@
 version: "3"
 services:
-  backend:
-    platform: linux/arm64
-    build:
-      context: ./
-      dockerfile: Dockerfile.backend
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 0.5GB
-    env_file:
-      - ./backend/.env
+  redis:
+    image: "redis:7"
+    container_name: prism-redis
+    networks:
+      - internal-proxy
     ports:
-      - "3001:3001"
+      - "6379:6379"
+    restart: unless-stopped
+  backend:
+    image: mikedelgaudio/prism-api:20230310
+    container_name: prism-api
+    depends_on:
+      - redis
+    environment:
+      - CORS_URLS=${CORS_URLS}
+      - REDIS_URL=${REDIS_URL}
+      - FIREBASE_ADMIN_CREDENTIALS=${FIREBASE_ADMIN_CREDENTIALS}
+      - GOOGLE_APP_CREDENTIALS=${GOOGLE_APP_CREDENTIALS}
+      - GOOGLE_SHEET_ID=${GOOGLE_SHEET_ID}
+      - GOOGLE_SHEET_NAME=${GOOGLE_SHEET_NAME}
+      - EMAIL_SERVER=${EMAIL_SERVER}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
+    networks:
+      - cloudflared
+      - internal-proxy
+    ports:
+      - "9001:80"
     command: npm start
+    restart: unless-stopped
   frontend:
-    platform: linux/arm64
-    build:
-      context: ./
-      dockerfile: Dockerfile.frontend
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 0.5GB
+    image: mikedelgaudio/prims:20230310
+    container_name: prism
     depends_on:
       - backend
-    env_file:
-      - ./frontend/.env
     ports:
-      - "80:80"
+      - "9002:80"
     command: ["nginx", "-g", "daemon off;"]
+    networks:
+      - cloudflared
+    restart: unless-stopped
+
+networks:
+  internal-proxy:
+    external: false

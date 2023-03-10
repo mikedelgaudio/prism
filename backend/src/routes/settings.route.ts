@@ -1,5 +1,5 @@
 import { Router, type Response } from "express";
-import type { RequestWithAuth } from "../middleware";
+import type { RequestWithAuth } from "../models/express";
 
 import { checkAuth } from "../middleware/firebase.middleware";
 
