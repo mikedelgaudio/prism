@@ -1,0 +1,39 @@
+version: "3"
+services:
+  prismRedis:
+    image: "redis:7.0"
+    networks:
+      - internal-proxy
+    ports:
+      - "6379:6379"
+  prismAPI:
+    build:
+      context: ./
+      dockerfile: Dockerfile.backend
+    depends_on:
+      - prismRedis
+    env_file:
+      - ./backend/.env
+    networks:
+      - external-proxy
+      - internal-proxy
+    ports:
+      - "3001:3001"
+    command: npm start
+  prism:
+    build:
+      context: ./
+      dockerfile: Dockerfile.frontend
+    depends_on:
+      - prismAPI
+    ports:
+      - "80:80"
+    command: ["nginx", "-g", "daemon off;"]
+    networks:
+      - external-proxy
+
+networks:
+  external-proxy:
+    external: true
+  internal-proxy:
+    external: false

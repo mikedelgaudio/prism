@@ -6,7 +6,7 @@ let googleAuthClient: GoogleAuth | null = null;
 let googleSheetClient: sheets_v4.Sheets | null = null;
 const GOOGLE_SHEET_NAME = process.env?.GOOGLE_SHEET_NAME ?? "";
 
-const googleConfig = async (): Promise<any> => {
+async function initGSheet(): Promise<void> {
   try {
     dotenv.config();
 
@@ -30,10 +30,8 @@ const googleConfig = async (): Promise<any> => {
 
     console.info("[GOOGLE SHEET API] Successful connection.");
   } catch (e) {
-    console.info(
-      "[GOOGLE SHEET API] Error - Failed to connect to Google Sheet API. Check env keys.",
-    );
+    console.info("[GOOGLE SHEET API] Connection failed.", e);
   }
-};
+}
 
-export { googleConfig, googleSheetClient, googleAuthClient, GOOGLE_SHEET_NAME };
+export { initGSheet, googleSheetClient, googleAuthClient, GOOGLE_SHEET_NAME };

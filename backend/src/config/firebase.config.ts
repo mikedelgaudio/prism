@@ -1,27 +1,28 @@
 import dotenv from "dotenv";
 import admin, { type ServiceAccount } from "firebase-admin";
-import { getFirestore } from "firebase-admin/firestore";
+import { getFirestore, type Firestore } from "firebase-admin/firestore";
 
-dotenv.config();
+let db: Firestore;
 
-const serviceAccount: ServiceAccount = JSON.parse(
-  process.env?.FIREBASE_ADMIN_CREDENTIALS ?? "{}",
-);
+async function initFirebase(): Promise<void> {
+  dotenv.config();
 
-// Init App
-try {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-  console.info("[FIREBASE] Successful connection.");
-} catch (e) {
-  console.info(
-    "[FIREBASE] Error - Failed to connect to Firebase. Check env keys.",
+  const serviceAccount: ServiceAccount = JSON.parse(
+    process.env?.FIREBASE_ADMIN_CREDENTIALS ?? "{}",
   );
-}
 
-// Firestore object
-const db = getFirestore();
+  // Init App
+  try {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+    db = getFirestore();
+
+    console.info("[FIREBASE] Successful connection.");
+  } catch (e) {
+    console.info("[FIREBASE] Connection failed.", e);
+  }
+}
 
 // Collection Names
 const FIREBASE_USERS_COLLECTION = "users";
@@ -30,6 +31,7 @@ const FIREBASE_UPLOADS_COLLECTION = "uploads";
 const FIREBASE_WEEKS_COLLECTION = "weeks";
 
 export {
+  initFirebase,
   admin,
   db,
   FIREBASE_USERS_COLLECTION,

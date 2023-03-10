@@ -3,7 +3,7 @@ import { param, validationResult } from "express-validator";
 import { computeSheetMVP } from "../data/sheet.mvp.data";
 import { getWeeklySideData } from "../data/weeks/week-breakdown.data";
 import { computeWeeks, getWeeklyUploads } from "../data/weeks/week.mvp.data";
-import type { RequestWithAuth } from "../middleware";
+import type { RequestWithAuth } from "../models/express";
 
 import { checkAuth } from "../middleware/firebase.middleware";
 

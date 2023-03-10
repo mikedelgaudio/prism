@@ -1,6 +1,6 @@
 import type { NextFunction, Response } from "express";
-import type { RequestWithAuth } from ".";
 import { admin } from "../config/firebase.config";
+import type { RequestWithAuth } from "../models/express";
 
 export const checkAuth = async (
   req: RequestWithAuth,
