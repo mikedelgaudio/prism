@@ -11,9 +11,10 @@ import {
   googleSheetClient,
   GOOGLE_SHEET_NAME,
 } from "../config/google.config";
+import type { Task } from "../models/tasks";
 import type { DailyUpload } from "../models/upload";
 import { convertToDate, convertToHour } from "../util/util.date";
-import { getUploadsColRef } from "../util/util.firebase";
+import { getTasksColRef, getUploadsColRef } from "../util/util.firebase";
 import { convertSideName } from "../util/util.sides";
 
 const computeSheetMVP = async (uid: string): Promise<{ status: string }> => {
@@ -71,9 +72,6 @@ const computeSheetMVP = async (uid: string): Promise<{ status: string }> => {
     const timestamp = timestampRange[timestampIndex];
     const queryTimestamp = convertToDate(timestamp);
 
-    console.info(`Timestamp: ${timestamp}`);
-    console.info(`Query Timestamp: ${queryTimestamp}`);
-
     // Search by date string key in firebase/firestore
     const docRef = await uploadsCollectionRef.doc(queryTimestamp).get();
 
@@ -82,12 +80,28 @@ const computeSheetMVP = async (uid: string): Promise<{ status: string }> => {
     const minutesTracked = minutesRange[timestampIndex];
     const hourTrackingStarted = convertToHour(timestamp);
 
-    console.info(
-      `Side name ${sideName} / Minutes tracked ${minutesTracked} / HourTrackingStarted ${hourTrackingStarted}`,
-    );
-
     if (!docRef.exists) {
       // Create a new object in the collection
+
+      const tasks = await getTasksColRef(uid).get();
+
+      const taskNames = {
+        side1Name: "",
+        side2Name: "",
+        side3Name: "",
+        side4Name: "",
+        side5Name: "",
+      };
+
+      if (!tasks.empty) {
+        for (let j = 0; j < tasks.docs.length; j++) {
+          const task = tasks.docs[j].data() as Task;
+          if (!task.side) continue;
+          const taskKey = `side${task.side}Name`;
+          taskNames[taskKey as keyof typeof taskNames] = task.name;
+        }
+      }
+
       const upload: DailyUpload = {
         title: timestamp,
         createdOn: new Date().toUTCString(),
@@ -98,12 +112,11 @@ const computeSheetMVP = async (uid: string): Promise<{ status: string }> => {
         side3Minutes: 0,
         side4Minutes: 0,
         side5Minutes: 0,
+        ...taskNames,
         modified: true,
       };
 
       batch.set(uploadsCollectionRef.doc(queryTimestamp), upload);
-
-      console.info(`Writing... ${queryTimestamp} doc to DB...`);
 
       // Create collections for side1 through side 5
       for (let i = 1; i <= 5; i++) {
@@ -117,10 +130,6 @@ const computeSheetMVP = async (uid: string): Promise<{ status: string }> => {
           if (sideName === `side${i}` && hourTrackingStarted === hour) {
             minutes = minutesTracked;
           }
-          if (minutes !== 0)
-            console.info(
-              `At ${queryTimestamp} at hour ${hour.toString()} on side${i}, user now has ${minutes} minutes.`,
-            );
 
           batch.set(uploadsSidesRef.doc(hour.toString()), {
             hour,

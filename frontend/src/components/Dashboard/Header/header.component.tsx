@@ -14,12 +14,18 @@ const Header = observer(() => {
 
   return (
     <div className="flex flex-col gap-6 border-b-2 pb-6 border-slate-500 md:gap-0 md:flex-row md:justify-between md:items-center">
-      <div>
-        <h1 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl sm:leading-tight lg:text-5xl lg:leading-tight">
-          {weekView
-            ? "Week review"
-            : `Great to see you ${firebaseStore.authUser?.displayName ?? ""}`}
-        </h1>
+      <div className="flex flex-col gap-0">
+        <div className="leading-3">
+          <small className="font-bold pl-1 uppercase tracking-widest">
+            Dashboard
+          </small>
+          <h1 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl sm:leading-tight lg:text-5xl lg:leading-tight">
+            {weekView
+              ? "Week review"
+              : `Great to see you ${firebaseStore.authUser?.displayName ?? ""}`}
+          </h1>
+        </div>
+
         {weekView ? (
           <p className="pl-1">Track your improvement</p>
         ) : (

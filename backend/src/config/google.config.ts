@@ -2,14 +2,14 @@ import dotenv from "dotenv";
 import type { GoogleAuth } from "google-auth-library";
 import type { sheets_v4 } from "googleapis";
 
+dotenv.config();
+
 let googleAuthClient: GoogleAuth | null = null;
 let googleSheetClient: sheets_v4.Sheets | null = null;
 const GOOGLE_SHEET_NAME = process.env?.GOOGLE_SHEET_NAME ?? "";
 
 async function initGSheet(): Promise<void> {
   try {
-    dotenv.config();
-
     // Create auth object for Google
     const serviceAccount = JSON.parse(
       process.env?.GOOGLE_APP_CREDENTIALS ?? "",

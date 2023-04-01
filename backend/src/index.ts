@@ -6,6 +6,7 @@ import helmet from "helmet";
 import { initFirebase } from "./config/firebase.config";
 import { initGSheet } from "./config/google.config";
 import { initRedis } from "./config/redis.config";
+import { saveNightlyTasks } from "./data/settings/tasks.data";
 import { logger } from "./middleware/logger.middleware";
 import { configRoutes } from "./routes";
 
@@ -38,12 +39,17 @@ app.use(helmet());
 app.use(logger);
 
 const PORT = 3001;
-const VERSION = "0.4.2";
+const VERSION = "0.5.0";
 
 configRoutes(app);
 
 app.listen(PORT, async () => {
-  await Promise.allSettled([initFirebase(), initGSheet(), initRedis()]);
+  await Promise.allSettled([
+    initFirebase(),
+    initGSheet(),
+    initRedis(),
+    saveNightlyTasks(),
+  ]);
 
   console.info(
     `[EXPRESS] Successful server v${VERSION} running on port: ${PORT}`,
