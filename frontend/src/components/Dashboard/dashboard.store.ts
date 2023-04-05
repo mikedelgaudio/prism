@@ -17,7 +17,7 @@ import {
   UserProfile,
   WeeklyUpload,
 } from "../../firebase/firebase.models";
-import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
+import { ERROR_USER_IS_NULL, errorToMsg } from "../../services/errors.service";
 import {
   db,
   FIREBASE_TASKS_COLLECTION,
@@ -30,7 +30,6 @@ import { convertToQueryTimestamp } from "../../services/util.service";
 export class DashboardStore {
   public profile: UserProfile | undefined;
   public tasks: Task[] = [];
-  public assignedTasksData: Task[] = [];
 
   public weeks: WeeklyUpload[] = [];
 
@@ -142,7 +141,6 @@ export class DashboardStore {
         usersTasks.docs.forEach(task => {
           this.tasks.push(task.data() as Task);
         });
-        this.assignedTasksData = this.tasks.filter(task => task.side !== null);
         this.profile = snap;
       });
     } catch (e) {
@@ -206,18 +204,9 @@ export class DashboardStore {
     }
   }
 
-  get assignedTasks() {
-    return this.assignedTasksData;
-  }
-
   getUploadByDate(dateTitle: string) {
     return this.uploads.find(upload => {
       return upload.title === dateTitle;
     });
-  }
-
-  getAssignedTaskById(id: string | undefined) {
-    if (!id) return this.assignedTasks[0];
-    return this.assignedTasks.find(task => task.id === id);
   }
 }

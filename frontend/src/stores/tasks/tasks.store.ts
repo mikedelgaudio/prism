@@ -4,7 +4,6 @@ import { API_URL, getRequest } from "../../services/api.service";
 
 export class TasksStore {
   public tasksData: Task[] = [];
-  public assignedTasksData: Task[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -12,10 +11,6 @@ export class TasksStore {
 
   get tasks() {
     return this.tasksData;
-  }
-
-  get assignedTasks() {
-    return this.assignedTasksData;
   }
 
   async getTasks() {

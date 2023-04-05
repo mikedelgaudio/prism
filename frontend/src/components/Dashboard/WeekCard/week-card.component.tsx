@@ -44,16 +44,16 @@ const WeekCard = observer(({ week }: { week: WeeklyUpload }) => {
         <option key={`${week.uploaded}-${week.year}-1-option-key`} value={1}>
           Side 1
         </option>
-        <option key={`${week.uploaded}-${week.year}-1-option-key`} value={2}>
+        <option key={`${week.uploaded}-${week.year}-2-option-key`} value={2}>
           Side 2
         </option>
-        <option key={`${week.uploaded}-${week.year}-1-option-key`} value={3}>
+        <option key={`${week.uploaded}-${week.year}-3-option-key`} value={3}>
           Side 3
         </option>
-        <option key={`${week.uploaded}-${week.year}-1-option-key`} value={4}>
+        <option key={`${week.uploaded}-${week.year}-4-option-key`} value={4}>
           Side 4
         </option>
-        <option key={`${week.uploaded}-${week.year}-1-option-key`} value={5}>
+        <option key={`${week.uploaded}-${week.year}-5-option-key`} value={5}>
           Side 5
         </option>
       </select>
