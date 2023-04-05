@@ -24,7 +24,7 @@ async function saveTasks(): Promise<void> {
     const uploadDoc = uploadsCollectionRef.doc(queryTimestamp);
     const upload = await uploadDoc.get();
 
-    // If no entry, no work to do return? (what about if the task didn't run before)
+    // If no entry, no work to do
     if (!upload.exists) continue;
 
     const tasks = await getTasksColRef(user.id).get();
