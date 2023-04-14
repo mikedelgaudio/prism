@@ -1,4 +1,4 @@
-const convertToDate = (date: string): string => {
+const convertToDate = (date: string | Date): string => {
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "numeric",

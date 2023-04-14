@@ -3,10 +3,10 @@ import { useContext } from "react";
 import { useTitle } from "../../hooks/use-title";
 import { toDateTitle } from "../../services/util.service";
 import { Loading } from "../Shared";
-import { Dashboard } from "./dashboard.component";
-import { DashboardContext } from "./dashboard.context";
 import { DayCard } from "./DayCard";
 import { DayEmptyCard } from "./DayEmptyCard";
+import { Dashboard } from "./dashboard.component";
+import { DashboardContext } from "./dashboard.context";
 
 const DashboardDay = observer(() => {
   useTitle("Day Dashboard");
@@ -19,7 +19,7 @@ const DashboardDay = observer(() => {
         return (
           toDateTitle(upload.title) === toDateTitle(new Date().toISOString())
         );
-      }) && dashboardStore.uploads.length === 0 ? (
+      }) || dashboardStore.uploads.length === 0 ? (
         <></>
       ) : (
         <DayEmptyCard />

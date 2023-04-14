@@ -16,7 +16,11 @@ const Navbar = observer(() => {
     <>
       <li>
         <NavLink
-          className="rounded sm:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2"
+          className={({ isActive }) =>
+            `${
+              isActive ? "border-b-2 border-slate-900 text-slate-900" : ""
+            } sm:text-base text-xl font-medium text-slate-700 pb-2 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800	 focus:ring-offset-2 `
+          }
           to="/dashboard/day"
           onClick={navigated}
         >
@@ -25,7 +29,11 @@ const Navbar = observer(() => {
       </li>
       <li>
         <NavLink
-          className="rounded sm:text-base text-xl font-medium text-slate-900 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2"
+          className={({ isActive }) =>
+            `${
+              isActive ? "border-b-2 border-slate-900 text-slate-900" : ""
+            } sm:text-base text-xl font-medium text-slate-700 pb-2 transition-all duration-200 hover:text-opacity-60 focus:outline-none focus:ring-1 focus:ring-slate-800 focus:ring-offset-2`
+          }
           to="/settings"
           onClick={navigated}
         >

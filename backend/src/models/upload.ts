@@ -8,6 +8,11 @@ interface DailyUpload {
   side3Minutes: number;
   side4Minutes: number;
   side5Minutes: number;
+  side1Name: string;
+  side2Name: string;
+  side3Name: string;
+  side4Name: string;
+  side5Name: string;
   modified: boolean;
 }
 

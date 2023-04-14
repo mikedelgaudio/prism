@@ -59,7 +59,7 @@ const DayCard = observer(({ title }: { title: string }) => {
     labels,
     datasets: [
       {
-        label: dashboardStore.assignedTasks[0]?.name,
+        label: upload?.side1Name,
         data: labels.map((_, index) => {
           return (
             (sideQuery.data?.side1[index] as DailyUploadSide)?.minutes ?? 0
@@ -68,7 +68,7 @@ const DayCard = observer(({ title }: { title: string }) => {
         backgroundColor: `${colors.indigo[400]}`,
       },
       {
-        label: dashboardStore.assignedTasks[1]?.name,
+        label: upload?.side2Name,
         data: labels.map((_, index) => {
           return (
             (sideQuery.data?.side2[index] as DailyUploadSide)?.minutes ?? 0
@@ -77,7 +77,7 @@ const DayCard = observer(({ title }: { title: string }) => {
         backgroundColor: `${colors.indigo[300]}`,
       },
       {
-        label: dashboardStore.assignedTasks[2]?.name,
+        label: upload?.side3Name,
         data: labels.map((_, index) => {
           return (
             (sideQuery.data?.side3[index] as DailyUploadSide)?.minutes ?? 0
@@ -86,7 +86,7 @@ const DayCard = observer(({ title }: { title: string }) => {
         backgroundColor: `${colors.indigo[600]}`,
       },
       {
-        label: dashboardStore.assignedTasks[3]?.name,
+        label: upload?.side4Name,
         data: labels.map((_, index) => {
           return (
             (sideQuery.data?.side4[index] as DailyUploadSide)?.minutes ?? 0
@@ -95,7 +95,7 @@ const DayCard = observer(({ title }: { title: string }) => {
         backgroundColor: `${colors.indigo[800]}`,
       },
       {
-        label: dashboardStore.assignedTasks[4]?.name,
+        label: upload?.side5Name,
         data: labels.map((_, index) => {
           return (
             (sideQuery.data?.side5[index] as DailyUploadSide)?.minutes ?? 0
@@ -105,68 +105,6 @@ const DayCard = observer(({ title }: { title: string }) => {
       },
     ],
   };
-
-  // const [barDatasets, setBarDatasets] = useState<any>({
-  //   labels,
-  //   datasets: [],
-  // });
-
-  // useEffect(() => {
-  //   if (!sideQuery.data) return;
-  //   console.log("Updated");
-  //   setBarDatasets({
-  //     ...barDatasets,
-  //     datasets: [
-  //       {
-  //         label: dashboardStore.assignedTasks[0]?.name,
-  //         data: labels.map((_, index) => {
-  //           return (
-  //             (sideQuery.data?.side1[index] as DailyUploadSide)?.minutes ?? 0
-  //           );
-  //         }),
-  //         backgroundColor: `${colors.indigo[400]}`,
-  //       },
-  //       {
-  //         label: dashboardStore.assignedTasks[1]?.name,
-  //         data: labels.map((_, index) => {
-  //           return (
-  //             (sideQuery.data?.side2[index] as DailyUploadSide)?.minutes ?? 0
-  //           );
-  //         }),
-  //         backgroundColor: `${colors.indigo[300]}`,
-  //       },
-  //       {
-  //         label: dashboardStore.assignedTasks[2]?.name,
-  //         data: labels.map((_, index) => {
-  //           return (
-  //             (sideQuery.data?.side3[index] as DailyUploadSide)?.minutes ?? 0
-  //           );
-  //         }),
-  //         backgroundColor: `${colors.indigo[600]}`,
-  //       },
-  //       {
-  //         label: dashboardStore.assignedTasks[3]?.name,
-  //         data: labels.map((_, index) => {
-  //           return (
-  //             (sideQuery.data?.side4[index] as DailyUploadSide)?.minutes ?? 0
-  //           );
-  //         }),
-  //         backgroundColor: `${colors.indigo[800]}`,
-  //       },
-  //       {
-  //         label: dashboardStore.assignedTasks[4]?.name,
-  //         data: labels.map((_, index) => {
-  //           return (
-  //             (sideQuery.data?.side5[index] as DailyUploadSide)?.minutes ?? 0
-  //           );
-  //         }),
-  //         backgroundColor: `${colors.indigo[900]}`,
-  //       },
-  //     ],
-  //   });
-  // }, [sideQuery.data]);
-
-  // Does not auto refresh when user clicks for new data, we'd need to switch to the listener model but could be expensive?
 
   return (
     <Card>
@@ -187,41 +125,31 @@ const DayCard = observer(({ title }: { title: string }) => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 py-4">
             <div className="flex flex-col">
-              <h3 className="font-semibold text-xl">
-                {dashboardStore.assignedTasks[0]?.name}
-              </h3>
+              <h3 className="font-semibold text-xl">{upload?.side1Name}</h3>
               <p className="text-xl">
                 {side1Tracked.hours}h {side1Tracked.minutes}m
               </p>
             </div>
             <div className="flex flex-col">
-              <h3 className="font-semibold text-xl">
-                {dashboardStore.assignedTasks[1]?.name}
-              </h3>
+              <h3 className="font-semibold text-xl">{upload?.side2Name}</h3>
               <p className="text-xl">
                 {side2Tracked.hours}h {side2Tracked.minutes}m
               </p>
             </div>
             <div className="flex flex-col">
-              <h3 className="font-semibold text-xl">
-                {dashboardStore.assignedTasks[2]?.name}
-              </h3>
+              <h3 className="font-semibold text-xl">{upload?.side3Name}</h3>
               <p className="text-xl">
                 {side3Tracked.hours}h {side3Tracked.minutes}m
               </p>
             </div>
             <div className="flex flex-col">
-              <h3 className="font-semibold text-xl">
-                {dashboardStore.assignedTasks[3]?.name}
-              </h3>
+              <h3 className="font-semibold text-xl">{upload?.side4Name}</h3>
               <p className="text-xl">
                 {side4Tracked.hours}h {side4Tracked.minutes}m
               </p>
             </div>
             <div className="flex flex-col">
-              <h3 className="font-semibold text-xl">
-                {dashboardStore.assignedTasks[4]?.name}
-              </h3>
+              <h3 className="font-semibold text-xl">{upload?.side5Name}</h3>
               <p className="text-xl">
                 {side5Tracked.hours}h {side5Tracked.minutes}m
               </p>

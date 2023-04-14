@@ -12,6 +12,15 @@ const firebaseConfig = {
   measurementId: "G-HB2KN7LCBR",
 };
 
+// const devFirebaseConfig = {
+//   apiKey: "AIzaSyBQ6rF_-MLtBshIr3Hfu-qVjpAR2Iuytgg",
+//   authDomain: "prism-productivity-mvp.firebaseapp.com",
+//   projectId: "prism-productivity-mvp",
+//   storageBucket: "prism-productivity-mvp.appspot.com",
+//   messagingSenderId: "388974293387",
+//   appId: "1:388974293387:web:5e78f3d23f5e9cde1fbf8e",
+// };
+
 export const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 
