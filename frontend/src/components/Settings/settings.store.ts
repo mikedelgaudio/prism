@@ -14,11 +14,12 @@ import {
 import { makeAutoObservable, runInAction } from "mobx";
 import { v4 as uuidv4 } from "uuid";
 import { Task, UserProfile } from "../../firebase/firebase.models";
-import { errorToMsg, ERROR_USER_IS_NULL } from "../../services/errors.service";
+import { API_URL, postRequest } from "../../services/api.service";
+import { ERROR_USER_IS_NULL, errorToMsg } from "../../services/errors.service";
 import {
-  db,
   FIREBASE_TASKS_COLLECTION,
   FIREBASE_USERS_COLLECTION,
+  db,
 } from "../../services/firebase.service";
 import { TOAST_SERVICE } from "../../services/toast.service";
 
@@ -117,6 +118,8 @@ export class SettingsStore {
       await updateDoc(tasksCollectionRef, {
         name: newName,
       });
+
+      postRequest(`${API_URL}/settings/update-tasks`, {});
 
       const index = this.tasks.findIndex(task => task.id === id);
 

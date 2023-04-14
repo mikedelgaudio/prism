@@ -2,26 +2,26 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyA_MjUdhHJXGD39XJi7n9Zfj3Fr01qe7UI",
-//   authDomain: "prism-productivity.firebaseapp.com",
-//   projectId: "prism-productivity",
-//   storageBucket: "prism-productivity.appspot.com",
-//   messagingSenderId: "1051077289664",
-//   appId: "1:1051077289664:web:a83532271959afb2ce2f25",
-//   measurementId: "G-HB2KN7LCBR",
-// };
-
-const devFirebaseConfig = {
-  apiKey: "AIzaSyBQ6rF_-MLtBshIr3Hfu-qVjpAR2Iuytgg",
-  authDomain: "prism-productivity-mvp.firebaseapp.com",
-  projectId: "prism-productivity-mvp",
-  storageBucket: "prism-productivity-mvp.appspot.com",
-  messagingSenderId: "388974293387",
-  appId: "1:388974293387:web:5e78f3d23f5e9cde1fbf8e",
+const firebaseConfig = {
+  apiKey: "AIzaSyA_MjUdhHJXGD39XJi7n9Zfj3Fr01qe7UI",
+  authDomain: "prism-productivity.firebaseapp.com",
+  projectId: "prism-productivity",
+  storageBucket: "prism-productivity.appspot.com",
+  messagingSenderId: "1051077289664",
+  appId: "1:1051077289664:web:a83532271959afb2ce2f25",
+  measurementId: "G-HB2KN7LCBR",
 };
 
-export const app = initializeApp(devFirebaseConfig);
+// const devFirebaseConfig = {
+//   apiKey: "AIzaSyBQ6rF_-MLtBshIr3Hfu-qVjpAR2Iuytgg",
+//   authDomain: "prism-productivity-mvp.firebaseapp.com",
+//   projectId: "prism-productivity-mvp",
+//   storageBucket: "prism-productivity-mvp.appspot.com",
+//   messagingSenderId: "388974293387",
+//   appId: "1:388974293387:web:5e78f3d23f5e9cde1fbf8e",
+// };
+
+export const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 
 // gives us an auth instance
