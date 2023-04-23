@@ -3,7 +3,7 @@ import { useEffect } from "react";
 export function useTitle(title: string) {
   useEffect(() => {
     const prevTitle = document.title;
-    document.title = `${title} - Prism Productivity Smart Cube`;
+    document.title = `${title} - Prism Productivity Smart Cube App`;
     return () => {
       document.title = prevTitle;
     };
